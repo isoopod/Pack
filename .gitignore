@@ -5,4 +5,5 @@
 # Roblox Studio lock files
 /*.rbxl.lock
 
+.vscode
 sourcemap.json

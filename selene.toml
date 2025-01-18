@@ -2,7 +2,6 @@ std = "roblox"
 
 [lints]
 multiple_statements = "allow"
-undefined_variable = "allow" #luau lsp will pick this up for us, and I dont want to fork the standard library to add the vector global library
 
 [config]
 multiple_statements = { one_line_if = "allow" }

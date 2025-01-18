@@ -6,6 +6,9 @@
         "ReplicatedStorage": {
             "Pack": {
                 "$path": "src"
+            },
+            "Packets": {
+                "$path": "tests/packets"
             }
         }
     }
