@@ -3,8 +3,8 @@
 export type WriteFlags = {}
 
 export type Packet<T> = {
-	Read: (buff: buffer) -> T,
-	Write: (data: T, flags: WriteFlags?) -> buffer,
+	Read: (self: Packet<T>, buff: buffer) -> T,
+	Write: (self: Packet<T>, data: T, flags: WriteFlags?) -> buffer,
 }
 
 export type Reader = {

@@ -15,7 +15,6 @@ function Packet.Write<T>(self: _Packet<T>, value: types.DatatypeInterface<T>)
 	self._write(writer, value)
 
 	local packed = writer:Finalize()
-	writer:Destroy()
 	return packed
 end
 
@@ -28,7 +27,7 @@ function Packet.Read<T>(self: _Packet<T>, packed: buffer)
 end
 
 function Pack.definePacket<T>(props: types.DatatypeInterface<T>): types.Packet<T>
-	local self: _Packet<T> = setmetatable({}, Packet) :: any
+	local self: _Packet<T> = setmetatable({}, { __index = Packet }) :: any
 
 	self._read = props.Read
 	self._write = props.Write
@@ -44,5 +43,9 @@ type _Packet<T> = types.Packet<T> & {
 ---- EXPORTS
 -- Load each datatype and export it through pack
 -- We need to load each datatype when Pack is required for dynamic packets, so the evaluators can be initialized.
+local datatypes = script.Datatypes
+Pack.Array = require(datatypes.Array)
+Pack.uint8 = require(datatypes.uint8)
+Pack.UByte = Pack.uint8
 
 return Pack

@@ -86,7 +86,7 @@ end
 function Reader.Destroy(self: types.Reader)
 	setmetatable(self, nil)
 	table.clear(self :: any)
-	table.freeze(self :: {})
+	table.freeze(self)
 end
 
 function ReaderClass.new(packet: buffer): types.Reader

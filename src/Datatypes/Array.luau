@@ -16,7 +16,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 	local read, write = valueType.Read, valueType.Write
 
 	return {
-		Read = function(Reader: types.Reader): T
+		Read = function(Reader: types.Reader): { T }
 			local len = Reader:u16()
 			local array = table.create(len)
 
@@ -32,7 +32,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 			Writer:u16(len)
 
 			for i = 1, len do
-				write(value[i])
+				write(Writer, value[i])
 			end
 		end,
 	}

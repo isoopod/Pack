@@ -9,6 +9,23 @@
             },
             "Packets": {
                 "$path": "tests/packets"
+            },
+            "shared": {
+                "$path": "tests/shared"
+            }
+        },
+
+        "ServerScriptService": {
+            "server": {
+                "$path": "tests/server"
+            }
+        },
+
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "client": {
+                    "$path": "tests/client"
+                }
             }
         }
     }
