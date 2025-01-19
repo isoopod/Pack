@@ -20,8 +20,8 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 			local len = Reader:u16()
 			local array = table.create(len)
 
-			for _ = 1, len do
-				table.insert(array, read(Reader))
+			for i = 1, len do
+				array[i] = read(Reader)
 			end
 
 			return array
