@@ -44,8 +44,29 @@ type _Packet<T> = types.Packet<T> & {
 -- Load each datatype and export it through pack
 -- We need to load each datatype when Pack is required for dynamic packets, so the evaluators can be initialized.
 local datatypes = script.Datatypes
-Pack.Array = require(datatypes.Array)
+-- [[ Number types ]]
+-- Integers --
+-- Unsigned
 Pack.uint8 = require(datatypes.uint8)
 Pack.UByte = Pack.uint8
+Pack.uint16 = require(datatypes.uint16)
+Pack.UShort = Pack.uint16
+Pack.uint32 = require(datatypes.uint32)
+Pack.UInt = Pack.uint32
+-- Signed
+Pack.int8 = require(datatypes.int8)
+Pack.Byte = Pack.int8
+Pack.int16 = require(datatypes.int16)
+Pack.Short = Pack.int16
+Pack.int32 = require(datatypes.int32)
+Pack.Int = Pack.int32
 
+-- Floating Point --
+Pack.float32 = require(datatypes.float32)
+Pack.Float = Pack.float32
+Pack.float64 = require(datatypes.float64)
+Pack.Double = Pack.float64
+
+-- [[ Structural types ]]
+Pack.Array = require(datatypes.Array)
 return Pack

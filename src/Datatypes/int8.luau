@@ -5,19 +5,19 @@
 local types = require(script.Parent.Parent.Types)
 
 --[=[
-        @function uint8
+        @function int8
         @within Datatypes
-        Represents an unsigned 8-bit integer ranging from 0 to 255.
-		UByte is an alias for uint8 and can be used in place of it.
+        Represents an signed 8-bit integer ranging from -128 to 127.
+		Byte is an alias for int8 and can be used in place of it.
 ]=]
 
 local datatype: types.DatatypeInterface<number> = {
 	Read = function(Reader: types.Reader): number
-		return Reader:u8()
+		return Reader:i8()
 	end,
 	Write = function(Writer: types.Writer, value: number)
 		Writer:alloc(1)
-		Writer:u8(value)
+		Writer:i8(value)
 	end,
 }
 
