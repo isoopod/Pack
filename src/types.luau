@@ -36,6 +36,7 @@ export type Writer = {
 	f32: (self: Writer, value: number) -> (),
 	f64: (self: Writer, value: number) -> (),
 	string: (self: Writer, value: string, count: number?) -> number, -- Returns the string's length in bytes
+	noop: (sefl: Writer, length: number) -> (),
 
 	Finalize: (self: Writer) -> buffer,
 	Destroy: (self: Writer) -> (),

@@ -106,6 +106,13 @@ function Writer.string(self: _Writer, value: string, count: number?): number
 	end)
 	return blen
 end
+
+-- Used to push the cursor forwards by a variable number of bytes without writing anything
+function Writer.noop(self: _Writer, length: number)
+	table.insert(self._queue, function()
+		return length
+	end)
+end
 ----
 
 -- Build the buffer from the writer and cleanup
