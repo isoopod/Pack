@@ -5,7 +5,7 @@
 local types = require(script.Parent.Parent.Types)
 
 --[=[
-        @function
+        @function Array
         @within Datatypes
         @param valueType: any
         A Pack 'Array' is homogenous, meaning it contains a variable number of items of the same datatype in numeric order.
@@ -18,7 +18,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 	return {
 		Read = function(Reader: types.Reader): { T }
 			local len = Reader:u16()
-			local array = table.create(len)
+			local array = table.create(len) :: { T }
 
 			for i = 1, len do
 				array[i] = read(Reader)

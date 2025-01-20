@@ -21,6 +21,4 @@ local datatype: types.DatatypeInterface<number> = {
 	end,
 }
 
-return function()
-	return datatype
-end
+return datatype

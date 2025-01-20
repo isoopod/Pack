@@ -1,10 +1,8 @@
 -- Shared types within pack
 
-export type WriteFlags = {}
-
 export type Packet<T> = {
 	Read: (self: Packet<T>, buff: buffer) -> T,
-	Write: (self: Packet<T>, data: T, flags: WriteFlags?) -> buffer,
+	Write: (self: Packet<T>, data: T) -> buffer,
 }
 
 export type Reader = {
