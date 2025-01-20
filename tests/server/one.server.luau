@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local testpacket = require(ReplicatedStorage.Packets.testpacket)
 
-local before = { 5, 3, 1, 2, 4 }
+local before = { one = 1, two = 2 }
 local packet = testpacket:Write(before)
 local after = testpacket:Read(packet)
 
