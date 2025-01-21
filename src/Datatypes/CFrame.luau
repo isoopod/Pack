@@ -172,12 +172,6 @@ local function decompressQuaternion(qi: number, qa: number?, qb: number?, qc: nu
 	end
 end
 
---[=[
-        @function CFrame
-        @within Datatypes
-        
-]=]
-
 local datatype: types.DatatypeInterface<CFrame> = {
 	Read = function(Reader: types.Reader): CFrame
 		local x = Reader:f32()

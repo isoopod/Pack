@@ -95,16 +95,18 @@ function Writer.f64(self: _Writer, value: number)
 end
 
 -- NOTICE: This function will allocate automatically as strings are variable length
-function Writer.string(self: _Writer, value: string, count: number?): number
+-- Returns the length of the string (in bytes) and a function to actually write it
+function Writer.string(self: _Writer, value: string, count: number?): (number, () -> ())
 	local s = fromstring(value)
 	local blen = len(s)
 	self._len += blen
-	table.insert(self._queue, function(b, cursor)
-		copy(b, cursor, s, 0, count)
-		s = nil :: any
-		return blen
-	end)
-	return blen
+	return blen, function()
+		table.insert(self._queue, function(b, cursor)
+			copy(b, cursor, s, 0, count)
+			s = nil :: any
+			return blen
+		end)
+	end
 end
 
 -- Used to push the cursor forwards by a variable number of bytes without writing anything

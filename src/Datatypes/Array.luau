@@ -4,14 +4,6 @@
 
 local types = require(script.Parent.Parent.Types)
 
---[=[
-        @function Array
-        @within Datatypes
-        @param valueType: any
-        A Pack 'Array' is homogenous, meaning it contains a variable number of items of the same datatype in numeric order.
-        You can combine this with other structural datatypes to be able to use multiple datatypes in the array.
-]=]
-
 return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
 	local read, write = valueType.Read, valueType.Write
 

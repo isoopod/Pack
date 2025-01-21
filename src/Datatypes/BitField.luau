@@ -12,19 +12,6 @@ end
 local bor = bit32.bor
 local band = bit32.band
 
---[=[
-        @function BitField
-        @within Datatypes
-		@param Length: number
-        A Pack 'BitField' is a compact representation of many boolean values, being able to fit 8 into a single byte.  
-		A predetermined length (the number of booleans, not bytes) must be provided, and it is accessed through arrays of booleans of that length.
-		When writing, if your array is shorter than the length of the BitField, the booleans that were not provided will be treated as false.
-
-		:::hint
-		Dont use a BitField to store a single bool, Use the standard Pack 'boolean' instead.
-		:::
-]=]
-
 return function(length: number): types.DatatypeInterface<{ boolean }>
 	local byteLength = (length + 7) // 8
 

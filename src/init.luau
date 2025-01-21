@@ -42,7 +42,8 @@ type _Packet<T> = types.Packet<T> & {
 
 ---- EXPORTS
 -- Load each datatype and export it through pack
--- We need to load each datatype when Pack is required for dynamic packets, so the evaluators can be initialized.
+-- TODO: Make pack a singleton and have the datatypes accessed dynamically, so a bunch of possibly unused native code isnt compiled for every thread using Pack.
+-- Also allows us to make definePacket a method, seperating the datatypes from definePacket in autocomplete.
 local datatypes = script.Datatypes
 -- [[ Number Types ]]
 -- Integers --
@@ -72,7 +73,21 @@ Pack.Double = Pack.float64
 Pack.boolean = require(datatypes.boolean) :: boolean
 Pack.BitField = require(datatypes.BitField) :: (length: number) -> { boolean }
 
+-- String --
+Pack.string = require(datatypes.string) :: string
+Pack.buffer = require(datatypes.buffer) :: buffer
+
+-- Color --
+Pack.Color3 = require(datatypes.Color3) :: Color3
+Pack.BrickColor = require(datatypes.BrickColor) :: BrickColor
+
+-- Spacial --
+Pack.CFrame = require(datatypes.CFrame) :: CFrame
+Pack.Vector3 = require(datatypes.Vector3) :: vector & Vector3
+
 -- [[ Structural types ]]
 Pack.Array = require(datatypes.Array) :: <T>(type: T) -> { T }
 Pack.Dictionary = require(datatypes.Dictionary) :: <T>(format: T) -> T
+Pack.Map = require(datatypes.Map) :: <K, V>(keyType: K, valueType: V) -> { [K]: V }
+
 return Pack
