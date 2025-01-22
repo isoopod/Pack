@@ -7,87 +7,89 @@ local types = require(script.Types)
 
 local Pack = {}
 
--- Packet class
-local Packet = {}
+-- Schema class
+--[=[
+	@class Schema
 
-function Packet.Write<T>(self: _Packet<T>, value: T): buffer
+	A schema is needed to read and write a packet with a particular data structure.  
+	Schemas are created through Pack:Define() through combinations of pack datatypes.  
+
+	Once created, a schema holds the Read and Write methods to serialize and deserialize data to and from packets (buffers).
+]=]
+local Schema = {}
+
+--- @method
+--- @within Schema
+--- @param input any
+--- @return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
+--- Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
+function Schema.Write<T>(self: _Schema<T>, input: T): buffer
 	local writer = Writer.new()
-	self._write(writer, value)
+	self._write(writer, input)
 
 	local packed = writer:Finalize()
 	return packed
 end
 
-function Packet.Read<T>(self: _Packet<T>, payload: buffer): T
-	local reader = Reader.new(payload)
+--- @method
+--- @within Schema
+--- @param packet buffer -- A packet created by this schema with the Write method.
+--- @return any -- This is a reconstruction of the input to the packet.
+--- Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
+function Schema.Read<T>(self: _Schema<T>, packet: buffer): T
+	local reader = Reader.new(packet)
 
 	local unpacked = self._read(reader)
 	reader:Destroy()
 	return unpacked
 end
 
-function Pack.definePacket<T>(props: T & types.DatatypeInterface<any>): types.Packet<T>
-	local self: _Packet<T> = setmetatable({}, { __index = Packet }) :: any
+function Pack.Define<T>(_: types.Pack, schema: T & types.DatatypeInterface<any>): types.Schema<T>
+	local self: _Schema<T> = setmetatable({}, { __index = Schema }) :: any
 
-	self._read = props.Read
-	self._write = props.Write
+	self._read = schema.Read
+	self._write = schema.Write
 
 	return self
 end
 -- Private type
-type _Packet<T> = types.Packet<T> & {
+type _Schema<T> = types.Schema<T> & {
 	_read: (types.Reader) -> T,
 	_write: (types.Writer, T, any?) -> (),
 }
 
----- EXPORTS
--- Load each datatype and export it through pack
--- TODO: Make pack a singleton and have the datatypes accessed dynamically, so a bunch of possibly unused native code isnt compiled for every thread using Pack.
--- Also allows us to make definePacket a method, seperating the datatypes from definePacket in autocomplete.
-local datatypes = script.Datatypes
--- [[ Number Types ]]
--- Integers --
--- Unsigned
-Pack.uint8 = require(datatypes.uint8) :: number
-Pack.UByte = Pack.uint8
-Pack.uint16 = require(datatypes.uint16) :: number
-Pack.UShort = Pack.uint16
-Pack.uint32 = require(datatypes.uint32) :: number
-Pack.UInt = Pack.uint32
--- Signed
-Pack.int8 = require(datatypes.int8) :: number
-Pack.Byte = Pack.int8
-Pack.int16 = require(datatypes.int16) :: number
-Pack.Short = Pack.int16
-Pack.int32 = require(datatypes.int32) :: number
-Pack.Int = Pack.int32
+function Pack.__index(self, key)
+	if Pack[key] then return Pack[key] end
 
--- Floating Point --
-Pack.float32 = require(datatypes.float32) :: number
-Pack.Float = Pack.float32
-Pack.float64 = require(datatypes.float64) :: number
-Pack.Double = Pack.float64
+	-- Apply alias for lazy-loading
+	local aliases = rawget(self, "_aliases") :: { [string]: string }
+	key = aliases[key] or key
 
--- [[ Other Basic ]]
--- Boolean --
-Pack.boolean = require(datatypes.boolean) :: boolean
-Pack.BitField = require(datatypes.BitField) :: (length: number) -> { boolean }
+	-- Lazy-load datatypes
+	-- Retrieve from cache if present
+	local cache: { [string]: any } = rawget(self, "_cachedDataypes") :: any
+	if cache[key] then return cache[key] end
 
--- String --
-Pack.string = require(datatypes.string) :: string
-Pack.buffer = require(datatypes.buffer) :: buffer
+	-- Load and cache datatype
+	local s, datatype = pcall(require, script.Datatypes:FindFirstChild(key))
+	assert(s, `Unable to access datatype Pack.{key}. Datatype not found.`)
+	cache[key] = datatype
+	rawset(self, "_cachedDatatypes", cache)
+	return datatype
+end
 
--- Color --
-Pack.Color3 = require(datatypes.Color3) :: Color3
-Pack.BrickColor = require(datatypes.BrickColor) :: BrickColor
+local object: types.Pack = setmetatable({
+	_cachedDatatypes = {},
+	_aliases = {
+		UByte = "uint8",
+		UShort = "uint16",
+		UInt = "uint32",
+		Byte = "int8",
+		Short = "int16",
+		Int = "int32",
+		Float = "float32",
+		Double = "float64",
+	},
+}, Pack) :: any
 
--- Spacial --
-Pack.CFrame = require(datatypes.CFrame) :: CFrame
-Pack.Vector3 = require(datatypes.Vector3) :: vector & Vector3
-
--- [[ Structural types ]]
-Pack.Array = require(datatypes.Array) :: <T>(type: T) -> { T }
-Pack.Dictionary = require(datatypes.Dictionary) :: <T>(format: T) -> T
-Pack.Map = require(datatypes.Map) :: <K, V>(keyType: K, valueType: V) -> { [K]: V }
-
-return Pack
+return object

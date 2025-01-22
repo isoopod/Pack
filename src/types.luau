@@ -1,8 +1,8 @@
 -- Shared types within pack
 
-export type Packet<T> = {
-	Read: (self: Packet<T>, buff: buffer) -> T,
-	Write: (self: Packet<T>, data: T) -> buffer,
+export type Schema<T> = {
+	Read: (self: Schema<T>, buff: buffer) -> T,
+	Write: (self: Schema<T>, data: T) -> buffer,
 }
 
 export type Reader = {
@@ -47,10 +47,48 @@ export type DatatypeInterface<T> = {
 	Write: (writer: Writer, value: T, flags: any?) -> (),
 }
 
---[=[
-		@class Datatypes
+export type Pack = {
+	-- Schema constructors
+	Define: <T>(self: Pack, schema: T) -> Schema<T>,
 
-		Description TODO
-]=]
+	-- [Datatypes] --
+	uint8: number,
+	UByte: number,
+	uint16: number,
+	UShort: number,
+	uint32: number,
+	UInt: number,
+
+	int8: number,
+	Byte: number,
+	int16: number,
+	Short: number,
+	int32: number,
+	Int: number,
+
+	float32: number,
+	Float: number,
+	float64: number,
+	double: number,
+
+	boolean: boolean,
+	BitField: (length: number) -> { boolean },
+
+	string: string,
+	buffer: buffer,
+
+	Color3: Color3,
+	BrickColor: BrickColor,
+
+	CFrame: CFrame,
+	Vector3: vector & Vector3,
+	Vector2: Vector2,
+
+	Instance: Instance,
+
+	Array: <T>(type: T) -> { T },
+	Dictionary: <T>(format: T) -> T,
+	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
+}
 
 return nil
