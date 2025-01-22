@@ -15,6 +15,11 @@ local abs = math.abs
 local sqrt = math.sqrt
 local floor = math.floor
 
+local lshift = bit32.lshift
+local rshift = bit32.rshift
+local bor = bit32.bor
+local band = bit32.band
+
 local INF = math.huge
 local EPSILON = 1e-6
 local I16_PRECISION = 32767
@@ -50,23 +55,27 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 	local qx, qy, qz, qw = cfToNormalisedQuaternion(cf)
 
 	-- Check if the quaternion is axis-aligned and detect the axis and rotation
-	if abs(qx) == 1 or abs(qy) == 1 or abs(qz) == 1 then
-		-- Axis-aligned quaternion (one of the 12 axis-aligned cases)
-		local axis, angle = 0, 0
+	local is_x = abs(qx) > 1 - EPSILON
+	local is_y = not is_x and abs(qy) > 1 - EPSILON
+	local is_z = not is_x and not is_y and abs(qz) > 1 - EPSILON
 
-		if abs(qx) == 1 then
-			axis = 1 -- x-axis
-			angle = floor(abs(qx) * 4 + 0.5) -- 0°, 90°, 180°, 270°
-		elseif abs(qy) == 1 then
-			axis = 2 -- y-axis
-			angle = floor(abs(qy) * 4 + 0.5)
-		elseif abs(qz) == 1 then
-			axis = 3 -- z-axis
-			angle = floor(abs(qz) * 4 + 0.5)
+	if is_x or is_y or is_z then
+		-- Axis-aligned quaternion (one of the 12 axis-aligned cases)
+		local axis: number, angle: number
+
+		if is_x then
+			axis = 0 -- x-axis
+			angle = floor(abs(qx) * 3 + 0.5) -- 0°, 90°, 180°, 270° (0-3)
+		elseif is_y then
+			axis = 1 -- y-axis
+			angle = floor(abs(qy) * 3 + 0.5)
+		else
+			axis = 2 -- z-axis
+			angle = floor(abs(qz) * 3 + 0.5)
 		end
 
-		-- Return the axis-aligned rotation as a single byte (1-12)
-		return (axis - 1) * 4 + angle + 1 + 4, nil, nil, nil --TODO: optimize this with bit32
+		-- Return the axis-aligned rotation as a bit packed number (1-12)
+		return bor(lshift(axis, 2), angle) + 5, nil, nil, nil
 	else
 		-- Non-axis-aligned quaternion, compress by optimizing out one value and quantizing to 16 bit
 		local index = -1
@@ -111,9 +120,10 @@ end
 -- Decompress a quaternion from either a 12-axis-aligned rotation or a full compressed quaternion
 local function decompressQuaternion(qi: number, qa: number?, qb: number?, qc: number?): (number, number, number, number)
 	-- If the quaternion is one of the 12 axis-aligned rotations
-	if qi >= 5 and qi <= 16 then
-		local axis = math.floor((qi - 1) / 4) + 1
-		local angle = (qi - 1) % 4
+	if qi >= 5 then
+		local combined = qi - 5
+		local axis = rshift(combined, 2)
+		local angle = band(combined, 0x03)
 
 		-- Initialize the quaternion based on the axis and angle
 		local qx, qy, qz, qw = 0, 0, 0, 1 -- Identity quaternion
