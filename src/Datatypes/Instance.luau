@@ -12,6 +12,8 @@ local IN_ACTOR = script:GetActor() ~= nil
 local IS_SERVER = RunService:IsServer()
 local PACK_CONFIG = (IS_SERVER and SharedTableRegistry:GetSharedTable("PACK_CONFIG")) :: SharedTable
 
+local PREFIX = IS_SERVER and "PACK_SREF" or "PACK_CREF"
+
 local Instance_Refs = SharedTableRegistry:GetSharedTable("PACK_INSTANCE_REFS")
 
 -- WARNING: Instances cannot cross the server client boundary this way, if you are making a networking library using Pack, pass instances in a seperate refs table
@@ -33,26 +35,26 @@ local datatype: types.DatatypeInterface<Instance?> = {
 	Read = function(Reader: types.Reader): Instance?
 		local ref = Reader:u32()
 
-		return CollectionService:GetTagged(`PACK_REF_{ref}`)[1]
+		return CollectionService:GetTagged(`{PREFIX}{ref}`)[1]
 	end,
 	Write = function(Writer: types.Writer, value: Instance?)
 		assert(value and typeof(value) == "Instance", "Value expected to be an Instance")
-		if IN_ACTOR then task.synchronize() end -- Go to serial mode
 
 		-- Check if the instance has an existing ref
 		local ref: number
-		for k, v in value:GetAttributes() do
-			if string.sub(k, 1, 8) == "PACK_REF_" then
-				ref = v :: number
+		for _, v in value:GetTags() do
+			if string.sub(v, 1, 9) == PREFIX then
+				ref = tonumber(string.sub(v, 10)) :: number
 				break
 			end
 		end
 		if not ref then
 			-- Otherwise, reserve a new ref
 
+			if IN_ACTOR then task.synchronize() end -- Go to serial mode
 			SharedTable.increment(Instance_Refs, "count", 1)
 			ref = Instance_Refs.count
-			value:AddTag(`PACK_REF_{ref}`)
+			value:AddTag(`{PREFIX}{ref}`)
 			if setcount then setcount(ref) end
 		end
 
