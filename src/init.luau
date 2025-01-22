@@ -67,7 +67,7 @@ function Pack.__index(self, key)
 
 	-- Lazy-load datatypes
 	-- Retrieve from cache if present
-	local cache: { [string]: any } = rawget(self, "_cachedDataypes") :: any
+	local cache: { [string]: any } = rawget(self, "_cachedDatatypes") :: any
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
