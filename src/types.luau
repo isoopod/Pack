@@ -86,6 +86,8 @@ export type Pack = {
 
 	Instance: Instance,
 
+	custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
+
 	Array: <T>(type: T) -> { T },
 	Dictionary: <T>(format: T) -> T,
 	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
