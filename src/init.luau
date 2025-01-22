@@ -1,4 +1,6 @@
 --!strict
+--!native
+--!optimize 2
 
 -- Modules
 local Reader = require(script.Reader)
