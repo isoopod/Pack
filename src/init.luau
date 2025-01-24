@@ -42,7 +42,6 @@ function Schema.Read<T>(self: _Schema<T>, packet: buffer): T
 	local reader = Reader.new(packet)
 
 	local unpacked = self._read(reader)
-	reader:Destroy()
 	return unpacked
 end
 

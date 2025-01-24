@@ -81,9 +81,10 @@ function Writer.string(self: _Writer, value: string, count: number?): (number, (
 	end
 end
 
--- Used to push the cursor forwards by a variable number of bytes without writing anything
-function Writer.noop(self: _Writer, length: number)
-	table.insert(self._queue, { "noop", length })
+-- Pushes the cursor by delta bytes.
+-- Warning: This does not prevent you from leaving buffer bounds.
+function Writer.moveCursor(self: _Writer, delta: number)
+	table.insert(self._queue, { "moveCursor", delta })
 end
 ----
 
@@ -135,8 +136,8 @@ function WriteFunctions.string(b: buffer, cursor: number, s: buffer, blen: numbe
 	return blen
 end
 
-function WriteFunctions.noop(_, _, length: number): number
-	return length
+function WriteFunctions.moveCursor(_, _, delta: number): number
+	return delta
 end
 
 -- Build the buffer from the writer and cleanup
@@ -149,15 +150,7 @@ function Writer.Finalize(self: _Writer): buffer
 		cursor += WriteFunctions[v[1]](b, cursor, unpack(v, 2))
 	end
 
-	self:Destroy()
-
 	return b
-end
-
-function Writer.Destroy(self: _Writer)
-	setmetatable(self, nil)
-	table.clear(self :: any)
-	table.freeze(self :: {})
 end
 
 function WriterClass.new(): types.Writer

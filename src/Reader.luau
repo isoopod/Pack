@@ -83,12 +83,6 @@ function Reader.string(self: types.Reader, count: number): string
 end
 ----
 
-function Reader.Destroy(self: types.Reader)
-	setmetatable(self, nil)
-	table.clear(self :: any)
-	table.freeze(self)
-end
-
 function ReaderClass.new(packet: buffer): types.Reader
 	local self: types.Reader = setmetatable({}, ReaderClass.metatable) :: any
 

@@ -19,13 +19,12 @@ export type Reader = {
 	f64: (self: Reader) -> number,
 	string: (self: Reader, count: number?) -> string,
 
-	Destroy: (self: Reader) -> (),
-
 	_buffer: buffer,
 }
 
 export type Writer = {
 	alloc: (self: Writer, number) -> (),
+	moveCursor: (sefl: Writer, delta: number) -> (),
 
 	u8: (self: Writer, value: number) -> (),
 	u16: (self: Writer, value: number) -> (),
@@ -36,10 +35,8 @@ export type Writer = {
 	f32: (self: Writer, value: number) -> (),
 	f64: (self: Writer, value: number) -> (),
 	string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
-	noop: (sefl: Writer, length: number) -> (),
 
 	Finalize: (self: Writer) -> buffer,
-	Destroy: (self: Writer) -> (),
 }
 
 export type DatatypeInterface<T> = {
