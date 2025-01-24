@@ -129,7 +129,7 @@ function WriteFunctions.f64(b: buffer, cursor: number, value: number): number
 	return 8
 end
 
-function WriteFunctions.stirng(b: buffer, cursor: number, s: buffer, blen: number, count: number): number
+function WriteFunctions.string(b: buffer, cursor: number, s: buffer, blen: number, count: number): number
 	copy(b, cursor, s, 0, count)
 	s = nil :: any
 	return blen
