@@ -11,7 +11,7 @@ local types = require(script.Parent.Types)
 
 type _Writer = types.Writer & {
 	_len: number,
-	_queue: { (b: buffer, cursor: number) -> number },
+	_queue: { { any } },
 }
 
 local writeu8 = buffer.writeu8
@@ -39,91 +39,114 @@ end
 
 ----
 function Writer.u8(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writeu8(b, cursor, value)
-		return 1
-	end)
+	table.insert(self._queue, { "u8", value })
 end
 
 function Writer.u16(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writeu16(b, cursor, value)
-		return 2
-	end)
+	table.insert(self._queue, { "u16", value })
 end
 
 function Writer.u32(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writeu32(b, cursor, value)
-		return 4
-	end)
+	table.insert(self._queue, { "u32", value })
 end
 
 function Writer.i8(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writei8(b, cursor, value)
-		return 1
-	end)
+	table.insert(self._queue, { "i8", value })
 end
 
 function Writer.i16(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writei16(b, cursor, value)
-		return 2
-	end)
+	table.insert(self._queue, { "i16", value })
 end
 
 function Writer.i32(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writei32(b, cursor, value)
-		return 4
-	end)
+	table.insert(self._queue, { "i32", value })
 end
 
 function Writer.f32(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writef32(b, cursor, value)
-		return 4
-	end)
+	table.insert(self._queue, { "f32", value })
 end
 
 function Writer.f64(self: _Writer, value: number)
-	table.insert(self._queue, function(b, cursor)
-		writef64(b, cursor, value)
-		return 8
-	end)
+	table.insert(self._queue, { "f64", value })
 end
 
 -- NOTICE: This function will allocate automatically as strings are variable length
 -- Returns the length of the string (in bytes) and a function to actually write it
 function Writer.string(self: _Writer, value: string, count: number?): (number, () -> ())
 	local s = fromstring(value)
-	local blen = len(s)
+	local blen = math.clamp(len(s), 0, count or math.huge)
 	self._len += blen
 	return blen, function()
-		table.insert(self._queue, function(b, cursor)
-			copy(b, cursor, s, 0, count)
-			s = nil :: any
-			return blen
-		end)
+		table.insert(self._queue, { "string", s, blen, count })
 	end
 end
 
 -- Used to push the cursor forwards by a variable number of bytes without writing anything
 function Writer.noop(self: _Writer, length: number)
-	table.insert(self._queue, function()
-		return length
-	end)
+	table.insert(self._queue, { "noop", length })
 end
 ----
+
+local WriteFunctions: { [string]: (buffer, number, ...any) -> number } = {}
+
+function WriteFunctions.u8(b: buffer, cursor: number, value: number): number
+	writeu8(b, cursor, value)
+	return 1
+end
+
+function WriteFunctions.u16(b: buffer, cursor: number, value: number): number
+	writeu16(b, cursor, value)
+	return 2
+end
+
+function WriteFunctions.u32(b: buffer, cursor: number, value: number): number
+	writeu32(b, cursor, value)
+	return 4
+end
+
+function WriteFunctions.i8(b: buffer, cursor: number, value: number): number
+	writei8(b, cursor, value)
+	return 1
+end
+
+function WriteFunctions.i16(b: buffer, cursor: number, value: number): number
+	writei16(b, cursor, value)
+	return 2
+end
+
+function WriteFunctions.i32(b: buffer, cursor: number, value: number): number
+	writei32(b, cursor, value)
+	return 4
+end
+
+function WriteFunctions.f32(b: buffer, cursor: number, value: number): number
+	writef32(b, cursor, value)
+	return 4
+end
+
+function WriteFunctions.f64(b: buffer, cursor: number, value: number): number
+	writef64(b, cursor, value)
+	return 8
+end
+
+function WriteFunctions.stirng(b: buffer, cursor: number, s: buffer, blen: number, count: number): number
+	copy(b, cursor, s, 0, count)
+	s = nil :: any
+	return blen
+end
+
+function WriteFunctions.noop(_, _, length: number): number
+	return length
+end
 
 -- Build the buffer from the writer and cleanup
 function Writer.Finalize(self: _Writer): buffer
 	local b = create(self._len)
 	local cursor = 0
 
-	for _, v in self._queue do
-		cursor += v(b, cursor)
+	for i = 1, #self._queue do
+		local v = self._queue[i]
+		cursor += WriteFunctions[v[1]](b, cursor, unpack(v, 2))
 	end
 
 	self:Destroy()
