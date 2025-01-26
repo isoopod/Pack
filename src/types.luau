@@ -20,6 +20,8 @@ export type Reader = {
 	string: (self: Reader, count: number?) -> string,
 
 	_buffer: buffer,
+
+	[string]: any, -- Add indexer for dynamic method access
 }
 
 export type Writer = {
@@ -37,6 +39,8 @@ export type Writer = {
 	string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
 
 	Finalize: (self: Writer) -> buffer,
+
+	[string]: any, -- Add indexer for dynamic method access
 }
 
 export type DatatypeInterface<T> = {
@@ -71,8 +75,8 @@ export type Pack = {
 	boolean: boolean,
 	BitField: (length: number) -> { boolean },
 
-	string: string,
-	buffer: buffer,
+	string: (("8bit" | "32bit" | "fixed")?, number?) -> string,
+	buffer: (("8bit" | "32bit" | "fixed")?, number?) -> buffer,
 
 	Color3: Color3,
 	BrickColor: BrickColor,

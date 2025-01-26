@@ -4,20 +4,38 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<buffer> = {
-	Read = function(Reader: types.Reader): buffer
-		local len = Reader:u16()
-		return buffer.fromstring(Reader:string(len))
-	end,
-	Write = function(Writer: types.Writer, value: buffer)
-		local len, write = Writer:string(buffer.tostring(value))
+return function(flag: "8bit" | "16bit" | "32bit" | "fixed", length: number?): types.DatatypeInterface<buffer>
+	flag = flag or "16bit" :: any
+	if flag == "fixed" and not length then error("len expected when using fixed flag on datatype string.") end
 
-		Writer:alloc(2)
-		Writer:u16(len)
+	if flag == "fixed" then
+		return {
+			Read = function(Reader: types.Reader): buffer
+				return buffer.fromstring(Reader:string(length))
+			end,
+			Write = function(Writer: types.Writer, value: buffer)
+				local len, write = Writer:string(buffer.tostring(value))
+				assert(len == length, "When using fixed length buffers, the written length must be equal to the allocated length.")
+				write()
+			end,
+		}
+	end
 
-		write()
-	end,
-}
+	local blen = (flag == "8bit" and 1) or (flag == "16bit" and 2) or 4
+	local interface = (flag == "8bit" and "u8") or (flag == "16bit" and "u16") or "u32"
 
--- TODO: Add flags for max buffer size, a u16 will not be enough for all applications
-return datatype
+	return {
+		Read = function(Reader: types.Reader): buffer
+			local len = Reader[interface](Reader)
+			return buffer.fromstring(Reader:string(len))
+		end,
+		Write = function(Writer: types.Writer, value: buffer)
+			local len, write = Writer:string(buffer.tostring(value))
+
+			Writer:alloc(blen)
+			Writer[interface](Writer, len)
+
+			write()
+		end,
+	}
+end
