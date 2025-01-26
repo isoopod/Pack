@@ -82,11 +82,14 @@ export type Pack = {
 	buffer_fixed: (len: number) -> buffer,
 
 	Color3: Color3,
+	Color3float32: Color3,
 	BrickColor: BrickColor,
 
 	CFrame: CFrame,
 	Vector3: vector & Vector3,
+	Vector3int16: vector & Vector3,
 	Vector2: Vector2,
+	Vector2int16: Vector2,
 
 	Instance: Instance,
 
