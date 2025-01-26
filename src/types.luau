@@ -71,8 +71,15 @@ export type Pack = {
 	boolean: boolean,
 	BitField: (length: number) -> { boolean },
 
-	string: string,
-	buffer: buffer,
+	string8: string,
+	string16: string,
+	string32: string,
+	string_fixed: (len: number) -> string,
+
+	buffer8: buffer,
+	buffer16: buffer,
+	buffer32: buffer,
+	buffer_fixed: (len: number) -> buffer,
 
 	Color3: Color3,
 	BrickColor: BrickColor,

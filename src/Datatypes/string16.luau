@@ -19,5 +19,4 @@ local datatype: types.DatatypeInterface<string> = {
 	end,
 }
 
--- TODO: Add flags for max string size, a u16 will not be enough for all applications
 return datatype
