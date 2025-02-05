@@ -92,7 +92,11 @@ export type Pack = {
 	Vector3int16: vector & Vector3,
 	Vector2: Vector2,
 	Vector2int16: Vector2,
+	UDim: Udim,
+	UDim2: UDim2,
 
+	DateTime: DateTime,
+	EnumItem: EnumItem,
 	Instance: Instance,
 
 	custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
