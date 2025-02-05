@@ -44,13 +44,7 @@ export type DatatypeInterface<T> = {
 	Write: (writer: Writer, value: T) -> (),
 }
 
-export type Pack = {
-	-- Schema constructors
-	-- (Generic type hell for basic tuple support)
-	-- There is type support for up to 8 values, but Pack will still function above that, you just lose safe typing.
-	Define: <T1, T2, T3, T4, T5, T6, T7, T8>(self: Pack, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> Schema<T1, T2, T3, T4, T5, T6, T7, T8>,
-
-	-- [Datatypes] --
+export type Datatypes = {
 	uint8: number,
 	UByte: number,
 	uint16: number,
@@ -92,6 +86,8 @@ export type Pack = {
 	Vector3int16: vector & Vector3,
 	Vector2: Vector2,
 	Vector2int16: Vector2,
+	Region3: Region3,
+	Region3int16: Region3int16,
 	UDim: Udim,
 	UDim2: UDim2,
 
@@ -107,5 +103,12 @@ export type Pack = {
 
 	nullable: <T>(type: T) -> T?,
 }
+
+export type Pack = {
+	-- Schema constructors
+	-- (Generic type hell for basic tuple support)
+	-- There is type support for up to 8 values, but Pack will still function above that, you just lose safe typing.
+	Define: <T1, T2, T3, T4, T5, T6, T7, T8>(self: Pack, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> Schema<T1, T2, T3, T4, T5, T6, T7, T8>,
+} & Datatypes
 
 return nil
