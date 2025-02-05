@@ -1,8 +1,8 @@
 -- Shared types within pack
 
-export type Schema<T> = {
-	Read: (self: Schema<T>, buff: buffer) -> T,
-	Write: (self: Schema<T>, data: T) -> buffer,
+export type Schema<T1, T2, T3, T4, T5, T6, T7, T8> = {
+	Read: (self: Schema<T>, buff: buffer) -> (T1, T2, T3, T4, T5, T6, T7, T8),
+	Write: (self: Schema<T>, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> buffer,
 }
 
 export type Reader = {
@@ -41,12 +41,14 @@ export type Writer = {
 
 export type DatatypeInterface<T> = {
 	Read: (Reader) -> T,
-	Write: (writer: Writer, value: T, flags: any?) -> (),
+	Write: (writer: Writer, value: T) -> (),
 }
 
 export type Pack = {
 	-- Schema constructors
-	Define: <T>(self: Pack, schema: T) -> Schema<T>,
+	-- (Generic type hell for basic tuple support)
+	-- There is type support for up to 8 values, but Pack will still function above that, you just lose safe typing.
+	Define: <T1, T2, T3, T4, T5, T6, T7, T8>(self: Pack, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> Schema<T1, T2, T3, T4, T5, T6, T7, T8>,
 
 	-- [Datatypes] --
 	uint8: number,

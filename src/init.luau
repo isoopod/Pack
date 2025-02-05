@@ -25,9 +25,13 @@ local Schema = {}
 --- @param input any
 --- @return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
 --- Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
-function Schema.Write<T>(self: _Schema<T>, input: T): buffer
+function Schema.Write(self: _Schema, ...: any): buffer
 	local writer = Writer.new()
-	self._write(writer, input)
+
+	local input = { ... }
+	for i = 1, self._args do
+		self._writers[i](writer, input[i])
+	end
 
 	local packed = writer:Finalize()
 	return packed
@@ -38,27 +42,44 @@ end
 --- @param packet buffer -- A packet created by this schema with the Write method.
 --- @return any -- This is a reconstruction of the input to the packet.
 --- Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
-function Schema.Read<T>(self: _Schema<T>, packet: buffer): T
+function Schema.Read(self: _Schema, packet: buffer): ...any
 	local reader = Reader.new(packet)
 
-	local unpacked = self._read(reader)
-	return unpacked
+	local tuple = table.create(self._args)
+	for i = 1, self._args do
+		tuple[i] = self._readers[i](reader)
+	end
+
+	return unpack(tuple)
 end
 
-function Pack.Define<T>(_: types.Pack, schema: T & types.DatatypeInterface<any>): types.Schema<T>
-	local self: _Schema<T> = setmetatable({}, { __index = Schema }) :: any
+function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericSchema
+	local self: _Schema = setmetatable({}, { __index = Schema }) :: any
 
-	self._read = schema.Read
-	self._write = schema.Write
+	local schemas = { ... }
+
+	self._args = #schemas
+	self._readers = table.create(self._args) :: { any }
+	self._writers = table.create(self._args) :: { any }
+
+	for i, schema in schemas do
+		self._readers[i] = schema.Read
+		self._writers[i] = schema.Write
+	end
 
 	return self
 end
 -- Private type
-type _Schema<T> = types.Schema<T> & {
-	_read: (types.Reader) -> T,
-	_write: (types.Writer, T, any?) -> (),
+-- We use a generic version of a schema here, the exported type for pack will apply the correct typing.
+type GenericSchema = types.Schema<any, any, any, any, any, any, any, any>
+type _Schema = GenericSchema & {
+	_args: number,
+	_readers: { (types.Reader) -> any },
+	_writers: { (types.Writer, any) -> () },
 }
 
+-- Lazy-loading for datatypes so only the neccesary datatypes are loaded on each thread
+-- This is useful to limit the amount of native code generated when using Pack in parallel luau
 function Pack.__index(self, key)
 	if Pack[key] then return Pack[key] end
 
