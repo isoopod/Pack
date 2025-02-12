@@ -6,16 +6,26 @@
 local types = require(script.Parent.Parent.Types)
 
 return function(enum: Enum): types.DatatypeInterface<EnumItem>
+	-- Try and use a u8 for the value of this enum, but if the enum has items with values outside the range of a u8
+	-- Use a u16 instead (works for all enums with a use case). Material and Keycode will use a u16 for example.
+	local len = 1
+	local op = "u8"
+
+	for _, v in enum:GetEnumItems() do
+		if v.value > 255 then
+			len = 2
+			op = "u16"
+			break
+		end
+	end
+
 	return {
 		Read = function(Reader: types.Reader): EnumItem
-			return enum:FromValue(Reader:u16()) :: EnumItem
+			return enum:FromValue(Reader[op](Reader)) :: EnumItem
 		end,
 		Write = function(Writer: types.Writer, value: EnumItem)
-			-- Some useful enumitems values like materials and keycodes are above 256
-			-- Therefore, we have to use an u16 instead. The only enum this does not work for is ReservedHighlightId
-			-- Which isn't usable anyway (as far as I know)
-			Writer:alloc(2)
-			Writer:u16(value.Value)
+			Writer:alloc(len)
+			Writer[op](Writer, value.Value)
 		end,
 	}
 end
