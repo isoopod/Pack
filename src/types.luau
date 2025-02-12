@@ -96,6 +96,7 @@ export type Datatypes = {
 	Instance: Instance,
 
 	custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
+	object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
 
 	Array: <T>(type: T) -> { T },
 	Dictionary: <T>(format: T) -> T,
