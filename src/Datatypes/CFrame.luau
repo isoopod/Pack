@@ -20,10 +20,12 @@ local rshift = bit32.rshift
 local bor = bit32.bor
 local band = bit32.band
 
+local Q90Deg = sqrt(0.5)
+
 local INF = math.huge
 local EPSILON = 1e-6
-local I16_PRECISION = 32767
-local Q90Deg = math.sqrt(0.5)
+local PRECISION = 0x7fff * Q90Deg -- The smaller 3 values in a rotation quaternion fit between [-1/sqrt(2), 1/sqrt(2)]
+-- This allows for more percision for the same number of bits
 
 -- Convert a CFrame to a normailised quaternion for encoding
 local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, number)
@@ -74,10 +76,10 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 			angle = floor(abs(qz) * 3 + 0.5)
 		end
 
-		-- Return the axis-aligned rotation as a bit packed number (1-12)
+		-- Return the axis-aligned rotation as a bit packed number (5-17)
 		return bor(lshift(axis, 2), angle) + 5, nil, nil, nil
 	else
-		-- Non-axis-aligned quaternion, compress by optimizing out one value and quantizing to 16 bit
+		-- Non axis-aligned quaternion, compress by optimizing out one value and quantizing to 16 bit
 		local index = -1
 		local value = -INF
 
@@ -96,21 +98,21 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 
 		local sign = element >= 0 and 1 or -1
 		if index == 1 then
-			v0 = floor(qy * sign * I16_PRECISION + 0.5)
-			v1 = floor(qz * sign * I16_PRECISION + 0.5)
-			v2 = floor(qw * sign * I16_PRECISION + 0.5)
+			v0 = floor(qy * sign * PRECISION + 0.5)
+			v1 = floor(qz * sign * PRECISION + 0.5)
+			v2 = floor(qw * sign * PRECISION + 0.5)
 		elseif index == 2 then
-			v0 = floor(qx * sign * I16_PRECISION + 0.5)
-			v1 = floor(qz * sign * I16_PRECISION + 0.5)
-			v2 = floor(qw * sign * I16_PRECISION + 0.5)
+			v0 = floor(qx * sign * PRECISION + 0.5)
+			v1 = floor(qz * sign * PRECISION + 0.5)
+			v2 = floor(qw * sign * PRECISION + 0.5)
 		elseif index == 3 then
-			v0 = floor(qx * sign * I16_PRECISION + 0.5)
-			v1 = floor(qy * sign * I16_PRECISION + 0.5)
-			v2 = floor(qw * sign * I16_PRECISION + 0.5)
+			v0 = floor(qx * sign * PRECISION + 0.5)
+			v1 = floor(qy * sign * PRECISION + 0.5)
+			v2 = floor(qw * sign * PRECISION + 0.5)
 		elseif index == 4 then
-			v0 = floor(qx * sign * I16_PRECISION + 0.5)
-			v1 = floor(qy * sign * I16_PRECISION + 0.5)
-			v2 = floor(qz * sign * I16_PRECISION + 0.5)
+			v0 = floor(qx * sign * PRECISION + 0.5)
+			v1 = floor(qy * sign * PRECISION + 0.5)
+			v2 = floor(qz * sign * PRECISION + 0.5)
 		end
 
 		return index, v0, v1, v2
@@ -165,9 +167,9 @@ local function decompressQuaternion(qi: number, qa: number?, qb: number?, qc: nu
 		-- Non-axis-aligned quaternion, handle the full compression case
 		assert(qa and qb and qc, "Non-identity quaternion requires qa, qb, and qc")
 
-		qa /= I16_PRECISION
-		qb /= I16_PRECISION
-		qc /= I16_PRECISION
+		qa /= PRECISION
+		qb /= PRECISION
+		qc /= PRECISION
 
 		local d = sqrt(1 - (qa * qa + qb * qb + qc * qc))
 		if qi == 1 then
