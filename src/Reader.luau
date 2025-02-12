@@ -17,7 +17,12 @@ local readi16 = buffer.readi16
 local readi32 = buffer.readi32
 local readf32 = buffer.readf32
 local readf64 = buffer.readf64
+-- selene: allow(incorrect_standard_library_use)
+local readbits = buffer.readbits
 local readstring = buffer.readstring
+
+local lshift = bit32.lshift
+local band = bit32.band
 
 local Reader = {}
 local ReaderClass = { metatable = { __index = Reader } }
@@ -63,6 +68,20 @@ function Reader.i32(self: types.Reader): number
 	self.Cursor += 4
 	return value
 end
+
+-- Requires manual cursor movement afterwards
+function Reader.nBitUint(self: types.Reader, n: number, bitOffset: number): number
+	return readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
+end
+
+function Reader.nBitInt(self: types.Reader, n: number, bitOffset: number): number
+	local value = readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
+	local sign = lshift(value, n - 1)
+
+	if band(value, sign) ~= 0 then return value - 2 ^ n end
+	return value
+end
+--//
 
 function Reader.f32(self: types.Reader): number
 	local value = readf32(self._buffer, self.Cursor)

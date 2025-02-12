@@ -8,13 +8,15 @@ export type Schema<T1, T2, T3, T4, T5, T6, T7, T8> = {
 export type Reader = {
 	Cursor: number,
 
-	moveCursor: (number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
+	moveCursor: (self: Reader, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
 	u8: (self: Reader) -> number,
 	u16: (self: Reader) -> number,
 	u32: (self: Reader) -> number,
 	i8: (self: Reader) -> number,
 	i16: (self: Reader) -> number,
 	i32: (self: Reader) -> number,
+	nBitUint: (self: Reader, n: number, bitOffset: number) -> number,
+	nBitInt: (self: Reader, n: number, bitOffset: number) -> number,
 	f32: (self: Reader) -> number,
 	f64: (self: Reader) -> number,
 	string: (self: Reader, count: number?) -> string,
@@ -24,7 +26,7 @@ export type Reader = {
 
 export type Writer = {
 	alloc: (self: Writer, number) -> (),
-	moveCursor: (sefl: Writer, delta: number) -> (),
+	moveCursor: (self: Writer, delta: number) -> (),
 
 	u8: (self: Writer, value: number) -> (),
 	u16: (self: Writer, value: number) -> (),
@@ -32,6 +34,8 @@ export type Writer = {
 	i8: (self: Writer, value: number) -> (),
 	i16: (self: Writer, value: number) -> (),
 	i32: (self: Writer, value: number) -> (),
+	nBitUint: (self: Writer, value: number, n: number, bitOffset: number) -> (),
+	nBitInt: (self: Writer, value: number, n: number, bitOffset: number) -> (),
 	f32: (self: Writer, value: number) -> (),
 	f64: (self: Writer, value: number) -> (),
 	string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string

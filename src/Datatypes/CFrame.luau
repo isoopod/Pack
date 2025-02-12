@@ -24,7 +24,7 @@ local Q90Deg = sqrt(0.5)
 
 local INF = math.huge
 local EPSILON = 1e-6
-local PRECISION = 0x7fff * Q90Deg -- The smaller 3 values in a rotation quaternion fit between [-1/sqrt(2), 1/sqrt(2)]
+local PRECISION = 0xffff * Q90Deg -- The smaller 3 values in a rotation quaternion fit between [-1/sqrt(2), 1/sqrt(2)]
 -- This allows for more percision for the same number of bits
 
 -- Convert a CFrame to a normailised quaternion for encoding
@@ -192,13 +192,15 @@ local datatype: types.DatatypeInterface<CFrame> = {
 
 		local qx, qy, qz, qw
 
-		local qi = Reader:u8()
+		local qi = Reader:nBitUint(5, 0)
 		if qi > 4 then
 			qx, qy, qz, qw = decompressQuaternion(qi)
+			Reader:moveCursor(1)
 		else
-			local qa = Reader:i16()
-			local qb = Reader:i16()
-			local qc = Reader:i16()
+			local qa = Reader:nBitInt(17, 5)
+			local qb = Reader:nBitInt(17, 22)
+			local qc = Reader:nBitInt(17, 39)
+			Reader:moveCursor(7)
 			qx, qy, qz, qw = decompressQuaternion(qi, qa, qb, qc)
 		end
 
@@ -215,11 +217,14 @@ local datatype: types.DatatypeInterface<CFrame> = {
 		Writer:f32(y)
 		Writer:f32(z)
 
-		Writer:u8(qi)
+		Writer:nBitUint(qi, 5, 0) -- We have a spare bit here, just using it to optimize out a -1
 		if not axisAligned then
-			Writer:i16(qa :: number)
-			Writer:i16(qb :: number)
-			Writer:i16(qc :: number)
+			Writer:nBitInt(qa :: number, 17, 5)
+			Writer:nBitInt(qb :: number, 17, 22)
+			Writer:nBitInt(qc :: number, 17, 39)
+			Writer:moveCursor(7)
+		else
+			Writer:moveCursor(1)
 		end
 	end,
 }

@@ -22,6 +22,8 @@ local writei16 = buffer.writei16
 local writei32 = buffer.writei32
 local writef32 = buffer.writef32
 local writef64 = buffer.writef64
+-- selene: allow(incorrect_standard_library_use)
+local writebits = buffer.writebits
 local fromstring = buffer.fromstring
 
 local len = buffer.len
@@ -60,6 +62,14 @@ end
 
 function Writer.i32(self: _Writer, value: number)
 	table.insert(self._queue, { "i32", value })
+end
+
+function Writer.nBitUint(self: _Writer, value: number, n: number, bitOffset: number)
+	table.insert(self._queue, { "nBitUint", value, n, bitOffset })
+end
+
+function Writer.nBitInt(self: _Writer, value: number, n: number, bitOffset: number)
+	table.insert(self._queue, { "nBitInt", value, n, bitOffset })
 end
 
 function Writer.f32(self: _Writer, value: number)
@@ -119,6 +129,18 @@ function WriteFunctions.i32(b: buffer, cursor: number, value: number): number
 	writei32(b, cursor, value)
 	return 4
 end
+
+-- Require manual cursor movement afterwards
+function WriteFunctions.nBitUint(b: buffer, cursor: number, value: number, n: number, bitOffset: number): number
+	writebits(b, cursor * 8 + bitOffset, n, value)
+	return 0
+end
+
+function WriteFunctions.nBitInt(b: buffer, cursor: number, value: number, n: number, bitOffset: number): number
+	writebits(b, cursor * 8 + bitOffset, n, value < 0 and value + 2 ^ n or value)
+	return 0
+end
+--//
 
 function WriteFunctions.f32(b: buffer, cursor: number, value: number): number
 	writef32(b, cursor, value)
