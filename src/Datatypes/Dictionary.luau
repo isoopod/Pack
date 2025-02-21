@@ -20,7 +20,8 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	table.sort(structure)
 
-	return {
+	return table.freeze({
+		Eval = "Dict",
 		Read = function(Reader: types.Reader)
 			local result = {}
 
@@ -37,5 +38,5 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 				format[key].Write(Writer, value[key])
 			end
 		end,
-	} :: any
+	}) :: types.DatatypeInterface<{}>
 end

@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<BrickColor> = {
+local datatype = table.freeze({
+	Eval = "BrickColor",
 	Read = function(Reader: types.Reader): BrickColor
 		return BrickColor.new(Reader:u16())
 	end,
@@ -12,6 +13,6 @@ local datatype: types.DatatypeInterface<BrickColor> = {
 		Writer:alloc(2)
 		Writer:u16(value.Number)
 	end,
-}
+}) :: types.DatatypeInterface<BrickColor>
 
 return datatype

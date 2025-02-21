@@ -7,7 +7,8 @@ local types = require(script.Parent.Parent.Types)
 return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
 	local read, write = valueType.Read, valueType.Write
 
-	return {
+	return table.freeze({
+		Eval = "Array",
 		Read = function(Reader: types.Reader): { T }
 			local len = Reader:u16()
 			local array = table.create(len) :: { T }
@@ -27,5 +28,5 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 				write(Writer, value[i])
 			end
 		end,
-	}
+	}) :: types.DatatypeInterface<{ T }>
 end

@@ -31,7 +31,8 @@ if IS_SERVER and PACK_CONFIG.PERSIST_INSTACE_REFS then
 	Instance_Refs.count = script:GetAttribute("n") or -1
 end
 
-local datatype: types.DatatypeInterface<Instance?> = {
+local datatype = table.freeze({
+	Eval = "Inst_Ref",
 	Read = function(Reader: types.Reader): Instance?
 		local ref = Reader:u32()
 
@@ -61,6 +62,6 @@ local datatype: types.DatatypeInterface<Instance?> = {
 		Writer:alloc(4)
 		Writer:u32(ref)
 	end,
-}
+}) :: types.DatatypeInterface<Instance?>
 
 return datatype

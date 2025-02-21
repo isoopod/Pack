@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<Color3> = {
+local datatype = table.freeze({
+	Eval = "Color3Raw",
 	Read = function(Reader: types.Reader): Color3
 		return Color3.new(Reader:f32(), Reader:f32(), Reader:f32())
 	end,
@@ -14,6 +15,6 @@ local datatype: types.DatatypeInterface<Color3> = {
 		Writer:f32(value.G)
 		Writer:f32(value.B)
 	end,
-}
+}) :: types.DatatypeInterface<Color3>
 
 return datatype

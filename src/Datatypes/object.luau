@@ -9,7 +9,8 @@ local types = require(script.Parent.Parent.Types)
 -- classData is a Dictionary describing the data the class stores
 -- Note that this might not work well for all metatable configurations, but should work well enough for common practices.
 return function(metatable: { [any]: any }, classData: types.DatatypeInterface<any>): types.DatatypeInterface<any>
-	return {
+	return table.freeze({
+		Eval = "object",
 		Read = function(Reader: types.Reader): any
 			return setmetatable(classData.Read(Reader), metatable)
 		end,
@@ -17,5 +18,5 @@ return function(metatable: { [any]: any }, classData: types.DatatypeInterface<an
 			assert(type(value) == "table", "An Object must be a table")
 			classData.Write(Writer, value)
 		end,
-	}
+	}) :: types.DatatypeInterface<any>
 end

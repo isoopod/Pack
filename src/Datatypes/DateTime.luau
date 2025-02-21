@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<DateTime> = {
+local datatype = table.freeze({
+	Eval = "DateTime",
 	Read = function(Reader: types.Reader): DateTime
 		return DateTime.fromUnixTimestampMillis(Reader:f64())
 	end,
@@ -12,6 +13,6 @@ local datatype: types.DatatypeInterface<DateTime> = {
 		Writer:alloc(8)
 		Writer:f64(value.UnixTimestampMillis)
 	end,
-}
+}) :: types.DatatypeInterface<DateTime>
 
 return datatype

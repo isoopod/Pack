@@ -8,7 +8,8 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 	local kread, kwrite = keyType.Read, keyType.Write
 	local vread, vwrite = valueType.Read, valueType.Write
 
-	return {
+	return table.freeze({
+		Eval = "Map",
 		Read = function(Reader: types.Reader): { [K]: V }
 			local len = Reader:u16()
 
@@ -34,5 +35,5 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 				vwrite(Writer, v)
 			end
 		end,
-	}
+	}) :: types.DatatypeInterface<{ [K]: V }>
 end

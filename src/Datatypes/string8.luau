@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<string> = {
+local datatype = table.freeze({
+	Eval = "s8",
 	Read = function(Reader: types.Reader): string
 		local len = Reader:u8()
 		return Reader:string(len)
@@ -17,6 +18,6 @@ local datatype: types.DatatypeInterface<string> = {
 
 		write()
 	end,
-}
+}) :: types.DatatypeInterface<string>
 
 return datatype

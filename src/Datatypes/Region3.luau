@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<Region3> = {
+local datatype = table.freeze({
+	Eval = "R3",
 	Read = function(Reader: types.Reader): Region3
 		local min: Vector3 = vector.create(Reader:f32(), Reader:f32(), Reader:f32()) :: any
 		local max: Vector3 = vector.create(Reader:f32(), Reader:f32(), Reader:f32()) :: any
@@ -26,6 +27,6 @@ local datatype: types.DatatypeInterface<Region3> = {
 		Writer:f32(max.Y)
 		Writer:f32(max.Z)
 	end,
-}
+}) :: types.DatatypeInterface<Region3>
 
 return datatype

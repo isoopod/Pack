@@ -4,7 +4,8 @@
 
 local types = require(script.Parent.Parent.Types)
 
-local datatype: types.DatatypeInterface<UDim2> = {
+local datatype = table.freeze({
+	Eval = "UD2",
 	Read = function(Reader: types.Reader): UDim2
 		return UDim2.new(Reader:f32(), Reader:i16(), Reader:f32(), Reader:i16())
 	end,
@@ -18,6 +19,6 @@ local datatype: types.DatatypeInterface<UDim2> = {
 		-- 2^15, letting us get away with 12 bytes instead of 16 (UDim's use an i32 for offset normally)
 		-- If greater percision is needed, it is not very hard to make a two Dictionaries with a float32 Scale and an int32 Offset
 	end,
-}
+}) :: types.DatatypeInterface<UDim2>
 
 return datatype

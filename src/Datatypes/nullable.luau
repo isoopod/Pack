@@ -4,12 +4,14 @@
 
 local types = require(script.Parent.Parent.Types)
 
--- Marks a value as being nullable / optional, and prefixing it with a bool to indicate if it was written or not
+-- Marks a value as being nullable / optional, and prefixing it with a bool to indicate if it was written or not.
+-- Should not be used inside a union.
+-- If you wish to make a union nullable, use Pack.null inside the union
 
 return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<T?>
 	local read, write = valueType.Read, valueType.Write
 
-	return {
+	return table.freeze({
 		Read = function(Reader: types.Reader): T?
 			if Reader:u8() == 1 then return read(Reader) end
 			return nil
@@ -20,5 +22,5 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 
 			if bool then write(Writer, value) end
 		end,
-	}
+	}) :: types.DatatypeInterface<T?>
 end

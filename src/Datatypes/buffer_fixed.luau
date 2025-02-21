@@ -9,7 +9,8 @@ local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG")) :: Share
 local DEBUG = PACK_CONFIG.__DEBUG__ == true
 
 return function(length: number): types.DatatypeInterface<buffer>
-	return {
+	return table.freeze({
+		Eval = "buffer",
 		Read = function(Reader: types.Reader): buffer
 			return buffer.fromstring(Reader:string(length))
 		end,
@@ -19,5 +20,5 @@ return function(length: number): types.DatatypeInterface<buffer>
 
 			write()
 		end,
-	}
+	}) :: types.DatatypeInterface<buffer>
 end

@@ -17,7 +17,8 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 
 	-- The reason we write a variable amount is to be more efficient with bit32
 	-- Since it uses 32 bits, we write 4 bytes at once if possible.
-	return {
+	return table.freeze({
+		Eval = "BitField",
 		Read = function(Reader: types.Reader): { boolean }
 			local result = table.create(length, false)
 
@@ -69,5 +70,5 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 				end
 			end
 		end,
-	}
+	}) :: types.DatatypeInterface<{ boolean }>
 end
