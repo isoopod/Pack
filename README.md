@@ -11,3 +11,4 @@ towards parallel luau. This allows you to represent more versatile data structur
 - [ ] Proper test coverage with TestEz
 - [ ] Datatype evaluators for infered datatypes (union/anyOf, any, inferedNumber)
 - [ ] Proper instance marshalling (instead of baked references)
+- [ ] Documentation
