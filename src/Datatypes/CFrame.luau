@@ -24,7 +24,7 @@ local Q90Deg = sqrt(0.5)
 
 local INF = math.huge
 local EPSILON = 1e-6
-local PRECISION = 0xffff * Q90Deg -- The smaller 3 values in a rotation quaternion fit between [-1/sqrt(2), 1/sqrt(2)]
+local PRECISION = 0xffff / Q90Deg -- The smaller 3 values in a rotation quaternion fit between [-1/sqrt(2), 1/sqrt(2)]
 -- This allows for more percision for the same number of bits
 
 -- Convert a CFrame to a normailised quaternion for encoding
@@ -184,7 +184,8 @@ local function decompressQuaternion(qi: number, qa: number?, qb: number?, qc: nu
 	end
 end
 
-local datatype: types.DatatypeInterface<CFrame> = {
+local datatype = table.freeze({
+	Eval = "CFrame",
 	Read = function(Reader: types.Reader): CFrame
 		local x = Reader:f32()
 		local y = Reader:f32()
@@ -227,6 +228,6 @@ local datatype: types.DatatypeInterface<CFrame> = {
 			Writer:moveCursor(1)
 		end
 	end,
-}
+}) :: types.DatatypeInterface<CFrame>
 
 return datatype

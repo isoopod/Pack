@@ -76,7 +76,7 @@ end
 
 function Reader.nBitInt(self: types.Reader, n: number, bitOffset: number): number
 	local value = readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
-	local sign = lshift(value, n - 1)
+	local sign = lshift(1, n - 1)
 
 	if band(value, sign) ~= 0 then return value - 2 ^ n end
 	return value

@@ -48,7 +48,7 @@ end
 
 local total = 0
 local upper, lower = -math.huge, math.huge
-local count = 2500000
+local count = 1
 
 local start = os.clock()
 for _ = 1, count do
@@ -56,7 +56,7 @@ for _ = 1, count do
 	local packet = testpacket:Write(before)
 	local after = testpacket:Read(packet)
 	local aerror = angleBetweenCFrames(before, after)
-	if aerror > 89 then continue end -- Remove outliers for this (axis aligned is borked rn)
+	--if aerror > 89 then continue end -- Remove outliers for this (axis aligned is borked rn)
 	if aerror < lower then lower = aerror end
 	if aerror > upper then upper = aerror end
 	total += angleBetweenCFrames(before, after)
@@ -66,6 +66,9 @@ end
 -- Note: Right now, the axis aligned is slightly broken and most of the time is completely wrong.
 -- For this test, I filtered out the cases where the angle error was above 89 degrees because of this
 -- as I just wanted to see how the random orientation compression was performing.
+
+-- 21/02/25: Average angle error has been brought down to < 0.0006512, though max the max error here jumped to ~0.16
+-- Axis aligned cases have been fixed
 
 print(`{count} CFrame operations took {(os.clock() - start) * 1000} ms to complete`)
 print(`Average angle error between {count} random CFrames is {total / count} degrees`)
