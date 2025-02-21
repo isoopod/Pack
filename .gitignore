@@ -5,6 +5,6 @@
 # Roblox Studio lock files
 /*.rbxl.lock
 
-.vscode
-sourcemap.json
+/wally.lock
+/sourcemap.json
 /DevPackages
