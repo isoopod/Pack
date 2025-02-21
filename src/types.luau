@@ -1,119 +1,123 @@
 -- Shared types within pack
 
-export type Schema<T1, T2, T3, T4, T5, T6, T7, T8> = {
-	Read: (self: Schema<T>, buff: buffer) -> (T1, T2, T3, T4, T5, T6, T7, T8),
-	Write: (self: Schema<T>, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> buffer,
+export type Schema<T> = {
+	Read: (self: Schema<T>, buff: buffer) -> (T, ...any),
+	Write: (self: Schema<T>, v1: T, ...any) -> buffer,
 }
 
 export type Reader = {
 	Cursor: number,
 
-	moveCursor: (self: Reader, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
-	u8: (self: Reader) -> number,
-	u16: (self: Reader) -> number,
-	u32: (self: Reader) -> number,
-	i8: (self: Reader) -> number,
-	i16: (self: Reader) -> number,
-	i32: (self: Reader) -> number,
-	nBitUint: (self: Reader, n: number, bitOffset: number) -> number,
-	nBitInt: (self: Reader, n: number, bitOffset: number) -> number,
-	f32: (self: Reader) -> number,
-	f64: (self: Reader) -> number,
-	string: (self: Reader, count: number?) -> string,
+	read moveCursor: (self: Reader, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
+	read u8: (self: Reader) -> number,
+	read u16: (self: Reader) -> number,
+	read u32: (self: Reader) -> number,
+	read i8: (self: Reader) -> number,
+	read i16: (self: Reader) -> number,
+	read i32: (self: Reader) -> number,
+	read nBitUint: (self: Reader, n: number, bitOffset: number) -> number,
+	read nBitInt: (self: Reader, n: number, bitOffset: number) -> number,
+	read f32: (self: Reader) -> number,
+	read f64: (self: Reader) -> number,
+	read string: (self: Reader, count: number?) -> string,
 
 	_buffer: buffer,
 }
 
 export type Writer = {
-	alloc: (self: Writer, number) -> (),
-	moveCursor: (self: Writer, delta: number) -> (),
+	read alloc: (self: Writer, number) -> (),
+	read moveCursor: (self: Writer, delta: number) -> (),
 
-	u8: (self: Writer, value: number) -> (),
-	u16: (self: Writer, value: number) -> (),
-	u32: (self: Writer, value: number) -> (),
-	i8: (self: Writer, value: number) -> (),
-	i16: (self: Writer, value: number) -> (),
-	i32: (self: Writer, value: number) -> (),
-	nBitUint: (self: Writer, value: number, n: number, bitOffset: number) -> (),
-	nBitInt: (self: Writer, value: number, n: number, bitOffset: number) -> (),
-	f32: (self: Writer, value: number) -> (),
-	f64: (self: Writer, value: number) -> (),
-	string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
+	read u8: (self: Writer, value: number) -> (),
+	read u16: (self: Writer, value: number) -> (),
+	read u32: (self: Writer, value: number) -> (),
+	read i8: (self: Writer, value: number) -> (),
+	read i16: (self: Writer, value: number) -> (),
+	read i32: (self: Writer, value: number) -> (),
+	read nBitUint: (self: Writer, value: number, n: number, bitOffset: number) -> (),
+	read nBitInt: (self: Writer, value: number, n: number, bitOffset: number) -> (),
+	read f32: (self: Writer, value: number) -> (),
+	read f64: (self: Writer, value: number) -> (),
+	read string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
 
-	Finalize: (self: Writer) -> buffer,
+	read Finalize: (self: Writer) -> buffer,
 }
 
 export type DatatypeInterface<T> = {
-	Read: (Reader) -> T,
-	Write: (writer: Writer, value: T) -> (),
+	read Eval: string?,
+	read Read: (Reader) -> T,
+	read Write: (writer: Writer, value: T) -> (),
+	[string]: any,
 }
 
 export type Datatypes = {
-	uint8: number,
-	UByte: number,
-	uint16: number,
-	UShort: number,
-	uint32: number,
-	UInt: number,
+	read uint8: number,
+	read UByte: number,
+	read uint16: number,
+	read UShort: number,
+	read uint32: number,
+	read UInt: number,
 
-	int8: number,
-	Byte: number,
-	int16: number,
-	Short: number,
-	int32: number,
-	Int: number,
+	read int8: number,
+	read Byte: number,
+	read int16: number,
+	read Short: number,
+	read int32: number,
+	read Int: number,
 
-	float32: number,
-	Float: number,
-	float64: number,
-	double: number,
+	read float32: number,
+	read Float: number,
+	read float64: number,
+	read double: number,
 
-	boolean: boolean,
-	BitField: (length: number) -> { boolean },
+	read boolean: boolean,
+	read BitField: (length: number) -> { boolean },
 
-	string8: string,
-	string16: string,
-	string32: string,
-	string_fixed: (len: number) -> string,
+	read string8: string,
+	read string16: string,
+	read string32: string,
+	read string_fixed: (len: number) -> string,
 
-	buffer8: buffer,
-	buffer16: buffer,
-	buffer32: buffer,
-	buffer_fixed: (len: number) -> buffer,
+	read buffer8: buffer,
+	read buffer16: buffer,
+	read buffer32: buffer,
+	read buffer_fixed: (len: number) -> buffer,
 
-	Color3: Color3,
-	Color3float32: Color3,
-	BrickColor: BrickColor,
+	read Color3: Color3,
+	read Color3float32: Color3,
+	read BrickColor: BrickColor,
 
-	CFrame: CFrame,
-	Vector3: vector & Vector3,
-	Vector3int16: vector & Vector3,
-	Vector2: Vector2,
-	Vector2int16: Vector2,
-	Region3: Region3,
-	Region3int16: Region3int16,
-	UDim: Udim,
-	UDim2: UDim2,
+	read CFrame: CFrame,
+	read Vector3: vector & Vector3,
+	read Vector3int16: vector & Vector3,
+	read Vector2: Vector2,
+	read Vector2int16: Vector2,
+	read Region3: Region3,
+	read Region3int16: Region3int16,
+	read UDim: Udim,
+	read UDim2: UDim2,
 
-	DateTime: DateTime,
-	EnumItem: EnumItem,
-	Instance: Instance,
+	read DateTime: DateTime,
+	read EnumItem: EnumItem,
+	read Instance: Instance,
 
-	custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
-	object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
+	read custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
+	read object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
 
-	Array: <T>(type: T) -> { T },
-	Dictionary: <T>(format: T) -> T,
-	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
+	read Array: <T>(type: T) -> { T },
+	read Dictionary: <T>(format: T) -> T,
+	read Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
 
-	nullable: <T>(type: T) -> T?,
+	read null: nil,
+	read nullable: <T>(type: T) -> T?,
 }
 
 export type Pack = {
 	-- Schema constructors
-	-- (Generic type hell for basic tuple support)
-	-- There is type support for up to 8 values, but Pack will still function above that, you just lose safe typing.
-	Define: <T1, T2, T3, T4, T5, T6, T7, T8>(self: Pack, a1: T1, a2: T2, a3: T3, a4: T4, a5: T5, a6: T6, a7: T7, a8: T8) -> Schema<T1, T2, T3, T4, T5, T6, T7, T8>,
+	-- A schema is a tuple, but only the first argument can be properly typed
+	-- This is a limitation of Luau, as there is no higher-order polymorphism
+	-- Meaning we cannot pass multiple generics to the lower order read/write methods
+	Define: <T>(self: Pack, v1: T, ...any) -> Schema<T>,
 } & Datatypes
 
 return nil

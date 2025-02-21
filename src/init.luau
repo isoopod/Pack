@@ -71,7 +71,7 @@ function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericS
 end
 -- Private type
 -- We use a generic version of a schema here, the exported type for pack will apply the correct typing.
-type GenericSchema = types.Schema<any, any, any, any, any, any, any, any>
+type GenericSchema = types.Schema<any>
 type _Schema = GenericSchema & {
 	_args: number,
 	_readers: { (types.Reader) -> any },
