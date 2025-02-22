@@ -1,8 +1,8 @@
 -- Shared types within pack
 
-export type Schema<T> = {
-	Read: (self: Schema<T>, buff: buffer) -> (T, ...any),
-	Write: (self: Schema<T>, v1: T, ...any) -> buffer,
+export type Schema<T, U...> = {
+	Read: (self: Schema<T, U...>, buff: buffer) -> (T, U...),
+	Write: (self: Schema<T, U...>, T, U...) -> buffer,
 }
 
 export type Reader = {
@@ -117,7 +117,7 @@ export type Pack = {
 	-- A schema is a tuple, but only the first argument can be properly typed
 	-- This is a limitation of Luau, as there is no higher-order polymorphism
 	-- Meaning we cannot pass multiple generics to the lower order read/write methods
-	Define: <T>(self: Pack, v1: T, ...any) -> Schema<T>,
+	Define: <T, U...>(self: Pack, T, U...) -> Schema<T, U...>,
 } & Datatypes
 
 return nil

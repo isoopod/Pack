@@ -114,4 +114,9 @@ local object: types.Pack = setmetatable({
 	},
 }, Pack) :: any
 
+-- If you are using the tuple system, you wont be able to get automatic type completion for more than 1 argument
+-- Therefore you have to define it as a manual tuple.
+-- Example Usage: local schema = Pack:Define(Pack.CFrame, Pack.Vector3) :: Pack.ManualTuple<CFrame, Vector3>
+export type ManualTuple<T, U...> = types.Schema<T, U...>
+
 return object
