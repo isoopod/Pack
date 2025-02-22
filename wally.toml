@@ -7,7 +7,7 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 repository = "https://github.com/isoopod/Pack"
 
-exlude = ["**"]
+exclude = ["**"]
 include = ["src", "src/*", "default.project.json", "wally.toml", "LICENSE"]
 
 [dev-dependencies]
