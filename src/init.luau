@@ -26,7 +26,7 @@ local Schema = {}
 --- @return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
 --- @return {any} -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
 --- Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
-function Schema.Write(self: _Schema, ...: any): (buffer, types.refs)
+function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
 	local refs = {}
 	local writer = Writer.new()
 	writer.refs = refs
@@ -37,7 +37,7 @@ function Schema.Write(self: _Schema, ...: any): (buffer, types.refs)
 	end
 
 	local packed = writer:Finalize()
-	return packed, refs
+	return packed, #refs > 0 and refs or nil
 end
 
 --- @method
