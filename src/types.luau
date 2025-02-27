@@ -1,12 +1,13 @@
 -- Shared types within pack
 
 export type Schema<T, U...> = {
-	Read: (self: Schema<T, U...>, buff: buffer) -> (T, U...),
-	Write: (self: Schema<T, U...>, T, U...) -> buffer,
+	Read: (self: Schema<T, U...>, buff: buffer, refs: refs?) -> (T, U...),
+	Write: (self: Schema<T, U...>, T, U...) -> (buffer, refs?),
 }
 
 export type Reader = {
 	Cursor: number,
+	refs: refs,
 
 	read moveCursor: (self: Reader, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
 	read u8: (self: Reader) -> number,
@@ -25,6 +26,8 @@ export type Reader = {
 }
 
 export type Writer = {
+	refs: refs,
+
 	read alloc: (self: Writer, number) -> (),
 	read moveCursor: (self: Writer, delta: number) -> (),
 
@@ -49,6 +52,8 @@ export type DatatypeInterface<T> = {
 	read Write: (writer: Writer, value: T) -> (),
 	[string]: any,
 }
+
+export type refs = { any }
 
 export type Datatypes = {
 	read uint8: number,

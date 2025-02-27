@@ -24,9 +24,12 @@ local Schema = {}
 --- @within Schema
 --- @param input any
 --- @return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
+--- @return {any} -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
 --- Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
-function Schema.Write(self: _Schema, ...: any): buffer
+function Schema.Write(self: _Schema, ...: any): (buffer, types.refs)
+	local refs = {}
 	local writer = Writer.new()
+	writer.refs = refs
 
 	local input = { ... }
 	for i = 1, self._args do
@@ -34,16 +37,18 @@ function Schema.Write(self: _Schema, ...: any): buffer
 	end
 
 	local packed = writer:Finalize()
-	return packed
+	return packed, refs
 end
 
 --- @method
 --- @within Schema
 --- @param packet buffer -- A packet created by this schema with the Write method.
+--- @param refs {any}? -- Optional table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
 --- @return any -- This is a reconstruction of the input to the packet.
 --- Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
-function Schema.Read(self: _Schema, packet: buffer): ...any
+function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 	local reader = Reader.new(packet)
+	reader.refs = refs :: any
 
 	local tuple = table.create(self._args)
 	for i = 1, self._args do
