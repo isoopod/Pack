@@ -73,7 +73,7 @@ export type Datatypes = {
 	read float32: number,
 	read Float: number,
 	read float64: number,
-	read double: number,
+	read Double: number,
 
 	read boolean: boolean,
 	read BitField: (length: number) -> { boolean },
