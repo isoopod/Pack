@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 -- Marks a value as being nullable / optional, and prefixing it with a bool to indicate if it was written or not.
 -- Should not be used inside a union.

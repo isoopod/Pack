@@ -5,7 +5,7 @@
 -- Modules
 local Reader = require(script.Reader)
 local Writer = require(script.Writer)
-local types = require(script.Types)
+local types = require(script.types)
 
 local Pack = {}
 

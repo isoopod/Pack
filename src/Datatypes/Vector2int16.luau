@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 -- Use Vector2 directly, since its nicer to work with
 local datatype = table.freeze({

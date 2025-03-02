@@ -6,7 +6,7 @@ local CollectionService = game:GetService("CollectionService")
 local RunService = game:GetService("RunService")
 local SharedTableRegistry = game:GetService("SharedTableRegistry")
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 local IN_ACTOR = script:GetActor() ~= nil
 local IS_SERVER = RunService:IsServer()

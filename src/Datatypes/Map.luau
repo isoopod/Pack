@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.DatatypeInterface<V>): types.DatatypeInterface<{ [K]: V }>
 	local kread, kwrite = keyType.Read, keyType.Write

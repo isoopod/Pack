@@ -3,7 +3,7 @@
 
 -- 2025/02/5: Enum:FromValue and Enum:FromName are not recognised by Luau LSP, so this file will not use strict mode for now.
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 return function(enum: Enum): types.DatatypeInterface<EnumItem>
 	-- Try and use a u8 for the value of this enum, but if the enum has items with values outside the range of a u8

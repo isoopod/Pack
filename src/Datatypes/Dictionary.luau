@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 return function(format: { [any]: types.DatatypeInterface<any> }): types.DatatypeInterface<{}>
 	-- In order to make it so we can read and write a dictionary in the same order, we will

@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 local BIT_MASKS = {}
 for i = 0, 31 do

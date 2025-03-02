@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 -- We are going to and from the vector class here, as the Vector3int16 is very slow in comparison.
 local datatype = table.freeze({

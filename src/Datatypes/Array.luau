@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
 	local read, write = valueType.Read, valueType.Write

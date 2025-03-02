@@ -7,7 +7,7 @@
 -- Its the same idea as StringBuilder in Java.
 
 --Modules
-local types = require(script.Parent.Types)
+local types = require(script.Parent.types)
 
 local readu8 = buffer.readu8
 local readu16 = buffer.readu16

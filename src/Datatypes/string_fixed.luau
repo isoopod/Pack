@@ -3,7 +3,7 @@
 --!optimize 2
 local SharedTableRegistry = game:GetService("SharedTableRegistry")
 
-local types = require(script.Parent.Parent.Types)
+local types = require(script.Parent.Parent.types)
 
 local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG")) :: SharedTable
 local DEBUG = PACK_CONFIG.__DEBUG__ == true
