@@ -36,7 +36,7 @@ function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
 		self._writers[i](writer, input[i])
 	end
 
-	local packed = writer:Finalize()
+	local packed = Writer.Finalize(writer)
 	return packed, #refs > 0 and refs or nil
 end
 
@@ -79,9 +79,19 @@ end
 type GenericSchema = types.Schema<any>
 type _Schema = GenericSchema & {
 	_args: number,
-	_readers: { (types.Reader) -> any },
-	_writers: { (types.Writer, any) -> () },
+	_readers: { (types.ReaderData) -> any },
+	_writers: { (types.WriterData, any) -> () },
 }
+
+-- Export types and components for external systems
+export type DatatypeInterface<T> = types.DatatypeInterface<T>
+export type Schema<T, U...> = types.Schema<T, U...>
+export type ReaderData = types.ReaderData
+export type WriterData = types.WriterData
+export type Datatypes = types.Datatypes
+
+Pack.Reader = Reader
+Pack.Writer = Writer
 
 -- Lazy-loading for datatypes so only the neccesary datatypes are loaded on each thread
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau
@@ -118,10 +128,5 @@ local object: types.Pack = setmetatable({
 		Double = "float64",
 	},
 }, Pack) :: any
-
--- If you are using the tuple system, you wont be able to get automatic type completion for more than 1 argument
--- Therefore you have to define it as a manual tuple.
--- Example Usage: local schema = Pack:Define(Pack.CFrame, Pack.Vector3) :: Pack.ManualTuple<CFrame, Vector3>
-export type ManualTuple<T, U...> = types.Schema<T, U...>
 
 return object
