@@ -9,13 +9,13 @@ local types = require(script.Parent.Parent.types)
 -- This is good for custom datatypes that make extensive use of bit packing.
 -- You cannot use these inside unions.
 
-return function<T>(read: (types.Reader) -> T, write: (writer: types.Writer, value: T) -> ()): types.DatatypeInterface<T>
+return function<T>(read: (types.ReaderData) -> T, write: (writer: types.WriterData, value: T) -> ()): types.DatatypeInterface<T>
 	return table.freeze({
-		Read = function(Reader: types.Reader): T?
-			return read(Reader)
+		Read = function(reader: types.ReaderData): T?
+			return read(reader)
 		end,
-		Write = function(Writer: types.Writer, value: T)
-			write(Writer, value)
+		Write = function(writer: types.WriterData, value: T)
+			write(writer, value)
 		end,
 	}) :: types.DatatypeInterface<T>
 end

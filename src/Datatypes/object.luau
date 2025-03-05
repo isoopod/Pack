@@ -11,12 +11,12 @@ local types = require(script.Parent.Parent.types)
 return function(metatable: { [any]: any }, classData: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	return table.freeze({
 		Eval = "object",
-		Read = function(Reader: types.Reader): any
-			return setmetatable(classData.Read(Reader), metatable)
+		Read = function(reader: types.ReaderData): any
+			return setmetatable(classData.Read(reader), metatable)
 		end,
-		Write = function(Writer: types.Writer, value: any)
+		Write = function(writer: types.WriterData, value: any)
 			assert(type(value) == "table", "An Object must be a table")
-			classData.Write(Writer, value)
+			classData.Write(writer, value)
 		end,
 	}) :: types.DatatypeInterface<any>
 end

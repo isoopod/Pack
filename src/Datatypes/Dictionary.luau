@@ -22,20 +22,20 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	return table.freeze({
 		Eval = "Dict",
-		Read = function(Reader: types.Reader)
+		Read = function(reader: types.ReaderData)
 			local result = {}
 
 			for i = 1, len do
 				local key = structure[i]
-				result[key] = format[key].Read(Reader)
+				result[key] = format[key].Read(reader)
 			end
 
 			return result
 		end,
-		Write = function(Writer: types.Writer, value: { [any]: types.DatatypeInterface<any> })
+		Write = function(writer: types.WriterData, value: { [any]: types.DatatypeInterface<any> })
 			for i = 1, len do
 				local key = structure[i]
-				format[key].Write(Writer, value[key])
+				format[key].Write(writer, value[key])
 			end
 		end,
 	}) :: types.DatatypeInterface<{}>

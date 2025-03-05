@@ -2,16 +2,18 @@
 --!native
 --!optimize 2
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 local datatype = table.freeze({
 	Eval = "f64",
-	Read = function(Reader: types.Reader): number
-		return Reader:f64()
+	Read = function(reader: types.ReaderData): number
+		return Reader.f64(reader)
 	end,
-	Write = function(Writer: types.Writer, value: number)
-		Writer:alloc(8)
-		Writer:f64(value)
+	Write = function(writer: types.WriterData, value: number)
+		Writer.alloc(writer, 8)
+		Writer.f64(writer, value)
 	end,
 }) :: types.DatatypeInterface<number>
 

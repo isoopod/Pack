@@ -2,6 +2,8 @@
 --!native
 --!optimize 2
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 -- Marks a value as being nullable / optional, and prefixing it with a bool to indicate if it was written or not.
@@ -12,15 +14,15 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 	local read, write = valueType.Read, valueType.Write
 
 	return table.freeze({
-		Read = function(Reader: types.Reader): T?
-			if Reader:u8() == 1 then return read(Reader) end
+		Read = function(reader: types.ReaderData): T?
+			if Reader.u8(reader) == 1 then return read(reader) end
 			return nil
 		end,
-		Write = function(Writer: types.Writer, value: any)
+		Write = function(writer: types.WriterData, value: any)
 			local bool = value ~= nil and 1 or 0
-			Writer:u8(bool)
+			Writer.u8(writer, bool)
 
-			if bool then write(Writer, value) end
+			if bool then write(writer, value) end
 		end,
 	}) :: types.DatatypeInterface<T?>
 end

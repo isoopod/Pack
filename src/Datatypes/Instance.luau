@@ -6,6 +6,8 @@ local CollectionService = game:GetService("CollectionService")
 local RunService = game:GetService("RunService")
 local SharedTableRegistry = game:GetService("SharedTableRegistry")
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 local IN_ACTOR = script:GetActor() ~= nil
@@ -33,12 +35,12 @@ end
 
 local datatype = table.freeze({
 	Eval = "Inst_Ref",
-	Read = function(Reader: types.Reader): Instance?
-		local ref = Reader:u32()
+	Read = function(reader: types.ReaderData): Instance?
+		local ref = Reader.u32(reader)
 
 		return CollectionService:GetTagged(`{PREFIX}{ref}`)[1]
 	end,
-	Write = function(Writer: types.Writer, value: Instance?)
+	Write = function(writer: types.WriterData, value: Instance?)
 		assert(value and typeof(value) == "Instance", "Value expected to be an Instance")
 
 		-- Check if the instance has an existing ref
@@ -59,8 +61,8 @@ local datatype = table.freeze({
 			if setcount then setcount(ref) end
 		end
 
-		Writer:alloc(4)
-		Writer:u32(ref)
+		Writer.alloc(writer, 4)
+		Writer.u32(writer, ref)
 	end,
 }) :: types.DatatypeInterface<Instance?>
 

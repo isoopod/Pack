@@ -2,6 +2,8 @@
 --!native
 --!optimize 2
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 local BIT_MASKS = {}
@@ -19,7 +21,7 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 	-- Since it uses 32 bits, we write 4 bytes at once if possible.
 	return table.freeze({
 		Eval = "BitField",
-		Read = function(Reader: types.Reader): { boolean }
+		Read = function(reader: types.ReaderData): { boolean }
 			local result = table.create(length, false)
 
 			for i = 1, length, 32 do
@@ -29,11 +31,11 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 				-- Read the appropriate chunk size
 				local chunk
 				if remainingBits > 16 then
-					chunk = Reader:u32()
+					chunk = Reader.u32(reader)
 				elseif remainingBits > 8 then
-					chunk = Reader:u16()
+					chunk = Reader.u16(reader)
 				else
-					chunk = Reader:u8()
+					chunk = Reader.u8(reader)
 				end
 
 				-- Extract bits from the chunk
@@ -46,8 +48,8 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 
 			return result
 		end,
-		Write = function(Writer: types.Writer, value: { boolean })
-			Writer:alloc(byteLength)
+		Write = function(writer: types.WriterData, value: { boolean })
+			Writer.alloc(writer, byteLength)
 
 			for i = 1, length, 32 do
 				local bitbuffer = table.create(32) :: { number } -- Preallocate the max chunk size
@@ -62,11 +64,11 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 				local chunk = bor(unpack(bitbuffer))
 				local filledBits = #bitbuffer
 				if filledBits > 16 then
-					Writer:u32(chunk)
+					Writer.u32(writer, chunk)
 				elseif filledBits > 8 then
-					Writer:u16(chunk)
+					Writer.u16(writer, chunk)
 				else
-					Writer:u8(chunk)
+					Writer.u8(writer, chunk)
 				end
 			end
 		end,

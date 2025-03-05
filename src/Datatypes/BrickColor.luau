@@ -2,16 +2,18 @@
 --!native
 --!optimize 2
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 local datatype = table.freeze({
 	Eval = "BrickColor",
-	Read = function(Reader: types.Reader): BrickColor
-		return BrickColor.new(Reader:u16())
+	Read = function(reader: types.ReaderData): BrickColor
+		return BrickColor.new(Reader.u16(reader))
 	end,
-	Write = function(Writer: types.Writer, value: BrickColor)
-		Writer:alloc(2)
-		Writer:u16(value.Number)
+	Write = function(writer: types.WriterData, value: BrickColor)
+		Writer.alloc(writer, 2)
+		Writer.u16(writer, value.Number)
 	end,
 }) :: types.DatatypeInterface<BrickColor>
 

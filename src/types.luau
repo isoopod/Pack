@@ -5,51 +5,60 @@ export type Schema<T, U...> = {
 	Write: (self: Schema<T, U...>, T, U...) -> (buffer, refs?),
 }
 
-export type Reader = {
+export type ReaderData = {
 	Cursor: number,
 	refs: refs,
-
-	read moveCursor: (self: Reader, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
-	read u8: (self: Reader) -> number,
-	read u16: (self: Reader) -> number,
-	read u32: (self: Reader) -> number,
-	read i8: (self: Reader) -> number,
-	read i16: (self: Reader) -> number,
-	read i32: (self: Reader) -> number,
-	read nBitUint: (self: Reader, n: number, bitOffset: number) -> number,
-	read nBitInt: (self: Reader, n: number, bitOffset: number) -> number,
-	read f32: (self: Reader) -> number,
-	read f64: (self: Reader) -> number,
-	read string: (self: Reader, count: number?) -> string,
-
 	_buffer: buffer,
 }
 
-export type Writer = {
+export type Reader = {
+	read moveCursor: (self: ReaderData, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
+	read u8: (self: ReaderData) -> number,
+	read u16: (self: ReaderData) -> number,
+	read u32: (self: ReaderData) -> number,
+	read i8: (self: ReaderData) -> number,
+	read i16: (self: ReaderData) -> number,
+	read i32: (self: ReaderData) -> number,
+	read nBitUint: (self: ReaderData, n: number, bitOffset: number) -> number,
+	read nBitInt: (self: ReaderData, n: number, bitOffset: number) -> number,
+	read f32: (self: ReaderData) -> number,
+	read f64: (self: ReaderData) -> number,
+	read string: (self: ReaderData, count: number?) -> string,
+
+	read new: (packet: buffer) -> ReaderData,
+}
+
+export type WriterData = {
 	refs: refs,
+	_len: number,
+	_queue: { { any } },
+}
 
-	read alloc: (self: Writer, number) -> (),
-	read moveCursor: (self: Writer, delta: number) -> (),
+export type Writer = {
+	read alloc: (self: WriterData, number) -> (),
+	read moveCursor: (self: WriterData, delta: number) -> (),
 
-	read u8: (self: Writer, value: number) -> (),
-	read u16: (self: Writer, value: number) -> (),
-	read u32: (self: Writer, value: number) -> (),
-	read i8: (self: Writer, value: number) -> (),
-	read i16: (self: Writer, value: number) -> (),
-	read i32: (self: Writer, value: number) -> (),
-	read nBitUint: (self: Writer, value: number, n: number, bitOffset: number) -> (),
-	read nBitInt: (self: Writer, value: number, n: number, bitOffset: number) -> (),
-	read f32: (self: Writer, value: number) -> (),
-	read f64: (self: Writer, value: number) -> (),
-	read string: (self: Writer, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
+	read u8: (self: WriterData, value: number) -> (),
+	read u16: (self: WriterData, value: number) -> (),
+	read u32: (self: WriterData, value: number) -> (),
+	read i8: (self: WriterData, value: number) -> (),
+	read i16: (self: WriterData, value: number) -> (),
+	read i32: (self: WriterData, value: number) -> (),
+	read nBitUint: (self: WriterData, value: number, n: number, bitOffset: number) -> (),
+	read nBitInt: (self: WrWriterDataiWriterDatater, value: number, n: number, bitOffset: number) -> (),
+	read f32: (self: WriterData, value: number) -> (),
+	read f64: (self: WriterData, value: number) -> (),
+	read string: (self: WriterData, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
 
-	read Finalize: (self: Writer) -> buffer,
+	read Finalize: (self: WriterData) -> buffer,
+
+	read new: () -> WriterData,
 }
 
 export type DatatypeInterface<T> = {
 	read Eval: string?,
-	read Read: (Reader) -> T,
-	read Write: (writer: Writer, value: T) -> (),
+	read Read: (ReaderData) -> T,
+	read Write: (writer: WriterData, value: T) -> (),
 	[string]: any,
 }
 
@@ -123,6 +132,9 @@ export type Pack = {
 	-- This is a limitation of Luau, as there is no higher-order polymorphism
 	-- Meaning we cannot pass multiple generics to the lower order read/write methods
 	Define: <T, U...>(self: Pack, T, U...) -> Schema<T, U...>,
+
+	Reader: Reader,
+	Writer: Writer,
 } & Datatypes
 
 return nil

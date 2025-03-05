@@ -2,6 +2,8 @@
 --!native
 --!optimize 2
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 -- We compress a CFrame's rotational component as a quaternion.
@@ -24,7 +26,7 @@ local PRECISION = 0xffff / sqrt(0.5) -- The smaller 3 values in a rotation quate
 local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, number)
 	local axis, angle = cf:Orthonormalize():ToAxisAngle()
 
-	local d = axis.X * axis.X + axis.Y * axis.Y + axis.Z * axis.Z
+	local d = axis.X ^ 2 + axis.Y ^ 2 + axis.Z ^ 2
 	if abs(d) > EPSILON then
 		axis *= (1 / sqrt(abs(d)))
 	end
@@ -45,7 +47,6 @@ local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, nu
 	return 0, 0, 0, 1 -- identity
 end
 
--- For each right vector index, define a table of allowed up indices
 local allowedUps = {
 	[0] = { 2, 3, 4, 5 }, -- If right is +X, up can be ±Y or ±Z
 	[1] = { 2, 3, 4, 5 }, -- If right is -X, up can be ±Y or ±Z
@@ -55,39 +56,27 @@ local allowedUps = {
 	[5] = { 0, 1, 2, 3 }, -- If right is -Z, up can be ±X or ±Y
 }
 
+-- stylua: ignore
+local axisLUT = {
+	[Vector3.xAxis] = 0, [-Vector3.xAxis] = 1,
+	[Vector3.yAxis] = 2, [-Vector3.yAxis] = 3,
+	[Vector3.zAxis] = 4, [-Vector3.zAxis] = 5,
+}
+
 -- Compress a CFrame as a Quaternion (with 24 axis-aligned rotations and 16-bit rotational components for non-axis-aligned)
 local function compressQuaternion(cf: CFrame): (number, number?, number?, number?)
 	local right, up = cf.XVector, cf.YVector
 
-	-- Function to determine axis index
-	local function getAxisIndex(v: Vector3): number?
-		if v.X > 0.5 then
-			return 0 -- +X
-		elseif v.X < -0.5 then
-			return 1 -- -X
-		elseif v.Y > 0.5 then
-			return 2 -- +Y
-		elseif v.Y < -0.5 then
-			return 3 -- -Y
-		elseif v.Z > 0.5 then
-			return 4 -- +Z
-		elseif v.Z < -0.5 then
-			return 5 -- -Z
-		end
-		return nil
-	end
-
 	-- Determine Right and Up indices
-	local rightIndex = getAxisIndex(right)
-	local upIndexRaw = rightIndex and getAxisIndex(up)
-	local validUpIndex
+	local rightIndex = axisLUT[right]
+	local upIndexRaw = rightIndex and axisLUT[up]
 
-	if upIndexRaw then validUpIndex = table.find(allowedUps[rightIndex :: number], upIndexRaw) end
-
-	if rightIndex and validUpIndex then
-		-- Start at 5 as padding for the quaternion index (these go in the same 5 bits)
-		local encoding = 5 + (rightIndex * 4) + validUpIndex - 1
-		return encoding, nil, nil, nil
+	if rightIndex and upIndexRaw then
+		local validUpIndex = table.find(allowedUps[rightIndex], upIndexRaw)
+		if validUpIndex then
+			-- Compute encoding (start at 5 for padding)
+			return 5 + (rightIndex * 4) + (validUpIndex - 1), nil, nil, nil
+		end
 	end
 
 	-- Non axis-aligned quaternion, compress by optimizing out one value and quantizing to 16 bit
@@ -131,13 +120,11 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 	return index, v0, v1, v2
 end
 
+-- stylua: ignore
 local axisVectors = {
-	vector.create(1, 0, 0),
-	vector.create(-1, 0, 0),
-	vector.create(0, 1, 0),
-	vector.create(0, -1, 0),
-	vector.create(0, 0, 1),
-	vector.create(0, 0, -1),
+	Vector3.xAxis, -Vector3.xAxis,
+	Vector3.yAxis, -Vector3.yAxis,
+	Vector3.zAxis, -Vector3.zAxis,
 }
 
 local function decompressAxisAligned(qi: number, x: number, y: number, z: number): CFrame
@@ -177,46 +164,46 @@ end
 
 local datatype = table.freeze({
 	Eval = "CFrame",
-	Read = function(Reader: types.Reader): CFrame
-		local x = Reader:f32()
-		local y = Reader:f32()
-		local z = Reader:f32()
+	Read = function(reader: types.ReaderData): CFrame
+		local x = Reader.f32(reader)
+		local y = Reader.f32(reader)
+		local z = Reader.f32(reader)
 
 		local qx: number, qy: number, qz: number, qw: number
 
-		local qi = Reader:nBitUint(5, 0)
+		local qi = Reader.nBitUint(reader, 5, 0)
 		if qi > 4 then
-			Reader:moveCursor(1)
+			Reader.moveCursor(reader, 1)
 			return decompressAxisAligned(qi, x, y, z)
 		else
-			local qa = Reader:nBitInt(17, 5)
-			local qb = Reader:nBitInt(17, 22)
-			local qc = Reader:nBitInt(17, 39)
-			Reader:moveCursor(7)
+			local qa = Reader.nBitInt(reader, 17, 5)
+			local qb = Reader.nBitInt(reader, 17, 22)
+			local qc = Reader.nBitInt(reader, 17, 39)
+			Reader.moveCursor(reader, 7)
 			qx, qy, qz, qw = decompressQuaternion(qi, qa, qb, qc)
 		end
 
 		return CFrame.new(x, y, z, qx, qy, qz, qw)
 	end,
-	Write = function(Writer: types.Writer, value: CFrame)
+	Write = function(writer: types.WriterData, value: CFrame)
 		local x, y, z = value.X, value.Y, value.Z
 		local qi, qa, qb, qc = compressQuaternion(value)
 
 		local axisAligned = qi > 4
-		Writer:alloc(axisAligned and 13 or 19)
+		Writer.alloc(writer, axisAligned and 13 or 19)
 
-		Writer:f32(x)
-		Writer:f32(y)
-		Writer:f32(z)
+		Writer.f32(writer, x)
+		Writer.f32(writer, y)
+		Writer.f32(writer, z)
 
-		Writer:nBitUint(qi, 5, 0)
+		Writer.nBitUint(writer, qi, 5, 0)
 		if not axisAligned then
-			Writer:nBitInt(qa :: number, 17, 5)
-			Writer:nBitInt(qb :: number, 17, 22)
-			Writer:nBitInt(qc :: number, 17, 39)
-			Writer:moveCursor(7)
+			Writer.nBitInt(writer, qa :: number, 17, 5)
+			Writer.nBitInt(writer, qb :: number, 17, 22)
+			Writer.nBitInt(writer, qc :: number, 17, 39)
+			Writer.moveCursor(writer, 7)
 		else
-			Writer:moveCursor(1)
+			Writer.moveCursor(writer, 1)
 		end
 	end,
 }) :: types.DatatypeInterface<CFrame>

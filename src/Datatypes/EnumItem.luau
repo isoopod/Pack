@@ -3,6 +3,8 @@
 
 -- 2025/02/5: Enum:FromValue and Enum:FromName are not recognised by Luau LSP, so this file will not use strict mode for now.
 
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 return function(enum: Enum): types.DatatypeInterface<EnumItem>
@@ -22,12 +24,12 @@ return function(enum: Enum): types.DatatypeInterface<EnumItem>
 	return table.freeze({
 		Eval = `Enum`,
 		Item = enum, -- In a union, we might have multiple enums
-		Read = function(Reader: types.Reader): EnumItem
-			return enum:FromValue(Reader[op](Reader)) :: EnumItem
+		Read = function(reader: types.ReaderData): EnumItem
+			return enum:FromValue(Reader[op](reader)) :: EnumItem
 		end,
-		Write = function(Writer: types.Writer, value: EnumItem)
-			Writer:alloc(len)
-			Writer[op](Writer, value.Value)
+		Write = function(writer: types.WriterData, value: EnumItem)
+			Writer.alloc(writer, len)
+			Writer[op](writer, value.Value)
 		end,
 	})
 end
