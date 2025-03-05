@@ -31,7 +31,8 @@ local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, nu
 end
 
 -- Function to measure the angle in degrees between two CFrames
-local function angleBetweenCFrames(cframe1: CFrame, cframe2: CFrame): number
+-- Doesnt work perfectly, treat results before March with a grain of salt. Simply checking angle between lookvectors now
+local function _angleBetweenCFrames(cframe1: CFrame, cframe2: CFrame): number
 	-- Convert CFrames to normalized quaternions
 	local x1, y1, z1, w1 = cfToNormalisedQuaternion(cframe1)
 	local x2, y2, z2, w2 = cfToNormalisedQuaternion(cframe2)
@@ -40,26 +41,31 @@ local function angleBetweenCFrames(cframe1: CFrame, cframe2: CFrame): number
 	local dot = math.clamp(w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2, -1, 1)
 
 	-- Calculate the angle in radians and convert to degrees
-	local angleRad = 2 * math.acos(dot)
+	local angleRad = 2 * math.acos(math.abs(dot))
 	local angleDeg = math.deg(angleRad)
 
 	return angleDeg
 end
 
+local function getAngle(cf1: CFrame, cf2: CFrame): number
+	return math.deg(math.acos(math.clamp(cf1.LookVector:Dot(cf2.LookVector), -1, 1)))
+end
+
 local total = 0
 local upper, lower = -math.huge, math.huge
-local count = 1
+local count = 1000000
 
 local start = os.clock()
 for _ = 1, count do
 	local before = CFrame.Angles(r:NextNumber(0, math.pi), r:NextInteger(0, math.pi), r:NextInteger(0, math.pi))
 	local packet = testpacket:Write(before)
 	local after = testpacket:Read(packet)
-	local aerror = angleBetweenCFrames(before, after)
+	local aerror = getAngle(before, after)
 	--if aerror > 89 then continue end -- Remove outliers for this (axis aligned is borked rn)
+	if aerror > 170 then warn(aerror, "before", before, "after", after, "len", buffer.len(packet)) end
 	if aerror < lower then lower = aerror end
 	if aerror > upper then upper = aerror end
-	total += angleBetweenCFrames(before, after)
+	total += aerror
 end
 
 -- 22/01/25: The average angle error is < 0.0021, maximum angle error is ~0.03 and minimum is 0.
@@ -69,6 +75,9 @@ end
 
 -- 21/02/25: Average angle error has been brought down to < 0.0006512, though max the max error here jumped to ~0.16
 -- Axis aligned cases have been fixed
+
+-- 5/03/25: Average angle of error is 0.00460889. max is ~0.04.
+-- since the method for determining the angle between has changed, retesting v0.1.0 (comparable to 21/02/25 test) gives us an average of 0.0148617
 
 print(`{count} CFrame operations took {(os.clock() - start) * 1000} ms to complete`)
 print(`Average angle error between {count} random CFrames is {total / count} degrees`)

@@ -55,7 +55,6 @@ local allowedUps = {
 	[4] = { 0, 1, 2, 3 }, -- If right is +Z, up can be ±X or ±Y
 	[5] = { 0, 1, 2, 3 }, -- If right is -Z, up can be ±X or ±Y
 }
-
 -- stylua: ignore
 local axisLUT = {
 	[Vector3.xAxis] = 0, [-Vector3.xAxis] = 1,
@@ -95,8 +94,6 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 			element = val
 		end
 	end
-
-	if abs(1 - value) < EPSILON then return index + 4, nil, nil, nil end
 
 	local sign = element >= 0 and 1 or -1
 	if index == 1 then
