@@ -1,4 +1,5 @@
 # Pack
+## [Documentation](https://isoopod.github.io/Pack/)
 Schematized Luau buffer serialization library.
 
 Pack allows you to define complex data (refered to as parallel data) structures through schemas, which represents the structure of the data you pass through,
@@ -11,4 +12,4 @@ towards parallel luau. This allows you to represent more versatile data structur
 - [ ] Proper test coverage with TestEz
 - [ ] Datatype evaluators for infered datatypes (union/anyOf, any, inferedNumber)
 - [ ] Proper instance marshalling (instead of baked references)
-- [ ] Documentation
+- [x] Documentation
