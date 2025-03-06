@@ -58,7 +58,7 @@ export type Writer = {
 --[=[
 	@class Datatype
 	:::note
-	This is the Internal documentation for writing Custom Datatypes. If you were looking for a list of all datatypes, that can be found [**here**](../docs/Datatypes/Primitives)
+	This is the Internal documentation for writing custom datatypes. If you were looking for a list of all datatypes, that can be found [**here**](../docs/Datatypes/Primitives)
 	:::
 
 	Internally, all datatypes follow the DatatypeInterface format.
@@ -74,14 +74,14 @@ export type Writer = {
 	-- You should freeze the DatatypeInterface table
 	local datatype = table.freeze({
 		Eval = "f64",
-		Read = function(reader: types.ReaderData): number
+		Read = function(reader: Pack.ReaderData): number
 			return Reader.f64(reader)
 		end,
-		Write = function(writer: types.WriterData, value: number)
+		Write = function(writer: Pack.WriterData, value: number)
 			Writer.alloc(writer, 8)
 			Writer.f64(writer, value)
 		end,
-	}) :: types.DatatypeInterface<number>
+	}) :: Pack.DatatypeInterface<number>
 	
 	-- For type inference when writing packets, we dont use the 
 	-- DatatypeInterface type when returning our datatype module.
@@ -99,14 +99,14 @@ export type Writer = {
 	
 	-- We return a function where we provide the datatype 
 	-- to use for values and return an array datatype for that
-	return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
+	return function<T>(valueType: Pack.DatatypeInterface<T>): Pack.DatatypeInterface<{ T }>
 		local read, write = valueType.Read, valueType.Write
 
 		-- We also freeze the dynamic datatype tables
 		return table.freeze({
 			Eval = "Array",
-			Of = valueType.Eval,
-			Read = function(reader: types.ReaderData): { T }
+			Of = valueType.Eval, -- Example of adding extra data for the evaluator
+			Read = function(reader: Pack.ReaderData): { T }
 				local len = Reader.u16(reader)
 				local array = table.create(len) :: { T }
 
@@ -116,7 +116,7 @@ export type Writer = {
 
 				return array
 			end,
-			Write = function(writer: types.WriterData, value: { T })
+			Write = function(writer: Pack.WriterData, value: { T })
 				local len = #value
 				Writer.alloc(writer, 2)
 				Writer.u16(writer, len)
@@ -125,7 +125,7 @@ export type Writer = {
 					write(writer, value[i])
 				end
 			end,
-		}) :: types.DatatypeInterface<{ T }>
+		}) :: Pack.DatatypeInterface<{ T }>
 	-- We also want to annotate a basic type for dynamic datatypes for type inference in Schemas
 	end :: <T>(T) -> { T }
 	```
