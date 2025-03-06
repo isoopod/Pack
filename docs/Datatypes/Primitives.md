@@ -124,7 +124,7 @@ Represents nothing, directly uses zero bytes. For use in the Union structure (WI
 
 ## object
 
-Allows marshalling a lua object by providing the class's metatable, and a [Dictionary](Structures.md/#dictionary) of members to serialize from the object.  
+Allows marshalling a lua object by providing the class's metatable, and a [Dictionary](Structures/#dictionary) of members to serialize from the object.  
 This should work for most common OOP patterns. An example has been provided for the classic lua OOP paradigm.
 
 ```lua
