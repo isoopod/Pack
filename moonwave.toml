@@ -1,0 +1,11 @@
+[[classOrder]]
+classes = ["Pack", "Schema"]
+
+[[classOrder]]
+section = "Internal"
+classes = ["Reader", "Writer", "Datatype"]
+
+gitSourceBranch = "main"
+
+[home]
+enabled = true

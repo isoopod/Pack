@@ -14,18 +14,20 @@ local Pack = {}
 	@class Schema
 
 	A schema is needed to read and write a packet with a particular data structure.  
-	Schemas are created through Pack:Define() through combinations of pack datatypes.  
+	Schemas are created through Pack:Define() through combinations of Pack datatypes.  
 
 	Once created, a schema holds the Read and Write methods to serialize and deserialize data to and from packets (buffers).
 ]=]
 local Schema = {}
 
---- @method
---- @within Schema
---- @param input any
---- @return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
---- @return {any} -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
---- Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
+--[=[
+	@method Write
+	@within Schema
+	@param ... any
+	@return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
+	@return {any} -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
+	Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
+]=]
 function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
 	local refs = {}
 	local writer = Writer.new()
@@ -40,12 +42,14 @@ function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
 	return packed, #refs > 0 and refs or nil
 end
 
---- @method
---- @within Schema
---- @param packet buffer -- A packet created by this schema with the Write method.
---- @param refs {any}? -- Optional table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
---- @return any -- This is a reconstruction of the input to the packet.
---- Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
+--[=[
+	@method Read
+	@within Schema
+	@param packet buffer -- A packet created by this schema with the Write method.
+	@param refs {any}? -- Optional table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
+	@return (...any) -- This is a reconstruction of the input to the packet.
+	Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
+]=]
 function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 	local reader = Reader.new(packet)
 	reader.refs = refs :: any
@@ -58,6 +62,35 @@ function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 	return unpack(tuple)
 end
 
+--[=[
+	@class Pack
+	The singleton object from where Schemas are created and Datatypes can be accessed.
+	
+	The constructor for Schemas is accessed with : syntax  
+	Datatypes are accessed with . syntax  
+	All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primitives)
+]=]
+
+--[=[
+	@method Define
+	@within Pack
+	@param ... Datatype -- See all datatypes in Docs/Datatypes
+	@return Schema
+
+	Defines a Schema from the provided datatypes.  
+	This supports tuples, however due to luau limitations you will need to manually annotate the type.
+
+	```lua title="tupleExample.luau"
+	local Pack = require(path.to.pack)
+
+	-- The type of this schema will implicitly be infered as CFrame
+	local exampleSchema = Pack:Define(Pack.CFrame)
+
+	-- For tuples, you must explicitly annotate the type of the schema using Pack.Schema<...>. 
+	-- The luau type solver can only infer the first argument.
+	local tupleSchema = Pack:Define(Pack.CFrame, Pack.Vector3) :: Pack.Schema<CFrame, Vector3>
+	```
+]=]
 function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericSchema
 	local self: _Schema = setmetatable({}, { __index = Schema }) :: any
 
@@ -74,6 +107,7 @@ function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericS
 
 	return self
 end
+
 -- Private type
 -- We use a generic version of a schema here, the exported type for pack will apply the correct typing.
 type GenericSchema = types.Schema<any>
@@ -93,7 +127,7 @@ export type Datatypes = types.Datatypes
 Pack.Reader = Reader
 Pack.Writer = Writer
 
--- Lazy-loading for datatypes so only the neccesary datatypes are loaded on each thread
+-- Lazy-loading for datatypes so only the neccesary datatypes are loaded in each environment
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau
 function Pack.__index(self, key)
 	if Pack[key] then return Pack[key] end

@@ -12,6 +12,8 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 
 	return table.freeze({
 		Eval = "Map",
+		Key = keyType.Eval,
+		Val = valueType.Eval,
 		Read = function(reader: types.ReaderData): { [K]: V }
 			local len = Reader.u16(reader)
 

@@ -55,6 +55,91 @@ export type Writer = {
 	read new: () -> WriterData,
 }
 
+--[=[
+	@class Datatype
+	:::note
+	This is the Internal documentation for writing Custom Datatypes. If you were looking for a list of all datatypes, that can be found [**here**](../docs/Datatypes/Primitives)
+	:::
+
+	Internally, all datatypes follow the DatatypeInterface format.
+
+	You can have static datatypes, which require no arguments passed in (most primitives).
+	```lua
+	-- float64.luau
+
+	local Pack = require(path.to.pack)
+	local Reader = Pack.Reader
+	local Writer = Pack.Writer
+
+	-- You should freeze the DatatypeInterface table
+	local datatype = table.freeze({
+		Eval = "f64",
+		Read = function(reader: types.ReaderData): number
+			return Reader.f64(reader)
+		end,
+		Write = function(writer: types.WriterData, value: number)
+			Writer.alloc(writer, 8)
+			Writer.f64(writer, value)
+		end,
+	}) :: types.DatatypeInterface<number>
+	
+	-- For type inference when writing packets, we dont use the 
+	-- DatatypeInterface type when returning our datatype module.
+	-- Instead we want to annoate it as the basic type, in this case number.
+	return (datatype :: any) :: number
+	```
+
+	You can also have dynamic datatypes which require arguments passed in (structural datatypes).
+	```lua
+	-- Array.luau
+
+	local Pack = require(path.to.pack)
+	local Reader = Pack.Reader
+	local Writer = Pack.Writer
+	
+	-- We return a function where we provide the datatype 
+	-- to use for values and return an array datatype for that
+	return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
+		local read, write = valueType.Read, valueType.Write
+
+		-- We also freeze the dynamic datatype tables
+		return table.freeze({
+			Eval = "Array",
+			Of = valueType.Eval,
+			Read = function(reader: types.ReaderData): { T }
+				local len = Reader.u16(reader)
+				local array = table.create(len) :: { T }
+
+				for i = 1, len do
+					array[i] = read(reader)
+				end
+
+				return array
+			end,
+			Write = function(writer: types.WriterData, value: { T })
+				local len = #value
+				Writer.alloc(writer, 2)
+				Writer.u16(writer, len)
+
+				for i = 1, len do
+					write(writer, value[i])
+				end
+			end,
+		}) :: types.DatatypeInterface<{ T }>
+	-- We also want to annotate a basic type for dynamic datatypes for type inference in Schemas
+	end :: <T>(T) -> { T }
+	```
+
+	When making your own datatypes, you only have to worry about Eval if you want to use that datatype inside Union
+]=]
+
+--[=[
+	@type DatatypeInterface<T> {Eval: string?, Read: (ReaderData) -> T, Write: (writer: WriterData, value: T) -> ()}
+	@within Datatype
+	Eval is a string indicating which evaluator to use for this value if applicable. Extra info can be added regarding this for advanced datatypes.  
+	Read is a function that is passed a ReaderData instance and expected to read the ReaderData and return whatever was passed into Write.
+	Write is a function that is passed a WriterData instance and a value and is expected to write the value into WriterData.
+]=]
 export type DatatypeInterface<T> = {
 	read Eval: string?,
 	read Read: (ReaderData) -> T,

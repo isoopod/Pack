@@ -11,6 +11,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 
 	return table.freeze({
 		Eval = "Array",
+		Of = valueType.Eval,
 		Read = function(reader: types.ReaderData): { T }
 			local len = Reader.u16(reader)
 			local array = table.create(len) :: { T }

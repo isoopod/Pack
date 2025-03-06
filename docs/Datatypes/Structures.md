@@ -1,0 +1,58 @@
+---
+sidebar_position: 2
+---
+
+# Structural Datatypes
+
+In Pack, structural datatypes are types that do not hold their own data, but instead help you organize primitive datatypes.
+
+## Array
+
+An array is an ordered collection of values with the same type.  
+Arrays are one-based for consistency with lua.  
+Arrays have two bytes of overhead and can contain a maximum of 65,565 elements.
+
+```lua
+Pack:DefineSchema(Pack.Array(Pack.Vector3))
+```
+
+## Dictionary
+
+A Pack Dictionary refers to a table with predefined keys.  
+This is sometimes called a struct in similar libraries.  
+Dictionaries add no overhead.
+
+```lua
+Pack:DefineSchema(Pack.Dictionary({
+    -- Doesn't matter which way you assign string keys
+    ["A"] = Pack.float64,
+    B = Pack.float32,
+    -- You aren't limited to just strings as the key.
+    -- Beware that using non-string keys may break the typing, and explicit type annotation may not be able to fix it.
+    [0] = Pack.CFrame,
+    -- You can nest Dictionaries and use other structural datatypes inside a dictionary
+    Nested = Pack.Dictionary({
+        A = Pack.string16,
+    }),
+}))
+```
+
+## Map
+
+A Map is a mapping of some type of key to some type of value.  
+This is very useful when used with the Union or any datatypes (WIP).  
+Maps have two bytes of overhead to store the number of elements they contain.
+
+```lua
+-- Represents a table with string keys and Vector3 values
+Pack:DefineSchema(Pack.Map(Pack.string8, Pack.Vector3))
+```
+
+## nullable
+
+The nullable datatype indicates the value is optional and may be nil. This adds 1 byte of overhead for every nullable value.
+
+```lua
+-- A packet from this schema could be 1 bytes long or 13 bytes long, depending if the Vector3 was passed in or not.
+Pack:DefineSchema(Pack.nullable(Pack.Vector3))
+```
