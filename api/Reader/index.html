@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="plugin-moonwave plugin-id-moonwave" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.6.3">
+<title data-rh="true">Reader | Pack</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://isoopod.github.io/Pack/api/Reader"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Reader | Pack"><meta data-rh="true" name="description" content="An internal ordered buffer reader library used to deserialize packets.  
+A reader instance is created with the .new constructor and modified by the library&#x27;s functions."><meta data-rh="true" property="og:description" content="An internal ordered buffer reader library used to deserialize packets.  
+A reader instance is created with the .new constructor and modified by the library&#x27;s functions."><link data-rh="true" rel="canonical" href="https://isoopod.github.io/Pack/api/Reader"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Reader" hreflang="en"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Reader" hreflang="x-default"><link rel="stylesheet" href="/Pack/assets/css/styles.5cbed574.css">
+<script src="/Pack/assets/js/runtime~main.884d982c.js" defer="defer"></script>
+<script src="/Pack/assets/js/main.3f34f0a5.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();null!==e?t(e):window.matchMedia("(prefers-color-scheme: dark)").matches?t("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,t("light"))}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/Pack/"><b class="navbar__title text--truncate">Pack</b></a><a class="navbar__item navbar__link" href="/Pack/docs/intro">Docs</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/Pack/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/isoopod/Pack" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input id="search_input_react" type="search" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0 docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/Pack/api/Pack">​Pack</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/Pack/api/Schema">​Schema</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/Pack/api/Reader">Internal</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/Pack/api/Reader">​Reader</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/Pack/api/Writer">​Writer</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/Pack/api/Datatype">​Datatype</a></li></ul></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Reader</span></h1><div class="luaClassTags_EipM"></div><div>
+<p>An internal ordered buffer reader library used to deserialize packets.<br>A reader instance is created with the .new constructor and modified by the library's functions.</p>
+</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="moveCursor"><code style="text-decoration:none">moveCursor</code><a href="#moveCursor" class="hash-link" aria-label="Direct link to moveCursor" title="Direct link to moveCursor">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L41"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">moveCursor</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>delta<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+<p>How many bytes to move the cursor, can be negative to go backwards</p>
+</span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Manually moves the reader's cursor.</p>
+
+  
+    
+    
+      <div class="admonition admonition-danger alert alert--danger">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
+                <path d="M5.05.31c.81 2.17.41 3.38-.52 4.31C3.55 5.67 1.98 6.45.9 7.98c-1.45 2.05-1.7 6.53 3.53 7.7-2.2-1.16-2.67-4.52-.3-6.61-.61 2.03.53 3.33 1.94 2.86 1.39-.47 2.3.53 2.27 1.67-.02.78-.31 1.44-1.13 1.81 3.42-.59 4.78-3.42 4.78-5.56 0-2.84-2.53-3.22-1.25-5.61-1.52.13-2.03 1.13-1.89 2.75.09 1.08-1.02 1.8-1.86 1.33-.67-.41-.66-1.19-.06-1.78C8.18 5.31 8.68 2.45 5.05.32L5.03.3l.02.01z"></path>
+              </svg></span><span class="admonition-title">DANGER</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>Does not prevent you from leaving buffer bounds.</p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u8"><code style="text-decoration:none">u8</code><a href="#u8" class="hash-link" aria-label="Direct link to u8" title="Direct link to u8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L53"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">u8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads an unsigned 8-bit integer from the buffer and moves the cursor forwards 1 byte.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u16"><code style="text-decoration:none">u16</code><a href="#u16" class="hash-link" aria-label="Direct link to u16" title="Direct link to u16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L66"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">u16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with.new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads an unsigned 16-bit integer from the buffer and moves the cursor forwards 2 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u32"><code style="text-decoration:none">u32</code><a href="#u32" class="hash-link" aria-label="Direct link to u32" title="Direct link to u32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L79"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">u32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads an unsigned 32-bit integer from the buffer and moves the cursor forwards 4 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u8"><code style="text-decoration:none">u8</code><a href="#u8" class="hash-link" aria-label="Direct link to u8" title="Direct link to u8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L92"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">u8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a signed 8-bit integer from the buffer and moves the cursor forwards 1 byte.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i16"><code style="text-decoration:none">i16</code><a href="#i16" class="hash-link" aria-label="Direct link to i16" title="Direct link to i16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L105"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">i16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a signed 16-bit integer from the buffer and moves the cursor forwards 2 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i32"><code style="text-decoration:none">i32</code><a href="#i32" class="hash-link" aria-label="Direct link to i32" title="Direct link to i32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L118"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">i32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a signed 32-bit integer from the buffer and moves the cursor forwards 4 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitUint"><code style="text-decoration:none">nBitUint</code><a href="#nBitUint" class="hash-link" aria-label="Direct link to nBitUint" title="Direct link to nBitUint">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L136"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">nBitUint</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>n<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>The length in bits of the integer</p>
+</span></span></div><div><code>bitOffset<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+<p>The bit offset from the current cursor location [0 – 31]</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads an unsigned integer of length <code>n</code> bits</p>
+
+  
+    
+    
+      <div class="admonition admonition-warning alert alert--warning">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path>
+              </svg></span><span class="admonition-title">WARNING</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>This function does not move the cursor after completing, so you will have to move it yourself with .moveCursor</p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitInt"><code style="text-decoration:none">nBitInt</code><a href="#nBitInt" class="hash-link" aria-label="Direct link to nBitInt" title="Direct link to nBitInt">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L152"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">nBitInt</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>n<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>The length in bits of the integer</p>
+</span></span></div><div><code>bitOffset<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+<p>The bit offset from the current cursor location [0 – 31]</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a signed integer of length <code>n</code> bits</p>
+
+  
+    
+    
+      <div class="admonition admonition-warning alert alert--warning">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path>
+              </svg></span><span class="admonition-title">WARNING</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>This function does not move the cursor after completing, so you will have to move it yourself with .moveCursor</p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f32"><code style="text-decoration:none">f32</code><a href="#f32" class="hash-link" aria-label="Direct link to f32" title="Direct link to f32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L167"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">f32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a 32-bit floating point number from the buffer and moves the cursor forwards 4 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f64"><code style="text-decoration:none">f64</code><a href="#f64" class="hash-link" aria-label="Direct link to f64" title="Direct link to f64">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L180"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">f64</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">number</code></div><div>
+<p>Reads a 64-bit floating point number from the buffer and moves the cursor forwards 8 bytes.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="string"><code style="text-decoration:none">string</code><a href="#string" class="hash-link" aria-label="Direct link to string" title="Direct link to string">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L194"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">string</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>count<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+<p>The length of the string in bytes</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">string</code></div><div>
+<p>Reads a string of length <code>count</code> bytes from the buffer and pushes the cursor <code>count</code> bytes forwards.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="new"><code style="text-decoration:none">new</code><a href="#new" class="hash-link" aria-label="Direct link to new" title="Direct link to new">​</a></h3><span class="docTag__6UZ" style="border-color:#ff793f;color:#ff793f">Constructor</span><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Reader.luau#L209"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Reader<!-- -->.</code><code class="green_DgR4">new</code><code>(</code><div class="inset_uKQm"><div><code>packet<!-- -->: </code><code class="blue_P4bS">buffer</code><span class="inlineDescription_G7Er">-- <span>
+<p>The packet the reader should be reading</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS">ReaderData</code></div><div>
+<p>Creates a new reader instance from a written packet</p>
+</div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
+    &quot;functions&quot;: [
+        {
+            &quot;name&quot;: &quot;moveCursor&quot;,
+            &quot;desc&quot;: &quot;Manually moves the reader&#x27;s cursor.  \n:::danger\nDoes not prevent you from leaving buffer bounds.\n:::&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;delta&quot;,
+                    &quot;desc&quot;: &quot;How many bytes to move the cursor, can be negative to go backwards&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 41,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;u8&quot;,
+            &quot;desc&quot;: &quot;Reads an unsigned 8-bit integer from the buffer and moves the cursor forwards 1 byte.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 53,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;u16&quot;,
+            &quot;desc&quot;: &quot;Reads an unsigned 16-bit integer from the buffer and moves the cursor forwards 2 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with.new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 66,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;u32&quot;,
+            &quot;desc&quot;: &quot;Reads an unsigned 32-bit integer from the buffer and moves the cursor forwards 4 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 79,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;u8&quot;,
+            &quot;desc&quot;: &quot;Reads a signed 8-bit integer from the buffer and moves the cursor forwards 1 byte.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 92,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;i16&quot;,
+            &quot;desc&quot;: &quot;Reads a signed 16-bit integer from the buffer and moves the cursor forwards 2 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 105,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;i32&quot;,
+            &quot;desc&quot;: &quot;Reads a signed 32-bit integer from the buffer and moves the cursor forwards 4 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 118,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;nBitUint&quot;,
+            &quot;desc&quot;: &quot;Reads an unsigned integer of length `n` bits\n:::warning\nThis function does not move the cursor after completing, so you will have to move it yourself with .moveCursor\n:::&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;n&quot;,
+                    &quot;desc&quot;: &quot;The length in bits of the integer&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;bitOffset&quot;,
+                    &quot;desc&quot;: &quot;The bit offset from the current cursor location [0 – 31]&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 136,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;nBitInt&quot;,
+            &quot;desc&quot;: &quot;Reads a signed integer of length `n` bits\n:::warning\nThis function does not move the cursor after completing, so you will have to move it yourself with .moveCursor\n:::&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;n&quot;,
+                    &quot;desc&quot;: &quot;The length in bits of the integer&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;bitOffset&quot;,
+                    &quot;desc&quot;: &quot;The bit offset from the current cursor location [0 – 31]&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 152,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;f32&quot;,
+            &quot;desc&quot;: &quot;Reads a 32-bit floating point number from the buffer and moves the cursor forwards 4 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 167,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;f64&quot;,
+            &quot;desc&quot;: &quot;Reads a 64-bit floating point number from the buffer and moves the cursor forwards 8 bytes.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 180,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;string&quot;,
+            &quot;desc&quot;: &quot;Reads a string of length `count` bytes from the buffer and pushes the cursor `count` bytes forwards.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;count&quot;,
+                    &quot;desc&quot;: &quot;The length of the string in bytes&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 194,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;new&quot;,
+            &quot;desc&quot;: &quot;Creates a new reader instance from a written packet&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;packet&quot;,
+                    &quot;desc&quot;: &quot;The packet the reader should be reading&quot;,
+                    &quot;lua_type&quot;: &quot;buffer&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;tags&quot;: [
+                &quot;Constructor&quot;
+            ],
+            &quot;source&quot;: {
+                &quot;line&quot;: 209,
+                &quot;path&quot;: &quot;src/Reader.luau&quot;
+            }
+        }
+    ],
+    &quot;properties&quot;: [],
+    &quot;types&quot;: [],
+    &quot;name&quot;: &quot;Reader&quot;,
+    &quot;desc&quot;: &quot;An internal ordered buffer reader library used to deserialize packets.  \nA reader instance is created with the .new constructor and modified by the library&#x27;s functions.&quot;,
+    &quot;source&quot;: {
+        &quot;line&quot;: 13,
+        &quot;path&quot;: &quot;src/Reader.luau&quot;
+    }
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#f32" class="table-of-contents__link toc-highlight">.f32</a></li><li><a href="#f64" class="table-of-contents__link toc-highlight">.f64</a></li><li><a href="#i16" class="table-of-contents__link toc-highlight">.i16</a></li><li><a href="#i32" class="table-of-contents__link toc-highlight">.i32</a></li><li><a href="#moveCursor" class="table-of-contents__link toc-highlight">.moveCursor</a></li><li><a href="#nBitInt" class="table-of-contents__link toc-highlight">.nBitInt</a></li><li><a href="#nBitUint" class="table-of-contents__link toc-highlight">.nBitUint</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li><li><a href="#string" class="table-of-contents__link toc-highlight">.string</a></li><li><a href="#u16" class="table-of-contents__link toc-highlight">.u16</a></li><li><a href="#u32" class="table-of-contents__link toc-highlight">.u32</a></li><li><a href="#u8" class="table-of-contents__link toc-highlight">.u8</a></li><li><a href="#u8" class="table-of-contents__link toc-highlight">.u8</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 isoopod. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
