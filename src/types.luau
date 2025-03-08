@@ -150,37 +150,37 @@ export type DatatypeInterface<T> = {
 export type refs = { any }
 
 export type Datatypes = {
-	read uint8: number,
+	read UInt8: number,
 	read UByte: number,
-	read uint16: number,
+	read UInt16: number,
 	read UShort: number,
-	read uint32: number,
+	read UInt32: number,
 	read UInt: number,
 
-	read int8: number,
+	read Int8: number,
 	read Byte: number,
-	read int16: number,
+	read Int16: number,
 	read Short: number,
-	read int32: number,
+	read Int32: number,
 	read Int: number,
 
-	read float32: number,
+	read Float32: number,
 	read Float: number,
-	read float64: number,
+	read Float64: number,
 	read Double: number,
 
-	read boolean: boolean,
+	read Boolean: boolean,
 	read BitField: (length: number) -> { boolean },
 
-	read string8: string,
-	read string16: string,
-	read string32: string,
-	read string_fixed: (len: number) -> string,
+	read String8: string,
+	read String16: string,
+	read String32: string,
+	read StringFixed: (len: number) -> string,
 
-	read buffer8: buffer,
-	read buffer16: buffer,
-	read buffer32: buffer,
-	read buffer_fixed: (len: number) -> buffer,
+	read Buffer8: buffer,
+	read Buffer16: buffer,
+	read Buffer32: buffer,
+	read BufferFixed: (len: number) -> buffer,
 
 	read Color3: Color3,
 	read Color3float32: Color3,
@@ -200,15 +200,15 @@ export type Datatypes = {
 	read EnumItem: EnumItem,
 	read Instance: Instance,
 
-	read custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
-	read object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
+	read Custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
+	read Object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
 
 	read Array: <T>(type: T) -> { T },
 	read Dictionary: <T>(format: T) -> T,
 	read Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
 
-	read null: nil,
-	read nullable: <T>(type: T) -> T?,
+	read Null: nil,
+	read Nullable: <T>(type: T) -> T?,
 }
 
 export type Pack = {
