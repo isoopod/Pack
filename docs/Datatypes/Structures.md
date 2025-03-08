@@ -25,14 +25,14 @@ Dictionaries add no overhead.
 ```lua
 Pack:DefineSchema(Pack.Dictionary({
     -- Doesn't matter which way you assign string keys
-    ["A"] = Pack.float64,
-    B = Pack.float32,
+    ["A"] = Pack.Float64,
+    B = Pack.Float32,
     -- You aren't limited to just strings as the key.
     -- Beware that using non-string keys may break the typing, and explicit type annotation may not be able to fix it.
     [0] = Pack.CFrame,
     -- You can nest Dictionaries and use other structural datatypes inside a dictionary
     Nested = Pack.Dictionary({
-        A = Pack.string16,
+        A = Pack.String16,
     }),
 }))
 ```
@@ -48,11 +48,11 @@ Maps have two bytes of overhead to store the number of elements they contain.
 Pack:DefineSchema(Pack.Map(Pack.string8, Pack.Vector3))
 ```
 
-## nullable
+## Nullable
 
-The nullable datatype indicates the value is optional and may be nil. This adds 1 byte of overhead for every nullable value.
+The Nullable datatype indicates the value is optional and may be nil. This adds 1 byte of overhead for every nullable value.
 
 ```lua
 -- A packet from this schema could be 1 bytes long or 13 bytes long, depending if the Vector3 was passed in or not.
-Pack:DefineSchema(Pack.nullable(Pack.Vector3))
+Pack:DefineSchema(Pack.Nullable(Pack.Vector3))
 ```

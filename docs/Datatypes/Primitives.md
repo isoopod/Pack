@@ -18,7 +18,7 @@ You should try to have the defined length as close to a multiple of eight as pos
 If your bitfield length is a mutliple of 8 (including 0) + 1, use a regular boolean for that last bool instead.
 :::
 
-## boolean
+## Boolean
 
 Encodes a true/false value into a single byte.
 
@@ -26,20 +26,20 @@ Encodes a true/false value into a single byte.
 
 Encodes a BrickColor value in 2 bytes.
 
-## buffer_fixed
+## BufferFixed
 
-buffer_fixed refers a fixed length buffer, where a buffer of a known length will encoded with zero overhead.  
+BufferFixed refers a fixed length buffer, where a buffer of a known length will encoded with zero overhead.  
 The fixed length of the buffer in bytes must be passed in.
 
-## buffer8
+## Buffer8
 
 Encodes a buffer of variable length between 0 and 255 bytes with 1 byte of overhead.
 
-## buffer16
+## Buffer16
 
 Encodes a buffer of variable length between 0 and 65,535 bytes with 2 bytes of overhead.
 
-## buffer32
+## Buffer32
 
 Encodes a buffer of any length with 4 bytes of overhead. The maximum length with a buffer32 is bigger than the 1 GiB size limit of buffers.
 
@@ -73,15 +73,15 @@ Some common Enums such as Material and KeyCode use 2 bytes due to how these Enum
 Pack:DefineSchema(Pack.EnumItem(Enum.KeyCode))
 ```
 
-## float32
+## Float32
 :::note[Aliases]
-**Float** is an alias for float32 and can be used instead
+**Float** is an alias for Float32 and can be used instead
 :::
 Encodes a 32-bit floating point number with 4 bytes
 
-## float64
+## Float64
 :::note[Aliases]
-**Double** is an alias for float64 and can be used instead
+**Double** is an alias for Float64 and can be used instead
 :::
 Enocdes a 64-bit floating point number with 8 bytes. This is the type used by lua numbers. It is also the only numeric type that can be used for UserIds, as those have passed the 32-bit unsigned integer limit.
 
@@ -97,32 +97,32 @@ Writing a reference to an Instance that does not already have a UID will synchro
 :::
 In saving places, references persist between server runtimes.
 
-## int8
+## Int8
 :::note[Aliases]
-**Byte** is an alias for int8 and can be used instead
+**Byte** is an alias for Int8 and can be used instead
 :::
 Enocdes an 8-bit signed integer in a single byte.  
 Range: -128 – 127
 
-## int16
+## Int16
 :::note[Aliases]
-**Short** is an alias for int16 and can be used instead
+**Short** is an alias for Int16 and can be used instead
 :::
 Encodes a 16-bit signed integer in 2 bytes.  
 Range: -32,768 – 32,767
 
-## int32
+## Int32
 :::note[Aliases]
-**Int** is an alias for int32 and can be used instead
+**Int** is an alias for Int32 and can be used instead
 :::
 Encodes a 32-bit signed integer in 4 bytes.
 Range: -2,147,483,648 – 2,147,483,647
 
-## null
+## Null
 
 Represents nothing, directly uses zero bytes. For use in the Union structure (WIP)
 
-## object
+## Object
 
 Allows marshalling a lua object by providing the class's metatable, and a [Dictionary](Structures/#dictionary) of members to serialize from the object.  
 This should work for most common OOP patterns. An example has been provided for the classic lua OOP paradigm.
@@ -174,22 +174,22 @@ Encodes a Region3 as a min and max Vector3, giving a total of 24 bytes.
 
 Encodes a Region3int16 as a min and max Vector3int16, giving a total of 12 bytes.
 
-## string_fixed
+## StringFixed
 
-string_fixed refers a fixed length string, where a string of a known length will encoded with zero overhead.  
+StringFixed refers a fixed length string, where a string of a known length will encoded with zero overhead.  
 The fixed length of the string in bytes must be passed in.
 
-## string8
+## String8
 
 Encodes a string of variable length between 0 and 255 bytes with 1 byte of overhead.  
 Chars already have a variable length of 1-4, so this can range from 255 chars to 63 chars.
 
-## string16
+## String16
 
 Encodes a string of variable length between 0 and 65,535 bytes with 2 bytes of overhead.
 Chars already have a variable length of 1-4, so this can range from 65,535 chars to 16,383 chars.
 
-## string32
+## String32
 
 Encodes a string of any length with 4 bytes of overhead. The maximum length with a string32 is bigger than the 1 GiB size limit of buffers.
 
@@ -203,23 +203,23 @@ We assume the offset will be within the range of a int16. If this is not the cas
 Encodes a UDim2 as 12 bytes.
 We assume the offset will be within the range of a int16. If this is not the case, you will have to send the two UDims as a float32 scale and int32 offset.
 
-## uint8
+## UInt8
 :::note[Aliases]
-**UByte** is an alias for uint8 and can be used instead
+**UByte** is an alias for UInt8 and can be used instead
 :::
 Enocdes an 8-bit unsigned integer in a single byte.  
 Range: 0 – 255
 
-## uint16
+## UInt16
 :::note[Aliases]
-**UShort** is an alias for uint16 and can be used instead
+**UShort** is an alias for UInt16 and can be used instead
 :::
 Encodes a 16-bit unsigned integer in 2 bytes.  
 Range: 0 – 65,565
 
-## uint32
+## UInt32
 :::note[Aliases]
-**UInt** is an alias for uint32 and can be used instead
+**UInt** is an alias for UInt32 and can be used instead
 :::
 Encodes a 32-bit unsigned integer in 4 bytes.
 Range: 0 – 4,294,967,295
