@@ -39,9 +39,13 @@ Encodes a buffer of variable length between 0 and 255 bytes with 1 byte of overh
 
 Encodes a buffer of variable length between 0 and 65,535 bytes with 2 bytes of overhead.
 
+## Buffer24
+
+Encodes a buffer of variable length between 0 and 16 MiB with 3 bytes of overhead.
+
 ## Buffer32
 
-Encodes a buffer of any length with 4 bytes of overhead. The maximum length with a buffer32 is bigger than the 1 GiB size limit of buffers.
+Encodes a buffer of any length with 4 bytes of overhead. The maximum length with a buffer32 is greater than the 1 GiB size limit of buffers.
 
 ## CFrame
 
@@ -188,6 +192,10 @@ Chars already have a variable length of 1-4, so this can range from 255 chars to
 
 Encodes a string of variable length between 0 and 65,535 bytes with 2 bytes of overhead.
 Chars already have a variable length of 1-4, so this can range from 65,535 chars to 16,383 chars.
+
+## String32
+
+Encodes a string of variable length between 0 and 16 MiB with 2 bytes of overhead.
 
 ## String32
 
