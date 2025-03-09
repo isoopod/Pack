@@ -193,9 +193,9 @@ Chars already have a variable length of 1-4, so this can range from 255 chars to
 Encodes a string of variable length between 0 and 65,535 bytes with 2 bytes of overhead.
 Chars already have a variable length of 1-4, so this can range from 65,535 chars to 16,383 chars.
 
-## String32
+## String24
 
-Encodes a string of variable length between 0 and 16 MiB with 2 bytes of overhead.
+Encodes a string of variable length between 0 and 16 MiB with 3 bytes of overhead.
 
 ## String32
 
