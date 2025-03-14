@@ -152,14 +152,14 @@ end
 local object: types.Pack = setmetatable({
 	_cachedDatatypes = {},
 	_aliases = {
-		UByte = "uint8",
-		UShort = "uint16",
-		UInt = "uint32",
-		Byte = "int8",
-		Short = "int16",
-		Int = "int32",
-		Float = "float32",
-		Double = "float64",
+		UByte = "UInt8",
+		UShort = "UInt16",
+		UInt = "UInt32",
+		Byte = "Int8",
+		Short = "Int16",
+		Int = "Int32",
+		Float = "Float32",
+		Double = "Float64",
 	},
 }, Pack) :: any
 
