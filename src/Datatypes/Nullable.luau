@@ -19,6 +19,8 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 			return nil
 		end,
 		Write = function(writer: types.WriterData, value: any)
+			Writer.alloc(writer, 1)
+
 			local bool = value ~= nil and 1 or 0
 			Writer.u8(writer, bool)
 
