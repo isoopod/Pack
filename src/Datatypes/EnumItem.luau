@@ -14,7 +14,7 @@ return function(enum: Enum): types.DatatypeInterface<EnumItem>
 	local op = "u8"
 
 	for _, v in enum:GetEnumItems() do
-		if v.value > 255 then
+		if v.Value > 255 then
 			len = 2
 			op = "u16"
 			break
