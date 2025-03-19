@@ -199,8 +199,8 @@ export type Datatypes = {
 	UDim2: UDim2,
 
 	DateTime: DateTime,
-	EnumItem: EnumItem,
 	Instance: Instance,
+	EnumItem: (Enum) -> any,
 
 	Custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
 	Object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
