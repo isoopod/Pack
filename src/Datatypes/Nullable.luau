@@ -24,7 +24,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 			local bool = value ~= nil and 1 or 0
 			Writer.u8(writer, bool)
 
-			if bool then write(writer, value) end
+			if bool == 1 then write(writer, value) end
 		end,
 	}) :: types.DatatypeInterface<T?>
 end
