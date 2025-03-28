@@ -11,6 +11,9 @@ local types = require(script.Parent.types)
 	A reader instance is created with the .new constructor and modified by the library's functions.
 ]=]
 
+local NAN = 0 / 0
+local INF = math.huge
+
 local readu8 = buffer.readu8
 local readu16 = buffer.readu16
 local readu32 = buffer.readu32
@@ -24,6 +27,7 @@ local readbits = buffer.readbits
 local readstring = buffer.readstring
 
 local lshift = bit32.lshift
+local rshift = bit32.rshift
 local band = bit32.band
 
 local Reader = {}
@@ -129,7 +133,7 @@ end
 	@param bitOffset number -- The bit offset from the current cursor location [0 – 31]
 	@return number
 	Reads an unsigned integer of length `n` bits
-	:::warning
+	:::info
 	This function does not move the cursor after completing, so you will have to move it yourself with .moveCursor
 	:::
 ]=]
@@ -145,7 +149,7 @@ end
 	@param bitOffset number -- The bit offset from the current cursor location [0 – 31]
 	@return number
 	Reads a signed integer of length `n` bits
-	:::warning
+	:::info
 	This function does not move the cursor after completing, so you will have to move it yourself with .moveCursor
 	:::
 ]=]
@@ -154,6 +158,61 @@ function Reader.nBitInt(self: types.ReaderData, n: number, bitOffset: number): n
 	local sign = lshift(1, n - 1)
 
 	if band(value, sign) ~= 0 then return value - 2 ^ n end
+	return value
+end
+
+--[=[
+	@function nBitFloat
+	@within Reader
+	@param self ReaderData -- A reader instance created with .new
+	@param n number -- The length in bits of the floating point's exponent
+	@param m number -- The length in bits of the floating point's mantissa
+	@param bitOffset number -- The bit offset from the current cursor location [0 – 31]
+	@return number
+	Reads a custom signed floating point number with the exponent length `n` bits and mantissa length `m` bits
+	:::info
+	This function does not move the cursor after completing, so you will have to move it yourself with .moveCursor
+	:::
+	:::warning
+	The sum of `n` and `m` should not be greater than `31 - bitOffset`.  
+	:::
+]=]
+function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffset: number): number
+	local totalBits = 1 + n + m
+	local combined = readbits(self._buffer, self.Cursor * 8 + bitOffset, totalBits)
+
+	local sign = rshift(combined, n + m)
+	local maxExponent = lshift(1, n) - 1
+	local storedExponent = band(rshift(combined, m), maxExponent)
+	local mantissa = band(combined, lshift(1, m) - 1)
+
+	-- If the value is zero, return immediately.
+	if storedExponent == 0 and mantissa == 0 then return 0 end
+
+	-- Check for special cases: Infinity or NaN (exponent all ones)
+	if storedExponent == maxExponent then
+		if mantissa == 0 then
+			return sign == 1 and -INF or INF
+		else
+			return NAN
+		end
+	end
+
+	local bias = lshift(1, n - 1) - 1
+	local exponent: number, value: number
+
+	if storedExponent == 0 then
+		-- Subnormal numbers: exponent is fixed at 1 - bias
+		exponent = 1 - bias
+		value = (mantissa / (2 ^ m)) * (2 ^ exponent)
+	else
+		-- Normalized numbers: restore the implicit leading 1
+		exponent = storedExponent - bias
+		value = (1 + (mantissa / (2 ^ m))) * (2 ^ exponent)
+	end
+
+	if sign == 1 then value = -value end
+
 	return value
 end
 

@@ -77,17 +77,45 @@ Some common Enums such as Material and KeyCode use 2 bytes due to how these Enum
 Pack:DefineSchema(Pack.EnumItem(Enum.KeyCode))
 ```
 
+## Float16
+
+Encodes a 16-bit floating point number using 2 bytes
+
+Range:
+    - Subnormal: ±6.1×10⁻⁵
+    - Normal: ±6.5×10⁴
+Precision: ~3.3 decimal places
+
+## Float24
+
+Encodes a 24-bit floating point number using 3 bytes
+
+Range:
+    - Subnormal: ±1×10⁻¹⁹
+    - Normal: ±2×10¹⁹
+Precision: ~5.9 decimal places
+
 ## Float32
 :::note[Aliases]
 **Float** is an alias for Float32 and can be used instead
 :::
-Encodes a 32-bit floating point number with 4 bytes
+Encodes a 32-bit floating point number using 4 bytes
+
+Range:
+    - Subnormal: ±1.2×10⁻³⁸ 
+    - Normal: ±3.4×10³⁸
+Precision: ~7.2 decimal places
 
 ## Float64
 :::note[Aliases]
 **Double** is an alias for Float64 and can be used instead
 :::
-Enocdes a 64-bit floating point number with 8 bytes. This is the type used by lua numbers. It is also the only numeric type that can be used for UserIds, as those have passed the 32-bit unsigned integer limit.
+Enocdes a 64-bit floating point number using 8 bytes. This is the type used by lua numbers. It is also the only numeric type that can be used for UserIds, as those have passed the 32-bit unsigned integer limit.
+
+Range:
+    - Subnormal: ±2.2×10⁻³⁰⁸ 
+    - Normal: ±1.8×10³⁰⁸
+Precision: ~15.9 decimal places
 
 ## Instance
 
@@ -232,20 +260,68 @@ Range: 0 – 65,565
 Encodes a 32-bit unsigned integer in 4 bytes.
 Range: 0 – 4,294,967,295
 
-## Vector2
+## Vector2float32
+:::note[Aliases]
+**Vector2** is an alias for Vector2float32 and can be used instead
+:::
 
-Encodes a 2D vector of float32s with 8 bytes.
+Encodes a 2D vector of float32s using 8 bytes.
+
+see [Float32](#float32) for approximate range and precision of each component.
+
+## Vector2float64
+
+Encodes a 2D vector of float64s using 16 bytes.  
+
+see [Float64](#float64) for approximate range and precision of each component.
+
+## Vector2float24
+
+Encodes a 2D vector of float24s using 6 bytes.  
+
+see [Float24](#float24) for approximate range and precision of each component.
+
+## Vector2float16
+
+Encodes a 2D vector of float16s with 4 bytes.
+
+see [Float16](#float16) for approximate range and precision of each component. 
 
 ## Vector2int16
 
-Encodes a 2D vector of int16s with 4 bytes.
+Encodes a 2D vector of int16s using 4 bytes.
 
-## Vector3
+## Vector3float32
+:::note[Aliases]
+**Vector3** is an alias for Vector3float32 and can be used instead
+:::
+Encodes a 3D vector of float32s using 12 bytes. 
 
-Encodes a 3D vector of float32s with 12 bytes.  
+see [Float32](#float32) for approximate range and precision of each component.
+
+:::note 
 Compatible with the Roblox Vector3 library and luau vector library.  
 Will return as a luau vector, but these are interchangeable with the Vector3 library.  
 (Vector3 methods can be used on vectors and vector library functions can take Vector3s)
+:::
+
+## Vector3float64
+
+Encodes a 3D vector of float64s using 24 bytes.  
+
+see [Float64](#float64) for approximate range and precision of each component.
+
+## Vector3float24
+
+Encodes a 3D vector of float24s using 9 bytes.  
+
+see [Float24](#float24) for approximate range and precision of each component.
+
+## Vector3float16
+
+Encodes a 3D vector of float16s with 6 bytes.  
+
+see [Float16](#float16) for approximate range and precision of each component.
 
 ## Vector3int16
 

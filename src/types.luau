@@ -21,6 +21,7 @@ export type Reader = {
 	read i32: (self: ReaderData) -> number,
 	read nBitUint: (self: ReaderData, n: number, bitOffset: number) -> number,
 	read nBitInt: (self: ReaderData, n: number, bitOffset: number) -> number,
+	read nBitFloat: (self: ReaderData, n: number, m: number, bitOffset: number) -> number,
 	read f32: (self: ReaderData) -> number,
 	read f64: (self: ReaderData) -> number,
 	read string: (self: ReaderData, count: number?) -> string,
@@ -45,7 +46,8 @@ export type Writer = {
 	read i16: (self: WriterData, value: number) -> (),
 	read i32: (self: WriterData, value: number) -> (),
 	read nBitUint: (self: WriterData, value: number, n: number, bitOffset: number) -> (),
-	read nBitInt: (self: WrWriterDataiWriterDatater, value: number, n: number, bitOffset: number) -> (),
+	read nBitInt: (self: WriterData, value: number, n: number, bitOffset: number) -> (),
+	read nBitFloat: (self: WriterData, value: number, n: number, m: number, bitOffset: number) -> (),
 	read f32: (self: WriterData, value: number) -> (),
 	read f64: (self: WriterData, value: number) -> (),
 	read string: (self: WriterData, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
@@ -149,6 +151,7 @@ export type DatatypeInterface<T> = {
 
 export type refs = { any }
 
+type Vector = vector & Vector3
 export type Datatypes = {
 	UInt8: number,
 	UByte: number,
@@ -164,6 +167,8 @@ export type Datatypes = {
 	Int32: number,
 	Int: number,
 
+	Float16: number,
+	Float24: number,
 	Float32: number,
 	Float: number,
 	Float64: number,
@@ -189,9 +194,17 @@ export type Datatypes = {
 	BrickColor: BrickColor,
 
 	CFrame: CFrame,
-	Vector3: vector & Vector3,
-	Vector3int16: vector & Vector3,
+	Vector3: Vector,
+	Vector3float32: Vector,
+	Vector3float64: Vector,
+	Vector3float24: Vector,
+	Vector3float16: Vector,
+	Vector3int16: Vector,
 	Vector2: Vector2,
+	Vector2float32: Vector2,
+	Vector2float64: Vector2,
+	Vector2float24: Vector2,
+	Vector2float16: Vector2,
 	Vector2int16: Vector2,
 	Region3: Region3,
 	Region3int16: Region3int16,
