@@ -6,43 +6,43 @@
 <title data-rh="true">Writer | Pack</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://isoopod.github.io/Pack/api/Writer"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Writer | Pack"><meta data-rh="true" name="description" content="An internal buffer builder used to serialize packets. Operations are added to a queue and the entire buffer will be created in one pass without needing to dynamically resize the buffer.  
 A writer instance is created with the .new constructor, and is modified with the library&#x27;s functions."><meta data-rh="true" property="og:description" content="An internal buffer builder used to serialize packets. Operations are added to a queue and the entire buffer will be created in one pass without needing to dynamically resize the buffer.  
 A writer instance is created with the .new constructor, and is modified with the library&#x27;s functions."><link data-rh="true" rel="canonical" href="https://isoopod.github.io/Pack/api/Writer"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Writer" hreflang="en"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Writer" hreflang="x-default"><link rel="stylesheet" href="/Pack/assets/css/styles.5cbed574.css">
-<script src="/Pack/assets/js/runtime~main.203cdeea.js" defer="defer"></script>
-<script src="/Pack/assets/js/main.95bcd131.js" defer="defer"></script>
+<script src="/Pack/assets/js/runtime~main.8aae213a.js" defer="defer"></script>
+<script src="/Pack/assets/js/main.e11c2e18.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();null!==e?t(e):window.matchMedia("(prefers-color-scheme: dark)").matches?t("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,t("light"))}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/Pack/"><b class="navbar__title text--truncate">Pack</b></a><a class="navbar__item navbar__link" href="/Pack/docs/intro">Docs</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/Pack/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/isoopod/Pack" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input id="search_input_react" type="search" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0 docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/Pack/api/Pack">​Pack</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/Pack/api/Schema">​Schema</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/Pack/api/Reader">Internal</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/Pack/api/Reader">​Reader</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/Pack/api/Writer">​Writer</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/Pack/api/Datatype">​Datatype</a></li></ul></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Writer</span></h1><div class="luaClassTags_EipM"></div><div>
 <p>An internal buffer builder used to serialize packets. Operations are added to a queue and the entire buffer will be created in one pass without needing to dynamically resize the buffer.<br>A writer instance is created with the .new constructor, and is modified with the library's functions.</p>
-</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="alloc"><code style="text-decoration:none">alloc</code><a href="#alloc" class="hash-link" aria-label="Direct link to alloc" title="Direct link to alloc">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L57"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">alloc</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="alloc"><code style="text-decoration:none">alloc</code><a href="#alloc" class="hash-link" aria-label="Direct link to alloc" title="Direct link to alloc">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L70"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">alloc</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>bytes<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
 <p>The number of bytes to allocate</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p>Most Writer functions will not automatically allocate length to the buffer, instead opting to make this call as few times as possible when writing a datatype.<br>Functions that do allocate will be marked with the Allocating tag. Otherwise, figure out how many bytes you need to allocate and call Writer.alloc</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u8"><code style="text-decoration:none">u8</code><a href="#u8" class="hash-link" aria-label="Direct link to u8" title="Direct link to u8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L70"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u8"><code style="text-decoration:none">u8</code><a href="#u8" class="hash-link" aria-label="Direct link to u8" title="Direct link to u8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L83"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>1 byte</strong><br>Orders an 8-bit unsigned integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u16"><code style="text-decoration:none">u16</code><a href="#u16" class="hash-link" aria-label="Direct link to u16" title="Direct link to u16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L82"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u16"><code style="text-decoration:none">u16</code><a href="#u16" class="hash-link" aria-label="Direct link to u16" title="Direct link to u16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L95"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>2 bytes</strong><br>Orders a 16-bit unsigned integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u32"><code style="text-decoration:none">u32</code><a href="#u32" class="hash-link" aria-label="Direct link to u32" title="Direct link to u32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L94"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="u32"><code style="text-decoration:none">u32</code><a href="#u32" class="hash-link" aria-label="Direct link to u32" title="Direct link to u32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L107"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">u32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>4 bytes</strong><br>Orders a 32-bit unsigned integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i8"><code style="text-decoration:none">i8</code><a href="#i8" class="hash-link" aria-label="Direct link to i8" title="Direct link to i8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L106"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i8"><code style="text-decoration:none">i8</code><a href="#i8" class="hash-link" aria-label="Direct link to i8" title="Direct link to i8">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L119"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i8</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>1 bytes</strong><br>Orders an 8-bit signed integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i16"><code style="text-decoration:none">i16</code><a href="#i16" class="hash-link" aria-label="Direct link to i16" title="Direct link to i16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L118"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i16"><code style="text-decoration:none">i16</code><a href="#i16" class="hash-link" aria-label="Direct link to i16" title="Direct link to i16">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L131"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i16</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>2 bytes</strong><br>Orders a 16-bit signed integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i32"><code style="text-decoration:none">i32</code><a href="#i32" class="hash-link" aria-label="Direct link to i32" title="Direct link to i32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L130"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="i32"><code style="text-decoration:none">i32</code><a href="#i32" class="hash-link" aria-label="Direct link to i32" title="Direct link to i32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L143"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">i32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>4 bytes</strong><br>Orders a 32-bit signed integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitUint"><code style="text-decoration:none">nBitUint</code><a href="#nBitUint" class="hash-link" aria-label="Direct link to nBitUint" title="Direct link to nBitUint">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L144"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">nBitUint</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitUint"><code style="text-decoration:none">nBitUint</code><a href="#nBitUint" class="hash-link" aria-label="Direct link to nBitUint" title="Direct link to nBitUint">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L161"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">nBitUint</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code></div><div><code>n<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>The length of the integer in bits</p>
@@ -50,7 +50,27 @@ A writer instance is created with the .new constructor, and is modified with the
 <p>The offset from the cursor in bits to start writing at [0 – 31]</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong><code>math.floor(n / 8) + 1</code> bytes</strong><br>Orders an unsigned <code>n</code>-bit integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitInt"><code style="text-decoration:none">nBitInt</code><a href="#nBitInt" class="hash-link" aria-label="Direct link to nBitInt" title="Direct link to nBitInt">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L158"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">nBitInt</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+
+  
+    
+    
+      <div class="admonition admonition-info alert alert--info">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+                <path d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path>
+              </svg></span><span class="admonition-title">INFO</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>
+            nBitUint does not automatically move the writers cursor so you will have to call
+            Writer.moveCursor the appropriate number of bytes after writing a section of nBit numbers.
+          </p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitInt"><code style="text-decoration:none">nBitInt</code><a href="#nBitInt" class="hash-link" aria-label="Direct link to nBitInt" title="Direct link to nBitInt">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L179"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">nBitInt</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code></div><div><code>n<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>The length of the integer in bits</p>
@@ -58,15 +78,82 @@ A writer instance is created with the .new constructor, and is modified with the
 <p>The offset from the cursor in bits to start writing at [0 – 31]</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong><code>math.floor(n / 8) + 1</code> bytes</strong><br>Orders a signed <code>n</code>-bit integer to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f32"><code style="text-decoration:none">f32</code><a href="#f32" class="hash-link" aria-label="Direct link to f32" title="Direct link to f32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L170"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">f32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+
+  
+    
+    
+      <div class="admonition admonition-info alert alert--info">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+                <path d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path>
+              </svg></span><span class="admonition-title">INFO</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>
+            nBitInt does not automatically move the writers cursor so you will have to call
+            Writer.moveCursor the appropriate number of bytes after writing a section of nBit numbers.
+          </p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="nBitFloat"><code style="text-decoration:none">nBitFloat</code><a href="#nBitFloat" class="hash-link" aria-label="Direct link to nBitFloat" title="Direct link to nBitFloat">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L201"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">nBitFloat</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A writer instance created with .new</p>
+</span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code></div><div><code>n<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>The length in bits of the floating point's exponent</p>
+</span></span></div><div><code>m<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>The length in bits of the floating point's mantissa</p>
+</span></span></div><div><code>bitOffset<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+<p>The offset from the cursor in bits to start writing at [0 – 31]</p>
+</span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p><strong><code>math.floor((1 + n + m) / 8) + 1</code> bytes</strong><br>Orders a signed <code>n</code>-bit integer to be written into the packet</p>
+
+  
+    
+    
+      <div class="admonition admonition-info alert alert--info">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+                <path d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path>
+              </svg></span><span class="admonition-title">INFO</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>
+            nBitFloat does not automatically move the writers cursor so you will have to call
+            Writer.moveCursor the appropriate number of bytes after writing a section of nBit numbers.
+          </p>
+        </div>
+      </div>
+    
+  
+
+
+  
+    
+    
+      <div class="admonition admonition-warning alert alert--warning">
+        <div class="admonition-heading">
+          <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path>
+              </svg></span><span class="admonition-title">WARNING</span></h5>
+        </div>
+        <div class="admonition-content">
+          <p>The sum of <code>n</code> and <code>m</code> should not be greater than <code>31 - bitOffset</code>.</p>
+        </div>
+      </div>
+    
+  
+
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f32"><code style="text-decoration:none">f32</code><a href="#f32" class="hash-link" aria-label="Direct link to f32" title="Direct link to f32">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L213"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">f32</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>4 bytes</strong><br>Orders a 32-bit floating point number to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f64"><code style="text-decoration:none">f64</code><a href="#f64" class="hash-link" aria-label="Direct link to f64" title="Direct link to f64">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L182"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">f64</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="f64"><code style="text-decoration:none">f64</code><a href="#f64" class="hash-link" aria-label="Direct link to f64" title="Direct link to f64">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L225"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">f64</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p><strong>8 bytes</strong><br>Orders a 64-bit floating point number to be written into the packet</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="string"><code style="text-decoration:none">string</code><a href="#string" class="hash-link" aria-label="Direct link to string" title="Direct link to string">​</a></h3><span class="docTag__6UZ" style="border-color:#218c74;color:#218c74">Allocating</span><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L200"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">string</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="string"><code style="text-decoration:none">string</code><a href="#string" class="hash-link" aria-label="Direct link to string" title="Direct link to string">​</a></h3><span class="docTag__6UZ" style="border-color:#218c74;color:#218c74">Allocating</span><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L243"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">string</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>value<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>The string you wish to write</p>
@@ -78,7 +165,7 @@ A writer instance is created with the .new constructor, and is modified with the
 <p>A function that orders the wring to be written into the packet</p>
 </span></span></div></div><code>)</code></div><div>
 <p>Processes a string into a seperate buffer and allocates the byte length of the string (or if count is provided and smaller than blen, allocates <code>count</code> bytes)<br>Returns the amount of bytes allocated, and a function to insert the string write operation into the queue.<br>This is so the length of the string can be written before writing the string itself, for variable length strings.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="moveCursor"><code style="text-decoration:none">moveCursor</code><a href="#moveCursor" class="hash-link" aria-label="Direct link to moveCursor" title="Direct link to moveCursor">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L219"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">moveCursor</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="moveCursor"><code style="text-decoration:none">moveCursor</code><a href="#moveCursor" class="hash-link" aria-label="Direct link to moveCursor" title="Direct link to moveCursor">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L262"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">moveCursor</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div><div><code>delta<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
 <p>How many bytes to move the cursor, can be negative to go backwards</p>
@@ -101,11 +188,11 @@ A writer instance is created with the .new constructor, and is modified with the
     
   
 
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Finalize"><code style="text-decoration:none">Finalize</code><a href="#Finalize" class="hash-link" aria-label="Direct link to Finalize" title="Direct link to Finalize">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L282"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">Finalize</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Finalize"><code style="text-decoration:none">Finalize</code><a href="#Finalize" class="hash-link" aria-label="Direct link to Finalize" title="Direct link to Finalize">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L393"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">Finalize</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">WriterData</code><span class="inlineDescription_G7Er">-- <span>
 <p>A writer instance created with .new</p>
 </span></span></div></div><code>) → </code><code class="blue_P4bS">buffer</code></div><div>
 <p>Creates a packet buffer from all queued operations in a single pass</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="new"><code style="text-decoration:none">new</code><a href="#new" class="hash-link" aria-label="Direct link to new" title="Direct link to new">​</a></h3><span class="docTag__6UZ" style="border-color:#ff793f;color:#ff793f">Constructor</span><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L301"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">new</code><code>(</code><code>) → </code><code class="blue_P4bS">WriterData</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="new"><code style="text-decoration:none">new</code><a href="#new" class="hash-link" aria-label="Direct link to new" title="Direct link to new">​</a></h3><span class="docTag__6UZ" style="border-color:#ff793f;color:#ff793f">Constructor</span><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/Writer.luau#L412"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Writer<!-- -->.</code><code class="green_DgR4">new</code><code>(</code><code>) → </code><code class="blue_P4bS">WriterData</code></div><div>
 <p>Creates an empty writer instance</p>
 </div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
     &quot;functions&quot;: [
@@ -127,7 +214,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 57,
+                &quot;line&quot;: 70,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -149,7 +236,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 70,
+                &quot;line&quot;: 83,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -171,7 +258,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 82,
+                &quot;line&quot;: 95,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -193,7 +280,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 94,
+                &quot;line&quot;: 107,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -215,7 +302,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 106,
+                &quot;line&quot;: 119,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -237,7 +324,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 118,
+                &quot;line&quot;: 131,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -259,13 +346,13 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 130,
+                &quot;line&quot;: 143,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
         {
             &quot;name&quot;: &quot;nBitUint&quot;,
-            &quot;desc&quot;: &quot;**`math.floor(n / 8) + 1` bytes**  \nOrders an unsigned `n`-bit integer to be written into the packet &quot;,
+            &quot;desc&quot;: &quot;**`math.floor(n / 8) + 1` bytes**  \nOrders an unsigned `n`-bit integer to be written into the packet \n:::info\nnBitUint does not automatically move the writers cursor so you will have to call \nWriter.moveCursor the appropriate number of bytes after writing a section of nBit numbers.\n:::&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;self&quot;,
@@ -291,13 +378,13 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 144,
+                &quot;line&quot;: 161,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
         {
             &quot;name&quot;: &quot;nBitInt&quot;,
-            &quot;desc&quot;: &quot;**`math.floor(n / 8) + 1` bytes**  \nOrders a signed `n`-bit integer to be written into the packet &quot;,
+            &quot;desc&quot;: &quot;**`math.floor(n / 8) + 1` bytes**  \nOrders a signed `n`-bit integer to be written into the packet \n:::info\nnBitInt does not automatically move the writers cursor so you will have to call \nWriter.moveCursor the appropriate number of bytes after writing a section of nBit numbers.\n:::&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;self&quot;,
@@ -323,7 +410,44 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 158,
+                &quot;line&quot;: 179,
+                &quot;path&quot;: &quot;src/Writer.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;nBitFloat&quot;,
+            &quot;desc&quot;: &quot;**`math.floor((1 + n + m) / 8) + 1` bytes**  \nOrders a signed `n`-bit integer to be written into the packet \n:::info\nnBitFloat does not automatically move the writers cursor so you will have to call \nWriter.moveCursor the appropriate number of bytes after writing a section of nBit numbers.\n:::\n:::warning\nThe sum of `n` and `m` should not be greater than `31 - bitOffset`.  \n:::&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A writer instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;WriterData&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;value&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;n&quot;,
+                    &quot;desc&quot;: &quot;The length in bits of the floating point&#x27;s exponent&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;m&quot;,
+                    &quot;desc&quot;: &quot;The length in bits of the floating point&#x27;s mantissa&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;bitOffset&quot;,
+                    &quot;desc&quot;: &quot;The offset from the cursor in bits to start writing at [0 – 31]&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 201,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -345,7 +469,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 170,
+                &quot;line&quot;: 213,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -367,7 +491,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 182,
+                &quot;line&quot;: 225,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -406,7 +530,7 @@ A writer instance is created with the .new constructor, and is modified with the
                 &quot;Allocating&quot;
             ],
             &quot;source&quot;: {
-                &quot;line&quot;: 200,
+                &quot;line&quot;: 243,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -428,7 +552,7 @@ A writer instance is created with the .new constructor, and is modified with the
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 219,
+                &quot;line&quot;: 262,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -450,7 +574,7 @@ A writer instance is created with the .new constructor, and is modified with the
             ],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 282,
+                &quot;line&quot;: 393,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         },
@@ -469,7 +593,7 @@ A writer instance is created with the .new constructor, and is modified with the
                 &quot;Constructor&quot;
             ],
             &quot;source&quot;: {
-                &quot;line&quot;: 301,
+                &quot;line&quot;: 412,
                 &quot;path&quot;: &quot;src/Writer.luau&quot;
             }
         }
@@ -482,6 +606,6 @@ A writer instance is created with the .new constructor, and is modified with the
         &quot;line&quot;: 17,
         &quot;path&quot;: &quot;src/Writer.luau&quot;
     }
-}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#alloc" class="table-of-contents__link toc-highlight">.alloc</a></li><li><a href="#f32" class="table-of-contents__link toc-highlight">.f32</a></li><li><a href="#f64" class="table-of-contents__link toc-highlight">.f64</a></li><li><a href="#Finalize" class="table-of-contents__link toc-highlight">.Finalize</a></li><li><a href="#i16" class="table-of-contents__link toc-highlight">.i16</a></li><li><a href="#i32" class="table-of-contents__link toc-highlight">.i32</a></li><li><a href="#i8" class="table-of-contents__link toc-highlight">.i8</a></li><li><a href="#moveCursor" class="table-of-contents__link toc-highlight">.moveCursor</a></li><li><a href="#nBitInt" class="table-of-contents__link toc-highlight">.nBitInt</a></li><li><a href="#nBitUint" class="table-of-contents__link toc-highlight">.nBitUint</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li><li><a href="#string" class="table-of-contents__link toc-highlight">.string</a></li><li><a href="#u16" class="table-of-contents__link toc-highlight">.u16</a></li><li><a href="#u32" class="table-of-contents__link toc-highlight">.u32</a></li><li><a href="#u8" class="table-of-contents__link toc-highlight">.u8</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 isoopod. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#alloc" class="table-of-contents__link toc-highlight">.alloc</a></li><li><a href="#f32" class="table-of-contents__link toc-highlight">.f32</a></li><li><a href="#f64" class="table-of-contents__link toc-highlight">.f64</a></li><li><a href="#Finalize" class="table-of-contents__link toc-highlight">.Finalize</a></li><li><a href="#i16" class="table-of-contents__link toc-highlight">.i16</a></li><li><a href="#i32" class="table-of-contents__link toc-highlight">.i32</a></li><li><a href="#i8" class="table-of-contents__link toc-highlight">.i8</a></li><li><a href="#moveCursor" class="table-of-contents__link toc-highlight">.moveCursor</a></li><li><a href="#nBitFloat" class="table-of-contents__link toc-highlight">.nBitFloat</a></li><li><a href="#nBitInt" class="table-of-contents__link toc-highlight">.nBitInt</a></li><li><a href="#nBitUint" class="table-of-contents__link toc-highlight">.nBitUint</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li><li><a href="#string" class="table-of-contents__link toc-highlight">.string</a></li><li><a href="#u16" class="table-of-contents__link toc-highlight">.u16</a></li><li><a href="#u32" class="table-of-contents__link toc-highlight">.u32</a></li><li><a href="#u8" class="table-of-contents__link toc-highlight">.u8</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 isoopod. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
 </body>
 </html>
