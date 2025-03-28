@@ -262,6 +262,11 @@ end
 function Writer.moveCursor(self: types.WriterData, delta: number)
 	insert(self._queue, { OP_MOV, delta })
 end
+
+function Writer.addRef(self: types.WriterData, ref: any)
+        self.nRefs += 1
+        self.refs[self.nRefs] = ref
+end
 ----
 
 local WriteFunctions: { (buffer, number, ...any) -> number } = {
@@ -411,6 +416,8 @@ end
 ]=]
 function Writer.new(): types.WriterData
 	local self = {}
+
+        self.nRefs = 0
 
 	self._len = 0
 	self._queue = {}
