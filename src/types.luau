@@ -31,7 +31,7 @@ export type Reader = {
 
 export type WriterData = {
 	refs: refs,
-        nRefs: number,
+	nRefs: number,
 	_len: number,
 	_queue: { { any } },
 }
@@ -52,7 +52,7 @@ export type Writer = {
 	read f32: (self: WriterData, value: number) -> (),
 	read f64: (self: WriterData, value: number) -> (),
 	read string: (self: WriterData, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
-        read addRef: (self: WriterData, ref: any) -> (),
+	read addRef: (self: WriterData, ref: any) -> (),
 
 	read Finalize: (self: WriterData) -> buffer,
 
@@ -222,6 +222,8 @@ export type Datatypes = {
 
 	Array: <T>(type: T) -> { T },
 	Dictionary: <T>(format: T) -> T,
+	-- Eventually needs to use a type function to all keys of T nullable
+	SparseDictionary: <T, U>(optionalFormat: T, requiredFormat: U?) -> T | U | any,
 	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
 
 	Null: nil,

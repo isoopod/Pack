@@ -56,3 +56,20 @@ The Nullable datatype indicates the value is optional and may be nil. This adds 
 -- A packet from this schema could be 1 bytes long or 13 bytes long, depending if the Vector3 was passed in or not.
 Pack:DefineSchema(Pack.Nullable(Pack.Vector3))
 ```
+
+## SparseDictionary
+
+A Pack SparseDictionary refers to a table with predefined keys, each of which are optional.  
+The second argument is for requried keys, which functions like a regular Dictionary.  
+SparseDictionaries have the overhead of a BitField for all optional keys.
+
+```lua
+Pack:DefineSchema(Pack.SparseDictionary({
+    -- Optional keys
+    CFrame = Pack.CFrame,
+    Velocity = Pack.Vector3,
+    -- Do not do:
+    opt = Pack.Nullable(Pack.CFrame)
+    -- All keys in the optional table are already nullable
+}))
+```
