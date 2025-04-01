@@ -20,23 +20,31 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	table.sort(structure)
 
-	return table.freeze({
+	local datatype = {
 		Eval = "Dict",
-		Read = function(reader: types.ReaderData)
-			local result = {}
+		format = format,
+	}
 
-			for i = 1, len do
-				local key = structure[i]
-				result[key] = format[key].Read(reader)
-			end
+	-- Deduplicate format
+	format = datatype.format
 
-			return result
-		end,
-		Write = function(writer: types.WriterData, value: { [any]: types.DatatypeInterface<any> })
-			for i = 1, len do
-				local key = structure[i]
-				format[key].Write(writer, value[key])
-			end
-		end,
-	}) :: types.DatatypeInterface<{}>
+	datatype.Read = function(reader: types.ReaderData)
+		local result = {}
+
+		for i = 1, len do
+			local key = structure[i]
+			result[key] = format[key].Read(reader)
+		end
+
+		return result
+	end
+
+	datatype.Write = function(writer: types.WriterData, value: { [any]: types.DatatypeInterface<any> })
+		for i = 1, len do
+			local key = structure[i]
+			format[key].Write(writer, value[key])
+		end
+	end
+
+	return table.freeze(datatype) :: types.DatatypeInterface<{}>
 end

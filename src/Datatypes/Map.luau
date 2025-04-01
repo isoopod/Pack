@@ -10,34 +10,42 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 	local kread, kwrite = keyType.Read, keyType.Write
 	local vread, vwrite = valueType.Read, valueType.Write
 
-	return table.freeze({
+	local datatype = {
 		Eval = "Map",
-		Key = keyType.Eval,
-		Val = valueType.Eval,
-		Read = function(reader: types.ReaderData): { [K]: V }
-			local len = Reader.u16(reader)
+		Key = keyType,
+		Val = valueType,
+	}
 
-			local map = {}
+	-- Deduplicate
+	keyType = datatype.Key
+	valueType = datatype.Val
 
-			for _ = 1, len do
-				map[kread(reader)] = vread(reader)
-			end
+	datatype.Read = function(reader: types.ReaderData): { [K]: V }
+		local len = Reader.u16(reader)
 
-			return map
-		end,
-		Write = function(writer: types.WriterData, value: { [K]: V })
-			local len = 0
-			for _ in value do
-				len += 1
-			end
+		local map = {}
 
-			Writer.alloc(writer, 2)
-			Writer.u16(writer, len)
+		for _ = 1, len do
+			map[kread(reader)] = vread(reader)
+		end
 
-			for k, v in value do
-				kwrite(writer, k)
-				vwrite(writer, v)
-			end
-		end,
-	}) :: types.DatatypeInterface<{ [K]: V }>
+		return map
+	end
+
+	datatype.Write = function(writer: types.WriterData, value: { [K]: V })
+		local len = 0
+		for _ in value do
+			len += 1
+		end
+
+		Writer.alloc(writer, 2)
+		Writer.u16(writer, len)
+
+		for k, v in value do
+			kwrite(writer, k)
+			vwrite(writer, v)
+		end
+	end
+
+	return table.freeze(datatype) :: types.DatatypeInterface<{ [K]: V }>
 end

@@ -154,6 +154,64 @@ evaluator.evaluators = {
 	DateTime = function(value: any)
 		return typeof(value) == "DateTime"
 	end,
+	Dict = function(value: any, datatype: types.DatatypeInterface<any>)
+		if typeof(value) ~= "table" then return false end
+		-- First check number of keys
+		local vLen, fLen = 0, 0
+		for _ in value do
+			vLen += 1
+		end
+		for _ in datatype.format do
+			fLen += 1
+		end
+		if vLen ~= fLen then return false end
+
+		for k, v in value do
+			if not datatype.format[k] then return false end
+			if not evaluator.evaluators[datatype.format[k].Eval](v, datatype.format[k]) then return false end
+		end
+		return true
+	end,
+	Enum = function(value: any, datatype: types.DatatypeInterface<any>)
+		-- TODO: Look for a faster way to do this
+		for _, v in (datatype.Item :: Enum):GetEnumItems() do
+			if value == v then return true end
+		end
+		return false
+	end,
+	f16 = function(value: any)
+		--FIXME: check if value is in the range appropriate for these
+		return type(value) == "number"
+	end,
+	f24 = function(value: any)
+		return type(value) == "number"
+	end,
+	f32 = function(value: any)
+		return type(value) == "number"
+	end,
+	f64 = function(value: any)
+		return type(value) == "number"
+	end,
+	Inst_Ref = function(value: any)
+		return typeof(value) == "Instance"
+	end,
+	i8 = function(value: any)
+		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1)
+	end,
+	i16 = function(value: any)
+		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1)
+	end,
+	i32 = function(value: any)
+		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1)
+	end,
+	Map = function(value: any, datatype: types.DatatypeInterface<any>)
+		if type(value) ~= "table" then return false end
+		for k, v in value do
+			if not evaluator.evaluators[datatype.Key.Eval](value, datatype.Key) then return false end
+			if not evaluator.evaluators[datatype.Val.Eval](value, datatype.Val) then return false end
+		end
+		return true
+	end,
 } :: evaluators
 
 return evaluator
