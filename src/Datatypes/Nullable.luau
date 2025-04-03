@@ -14,6 +14,8 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 	local read, write = valueType.Read, valueType.Write
 
 	return table.freeze({
+		Eval = "nullable",
+		dt = valueType,
 		Read = function(reader: types.ReaderData): T?
 			if Reader.u8(reader) == 1 then return read(reader) end
 			return nil

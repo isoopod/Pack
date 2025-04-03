@@ -179,8 +179,8 @@ evaluator.evaluators = {
 		end
 		return false
 	end,
+	--FIXME: check if value is in the range appropriate for these
 	f16 = function(value: any)
-		--FIXME: check if value is in the range appropriate for these
 		return type(value) == "number"
 	end,
 	f24 = function(value: any)
@@ -207,10 +207,93 @@ evaluator.evaluators = {
 	Map = function(value: any, datatype: types.DatatypeInterface<any>)
 		if type(value) ~= "table" then return false end
 		for k, v in value do
-			if not evaluator.evaluators[datatype.Key.Eval](value, datatype.Key) then return false end
-			if not evaluator.evaluators[datatype.Val.Eval](value, datatype.Val) then return false end
+			if not evaluator.evaluators[datatype.Key.Eval](k, datatype.Key) then return false end
+			if not evaluator.evaluators[datatype.Val.Eval](v, datatype.Val) then return false end
 		end
 		return true
+	end,
+	["nil"] = function(value: any)
+		return value == nil
+	end,
+	nullable = function(value: any, datatype: types.DatatypeInterface<any>)
+		return value == nil or evaluator.evaluators[datatype.dt.Eval](value, datatype.dt)
+	end,
+	object = function(value: any, datatype: types.DatatypeInterface<any>)
+		if type(value) ~= "table" then return false end
+		if getmetatable(value :: any) ~= datatype.mt then return false end
+		return evaluator.evaluators[datatype.cData.Eval](value, datatype.cData)
+	end,
+	R3 = function(value: any)
+		return typeof(value) == "Region3"
+	end,
+	R3i16 = function(value: any)
+		return typeof(value) == "Region3int16"
+	end,
+	--TODO sparse dictionary
+	s8 = function(value: any)
+		if type(value) ~= "string" then return false end
+		return buffer.len(buffer.fromstring(value)) < 2 ^ 8
+	end,
+	s16 = function(value: any)
+		if type(value) ~= "string" then return false end
+		return buffer.len(buffer.fromstring(value)) < 2 ^ 16
+	end,
+	s24 = function(value: any)
+		if type(value) ~= "string" then return false end
+		return buffer.len(buffer.fromstring(value)) < 2 ^ 24
+	end,
+	s32 = function(value: any)
+		return type(value) == "string"
+	end,
+	string = function(value: any, datatype: types.DatatypeInterface<any>)
+		if type(value) ~= "string" then return false end
+		return buffer.len(buffer.fromstring(value)) == datatype.len
+	end,
+	UD = function(value: any)
+		return typeof(value) == "UDim"
+	end,
+	UD2 = function(value: any)
+		return typeof(value) == "UDim2"
+	end,
+	u8 = function(value: any)
+		return type(value) == "number" and value >= 0 and value < 2 ^ 8
+	end,
+	u16 = function(value: any)
+		return type(value) == "number" and value >= 0 and value < 2 ^ 16
+	end,
+	u32 = function(value: any)
+		return type(value) == "number" and value >= 0 and value < 2 ^ 32
+	end,
+	--FIXME: check if each component is in the range appropriate for these
+	V2f16 = function(value: any)
+		if typeof(value) ~= "Vector2" then return false end
+		return true
+	end,
+	V2f24 = function(value: any)
+		if typeof(value) ~= "Vector2" then return false end
+		return true
+	end,
+	V2f32 = function(value: any)
+		if typeof(value) ~= "Vector2" then return false end
+		return true
+	end,
+	V2f64 = function(value: any)
+		return typeof(value) == "Vector2"
+	end,
+	V3f16 = function(value: any)
+		if type(value) ~= "vector" then return false end
+		return true
+	end,
+	V3f24 = function(value: any)
+		if type(value) ~= "vector" then return false end
+		return true
+	end,
+	V3f32 = function(value: any)
+		if type(value) ~= "vector" then return false end
+		return true
+	end,
+	V3f64 = function(value: any)
+		return type(value) == "vector"
 	end,
 } :: evaluators
 

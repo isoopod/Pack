@@ -13,6 +13,7 @@ local DEBUG = PACK_CONFIG.__DEBUG__ == true
 return function(length: number): types.DatatypeInterface<string>
 	return table.freeze({
 		Eval = "string",
+		len = length,
 		Read = function(reader: types.ReaderData): string
 			return Reader.string(reader, length)
 		end,
