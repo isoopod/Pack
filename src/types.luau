@@ -219,6 +219,7 @@ export type Datatypes = {
 
 	Custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
 	Object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
+	Transformer: <T, U>(format: U, encode: ((T) -> U)?, decode: ((U) -> T)?) -> T,
 
 	Array: <T>(type: T) -> { T },
 	Dictionary: <T>(format: T) -> T,
