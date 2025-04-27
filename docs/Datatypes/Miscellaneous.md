@@ -47,21 +47,21 @@ Pack:DefineSchema(
         Pack.Dicitonary({
             color = Pack.Color3,
             enabled = Pack.Boolean,
-        })
-    ),
-    function(input: standard)
-        local result = {}
-        result.color = Color3.FromHex(input.color)
-        result.enabled = input.enabled == "True"
-        
-        return result
-    end,
-    function(input) -- The type should be inferred as the same type as the dictionary
-        local result = {}
-        result.color = input.color:ToHex()
-        result.enabled = input.enabled and "True" or "False
-
-        return result
-    end
+        }),
+        function(input: standard)
+            local result = {}
+            result.color = Color3.FromHex(input.color)
+            result.enabled = input.enabled == "True"
+            
+            return result
+        end,
+        function(input) -- The type should be inferred as the same type as the dictionary
+            local result = {}
+            result.color = input.color:ToHex()
+            result.enabled = input.enabled and "True" or "False
+    
+            return result
+        end
+    )
 )
 ```
