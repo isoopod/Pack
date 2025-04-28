@@ -21,6 +21,8 @@ return function<T, U>(format: types.DatatypeInterface<U>, encode: (T) -> U, deco
 		Write = function(writer: types.WriterData, value: T)
 			format.Write(writer, encode(value))
 		end,
-		Eval = format.Eval,
+		Eval = "Transformer",
+		Form = format.Eval,
+		enc = encode,
 	})
 end
