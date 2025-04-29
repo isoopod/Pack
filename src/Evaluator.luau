@@ -274,13 +274,13 @@ evaluator.evaluators = {
 		return typeof(value) == "Instance"
 	end,
 	i8 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1)
+		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1) and value % 1 == 0
 	end,
 	i16 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1)
+		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1) and value % 1 == 0
 	end,
 	i32 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1)
+		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and value % 1 == 0
 	end,
 	Map = function(value: any, datatype: types.DatatypeInterface<any>)
 		if type(value) ~= "table" then return false end
@@ -380,13 +380,13 @@ evaluator.evaluators = {
 		return typeof(value) == "UDim2"
 	end,
 	u8 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 8
+		return type(value) == "number" and value >= 0 and value < 2 ^ 8 and value % 1 == 0
 	end,
 	u16 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 16
+		return type(value) == "number" and value >= 0 and value < 2 ^ 16 and value % 1 == 0
 	end,
 	u32 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 32
+		return type(value) == "number" and value >= 0 and value < 2 ^ 32 and value % 1 == 0
 	end,
 	V2f16 = function(value: any)
 		return checkVector2(value, MAX_F16)
