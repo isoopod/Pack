@@ -13,7 +13,7 @@ return function()
 		local aRight, aUp, aLook = actual:GetComponents()
 		local bRight, bUp, bLook = expected:Orthonormalize():GetComponents()
 
-		for i, aVec in ipairs({ aRight, aUp, aLook }) do
+		for i, aVec in { aRight, aUp, aLook } do
 			local bVec = select(i, bRight, bUp, bLook)
 			for j = 1, 3 do
 				expect(aVec[j]).to.be.near(bVec[j], epsilon)
