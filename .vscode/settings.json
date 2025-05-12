@@ -6,5 +6,5 @@
     "luau-lsp.inlayHints.functionReturnTypes": true,
     "luau-lsp.inlayHints.parameterTypes": true,
     "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
-    "stylua.targetReleaseVersion": "latest"
+    "stylua.targetReleaseVersion": "latest",
 }

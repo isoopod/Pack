@@ -13,4 +13,4 @@ Without doing this, you will not have access to the Pack.Schema type needed to u
 
 ## Manual
 
-Download the latest version of Pack from [releases](https://github.com/isoopod/Pack/releases) and insert it somewhere in ReplicatedStorage. 
+Download the latest version of Pack from [releases](https://github.com/isoopod/Pack/releases) and insert it somewhere in ReplicatedStorage.

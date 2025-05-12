@@ -73,3 +73,7 @@ Pack:DefineSchema(Pack.SparseDictionary({
     -- All keys in the optional table are already nullable
 }))
 ```
+
+## Union
+
+The Union datatype indicates a value may be one of many datatypes, adding 1 byte of overhead. The order of the values is the order they will be evaluated.

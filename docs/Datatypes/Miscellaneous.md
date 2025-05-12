@@ -30,8 +30,8 @@ Pack:DefineSchema(
 ## Transformer
 
 The `Transformer` datatype functions as a convenient wrapper for transforming raw data into a more efficient format for encoding, and reversing that process.
-The `format` (usually a [Dictionary](Structures#dictionary)) is how the data will be encoded by Pack. 
-The `encode` function should take some data not that would not directly be accepted by `format` and transform it such that it can be. 
+The `format` (usually a [Dictionary](Structures#dictionary)) is how the data will be encoded by Pack.
+The `encode` function should take some data not that would not directly be accepted by `format` and transform it such that it can be.
 The `decode` function would then bring data encoded in that `format` and turn it back into the original format
 
 `encode` and `decode` are both optional, allowing you to use the transformer for data normalization, such as filling in defaults.

@@ -6,6 +6,10 @@ sidebar_position: 1
 
 In Pack, a primitive datatype refers to datatypes that contain only their own data. By this definition, Datatypes like Vector3 are treated as primitives, where they might normally be called compount datatypes or aggregate datatypes.
 
+## Any
+
+The Any datatype attempts to automatically encode any value inserted, at the cost of a much higher overhead. Currently, Any has no optimizations for tables, treating them all as `[any]: any` (2 bytes of overhead for each key-value pair) and does not support metatables or functions.
+
 ## BitField
 
 A BitField is a highly compressed array of booleans, using bit packing to fit eight booleans into one byte, instead of the usual one.  
@@ -96,31 +100,33 @@ Range:
 Precision: ~5.9 decimal places
 
 ## Float32
+
 :::note[Aliases]
 **Float** is an alias for Float32 and can be used instead
 :::
 Encodes a 32-bit floating point number using 4 bytes
 
 Range:
-    - Subnormal: ±1.2×10⁻³⁸ 
+    - Subnormal: ±1.2×10⁻³⁸
     - Normal: ±3.4×10³⁸
 Precision: ~7.2 decimal places
 
 ## Float64
+
 :::note[Aliases]
 **Double** is an alias for Float64 and can be used instead
 :::
 Enocdes a 64-bit floating point number using 8 bytes. This is the type used by lua numbers. It is also the only numeric type that can be used for UserIds, as those have passed the 32-bit unsigned integer limit.
 
 Range:
-    - Subnormal: ±2.2×10⁻³⁰⁸ 
+    - Subnormal: ±2.2×10⁻³⁰⁸
     - Normal: ±1.8×10³⁰⁸
 Precision: ~15.9 decimal places
 
 ## Instance
 
 Encodes a reference to an Instance. This will place a UID tag on the instance so it can be located later. This UID is 4 bytes.  
-Note that the UID tag is not removed, as 
+Note that the UID tag is not removed, as
 :::warning
 This reference does not persist between server and client
 
@@ -130,6 +136,7 @@ Writing a reference to an Instance that does not already have a UID will synchro
 In saving places, references persist between server runtimes.
 
 ## Int8
+
 :::note[Aliases]
 **Byte** is an alias for Int8 and can be used instead
 :::
@@ -137,6 +144,7 @@ Enocdes an 8-bit signed integer in a single byte.
 Range: -128 – 127
 
 ## Int16
+
 :::note[Aliases]
 **Short** is an alias for Int16 and can be used instead
 :::
@@ -144,6 +152,7 @@ Encodes a 16-bit signed integer in 2 bytes.
 Range: -32,768 – 32,767
 
 ## Int32
+
 :::note[Aliases]
 **Int** is an alias for Int32 and can be used instead
 :::
@@ -240,6 +249,7 @@ Encodes a UDim2 as 12 bytes.
 We assume the offset will be within the range of a int16. If this is not the case, you will have to send the two UDims as a float32 scale and int32 offset.
 
 ## UInt8
+
 :::note[Aliases]
 **UByte** is an alias for UInt8 and can be used instead
 :::
@@ -247,6 +257,7 @@ Enocdes an 8-bit unsigned integer in a single byte.
 Range: 0 – 255
 
 ## UInt16
+
 :::note[Aliases]
 **UShort** is an alias for UInt16 and can be used instead
 :::
@@ -254,6 +265,7 @@ Encodes a 16-bit unsigned integer in 2 bytes.
 Range: 0 – 65,565
 
 ## UInt32
+
 :::note[Aliases]
 **UInt** is an alias for UInt32 and can be used instead
 :::
@@ -261,6 +273,7 @@ Encodes a 32-bit unsigned integer in 4 bytes.
 Range: 0 – 4,294,967,295
 
 ## Vector2float32
+
 :::note[Aliases]
 **Vector2** is an alias for Vector2float32 and can be used instead
 :::
@@ -285,21 +298,22 @@ see [Float24](#float24) for approximate range and precision of each component.
 
 Encodes a 2D vector of float16s with 4 bytes.
 
-see [Float16](#float16) for approximate range and precision of each component. 
+see [Float16](#float16) for approximate range and precision of each component.
 
 ## Vector2int16
 
 Encodes a 2D vector of int16s using 4 bytes.
 
 ## Vector3float32
+
 :::note[Aliases]
 **Vector3** is an alias for Vector3float32 and can be used instead
 :::
-Encodes a 3D vector of float32s using 12 bytes. 
+Encodes a 3D vector of float32s using 12 bytes.
 
 see [Float32](#float32) for approximate range and precision of each component.
 
-:::note 
+:::note
 Compatible with the Roblox Vector3 library and luau vector library.  
 Will return as a luau vector, but these are interchangeable with the Vector3 library.  
 (Vector3 methods can be used on vectors and vector library functions can take Vector3s)

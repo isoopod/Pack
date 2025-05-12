@@ -4,6 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Evaluator = require(ReplicatedStorage.Pack.Evaluator)
+local Map = require(script.Parent.Map)
 local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
@@ -52,27 +53,31 @@ for k, v in Evaluator.evalToId do
 	idToEval[v] = k
 end
 
-local datatype = table.freeze({
-	Eval = "Any",
-	Read = function(reader: types.ReaderData): number
-		-- TODO
-	end,
-	Write = function(writer: types.WriterData, value: number)
-		-- Attempt to find a valid representation for value
-		for _, v in searchOrder do
-			if Evaluator.evaluators[v](value, nil :: any) then
-				Writer.alloc(writer, 1)
-				Writer.u8(writer, Evaluator.evalToId[v])
-				-- TODO
-				return
-			end
-		end
+local datatype = {}
 
-		-- Handle other cases
-		if type(value) == "table" then
-			-- For now, treat tables as map [any]: any
-		end
-	end,
-}) :: types.DatatypeInterface<number>
+local tbl = Map(datatype, datatype)
 
-return datatype
+datatype.Eval = "Any"
+datatype.Read = function(reader: types.ReaderData): number
+	-- TODO
+end
+datatype.Write = function(writer: types.WriterData, value: number)
+	-- Attempt to find a valid representation for value
+	for _, v in searchOrder do
+		if Evaluator.evaluators[v](value, nil :: any) then
+			Writer.alloc(writer, 1)
+			Writer.u8(writer, Evaluator.evalToId[v])
+			require(Evaluator.indexToDatatype[Evaluator.evalToId[v]]).Write(writer, value)
+			return
+		end
+	end
+
+	-- Handle other cases
+	if type(value) == "table" then
+		-- For now, treat tables as map [any]: any
+		Writer.u8(writer, Evaluator.evalToId[tbl.Eval :: string])
+		tbl.Write(writer, value)
+	end
+end
+
+return table.freeze(datatype)
