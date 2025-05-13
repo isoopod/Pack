@@ -8,7 +8,7 @@ In Pack, a primitive datatype refers to datatypes that contain only their own da
 
 ## Any
 
-The Any datatype attempts to automatically encode any value inserted, at the cost of a much higher overhead. Currently, Any has no optimizations for tables, treating them all as `[any]: any` (2 bytes of overhead for each key-value pair) and does not support metatables or functions.
+The Any datatype attempts to automatically encode any value inserted, at the cost of a much higher overhead. Currently, Any has few optimizations for tables, treating them all as arrays of any when possible (1 byte overhead for each value), otherwise falling back to a map of `[any]: any` (2 bytes of overhead for each key-value pair) and does not support metatables or functions.
 
 ## BitField
 

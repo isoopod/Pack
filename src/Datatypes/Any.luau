@@ -3,6 +3,7 @@
 --!optimize 2
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Array = require(script.Parent.Array)
 local Evaluator = require(ReplicatedStorage.Pack.Evaluator)
 local Map = require(script.Parent.Map)
 local Reader = require(script.Parent.Parent.Reader)
@@ -55,28 +56,54 @@ end
 
 local datatype = {}
 
+-- Map of any -> any
 local tbl = Map(datatype, datatype)
 
+-- Array of any
+local array = Array(datatype)
+
 datatype.Eval = "Any"
-datatype.Read = function(reader: types.ReaderData): number
+datatype.Read = function(reader: types.ReaderData): any
 	-- TODO
+	local dtId = Reader.u8(reader)
+	local s, dt = pcall(require, Evaluator.indexToDatatype[dtId])
+	assert(s, "Get datatype from ID failed")
+	return dt.Read(reader)
 end
-datatype.Write = function(writer: types.WriterData, value: number)
+datatype.Write = function(writer: types.WriterData, value: any)
 	-- Attempt to find a valid representation for value
 	for _, v in searchOrder do
 		if Evaluator.evaluators[v](value, nil :: any) then
 			Writer.alloc(writer, 1)
 			Writer.u8(writer, Evaluator.evalToId[v])
-			require(Evaluator.indexToDatatype[Evaluator.evalToId[v]]).Write(writer, value)
+			local s, dt = pcall(require, Evaluator.indexToDatatype[Evaluator.evalToId[v]])
+			assert(s, "Get datatype from Eval failed")
+			dt.Write(writer, value)
 			return
 		end
 	end
 
 	-- Handle other cases
 	if type(value) == "table" then
-		-- For now, treat tables as map [any]: any
-		Writer.u8(writer, Evaluator.evalToId[tbl.Eval :: string])
-		tbl.Write(writer, value)
+		-- Check if the table is an array
+		local expectedIndex: any = 1
+		for i in value do
+			if i ~= expectedIndex then
+				expectedIndex = nil
+				break
+			end
+			expectedIndex += 1
+		end
+
+		-- expectedIndex will be nil if not an array
+		if expectedIndex then
+			Writer.u8(writer, Evaluator.evalToId[array.Eval :: string])
+			array.Write(writer, value :: any)
+		else
+			-- For now, treat tables as map [any]: any
+			Writer.u8(writer, Evaluator.evalToId[tbl.Eval :: string])
+			tbl.Write(writer, value :: any)
+		end
 	end
 end
 

@@ -231,6 +231,7 @@ export type Datatypes = {
 	Nullable: <T>(type: T) -> T?,
 	-- If possible make this a type function to union all members of a type pack
 	Union: <T0, T1, T2, T3, T4, T5, T6, T7>(v0: T0, v1: T1, v2: T2?, v3: T3?, v4: T4?, v5: T5?, v6: T6?, v7: T7?) -> T1 | T2 | T3 | T4 | T5 | T6 | T7,
+	Any: any,
 }
 
 export type Pack = {
