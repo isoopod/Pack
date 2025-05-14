@@ -7,7 +7,7 @@ local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
-local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG")) :: SharedTable
+local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG"))
 local DEBUG = PACK_CONFIG.__DEBUG__ == true
 
 return function(length: number): types.DatatypeInterface<buffer>
@@ -19,7 +19,7 @@ return function(length: number): types.DatatypeInterface<buffer>
 		end,
 		Write = function(writer: types.WriterData, value: buffer)
 			local len, write = Writer.string(writer, buffer.tostring(value))
-			if DEBUG then assert(len == length, "buffer_fixed expects written buffer length (in bytes) to match the allocated length.") end
+			if DEBUG then assert(len == length, "BufferFixed expects written buffer length (in bytes) to match the allocated length.") end
 
 			write()
 		end,

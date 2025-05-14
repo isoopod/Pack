@@ -10,6 +10,7 @@ local datatype = table.freeze({
 	Eval = "buffer32",
 	Read = function(reader: types.ReaderData): buffer
 		local len = Reader.nBitUint(reader, 24, 0)
+		Reader.moveCursor(reader, 3)
 		return buffer.fromstring(Reader.string(reader, len))
 	end,
 	Write = function(writer: types.WriterData, value: buffer)
@@ -17,6 +18,7 @@ local datatype = table.freeze({
 
 		Writer.alloc(writer, 3)
 		Writer.nBitUint(writer, len, 24, 0)
+		Writer.moveCursor(writer, 3)
 
 		write()
 	end,

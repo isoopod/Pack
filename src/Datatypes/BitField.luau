@@ -30,8 +30,11 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 
 				-- Read the appropriate chunk size
 				local chunk
-				if remainingBits > 16 then
+				if remainingBits > 24 then
 					chunk = Reader.u32(reader)
+				elseif remainingBits > 16 then
+					chunk = Reader.nBitUint(reader, 24, 0)
+					Reader.moveCursor(reader, 3)
 				elseif remainingBits > 8 then
 					chunk = Reader.u16(reader)
 				else
@@ -52,20 +55,29 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 			Writer.alloc(writer, byteLength)
 
 			for i = 1, length, 32 do
-				local bitbuffer = table.create(32) :: { number } -- Preallocate the max chunk size
-				for j = 1, 32 do
-					if i + j > length then break end -- We have reached the end of the bit field so break early
-					local bit = value[i + j]
+				-- How many bits left in this chunk?
+				local remainingBits = math.min(32, length - i + 1)
 
-					bitbuffer[j] = bit and BIT_MASKS[j] or 0
+				-- Build exactly remainingBits entries
+				local bitbuffer = {}
+				for j = 1, remainingBits do
+					if value[i + j - 1] then
+						bitbuffer[j] = BIT_MASKS[j]
+					else
+						bitbuffer[j] = 0
+					end
 				end
 
-				-- Write the appropriate chunk size
+				-- Pack into one integer
 				local chunk = bor(unpack(bitbuffer))
-				local filledBits = #bitbuffer
-				if filledBits > 16 then
+
+				-- Emit exactly the same width that the reader expects
+				if remainingBits > 24 then
 					Writer.u32(writer, chunk)
-				elseif filledBits > 8 then
+				elseif remainingBits > 16 then
+					Writer.nBitUint(writer, chunk, 24, 0)
+					Writer.moveCursor(writer, 3)
+				elseif remainingBits > 8 then
 					Writer.u16(writer, chunk)
 				else
 					Writer.u8(writer, chunk)

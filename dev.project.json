@@ -10,25 +10,14 @@
             "Pack": {
                 "$path": "src"
             },
-            "Packets": {
-                "$path": "tests/packets"
-            },
             "shared": {
                 "$path": "tests/shared"
             }
         },
 
         "ServerScriptService": {
-            "server": {
-                "$path": "tests/server"
-            }
-        },
-
-        "StarterPlayer": {
-            "StarterPlayerScripts": {
-                "client": {
-                    "$path": "tests/client"
-                }
+            "TestRunner": {
+                "$path": "tests/TestRunner.luau"
             }
         }
     }

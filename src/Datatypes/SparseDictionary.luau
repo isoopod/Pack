@@ -18,7 +18,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	optStructure = table.create(optLen) :: { any }
 
 	for k in optionalFormat do
-		table.insert(optStructure, k)
+		table.insert(optStructure, k :: any)
 	end
 
 	table.sort(optStructure)
@@ -31,7 +31,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 		reqStructure = table.create(reqLen) :: { any }
 
 		for k in requiredFormat do
-			table.insert(reqStructure, k)
+			table.insert(reqStructure, k :: any)
 		end
 
 		table.sort(reqStructure)

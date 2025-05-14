@@ -7,7 +7,7 @@ local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
-local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG")) :: SharedTable
+local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG"))
 local DEBUG = PACK_CONFIG.__DEBUG__ == true
 
 return function(length: number): types.DatatypeInterface<string>
