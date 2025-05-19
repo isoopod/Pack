@@ -58,7 +58,7 @@ local datatype = table.freeze({
 			SharedTable.increment(Instance_Refs, "count", 1)
 			ref = Instance_Refs.count
 			value:AddTag(`{PREFIX}{ref}`)
-			if setcount then setcount(ref) end
+			if setcount then (setcount :: any)(ref) end
 		end
 
 		Writer.alloc(writer, 4)

@@ -31,5 +31,5 @@ return function(enum: Enum): types.DatatypeInterface<EnumItem>
 			Writer.alloc(writer, len)
 			Writer[op](writer, value.Value)
 		end,
-	})
+	}) :: types.DatatypeInterface<EnumItem>
 end
