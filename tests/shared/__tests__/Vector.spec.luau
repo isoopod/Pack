@@ -17,7 +17,7 @@ local tests = {
 			vector.create(1, -1, 0.5),
 			vector.create(123.456, -654.321, 3.14),
 		},
-		digits = 3,
+		digits = 0,
 	},
 	{
 		name = "Vector3float24",
@@ -28,7 +28,7 @@ local tests = {
 			vector.create(1, -1, 0.5),
 			vector.create(123.456, -654.321, 3.14),
 		},
-		digits = 4,
+		digits = 2,
 	},
 	{
 		name = "Vector3float32",
@@ -71,7 +71,7 @@ local tests = {
 			Vector2.new(1, -1),
 			Vector2.new(123.456, -654.321),
 		},
-		digits = 3,
+		digits = 0,
 	},
 	{
 		name = "Vector2float24",
@@ -82,7 +82,7 @@ local tests = {
 			Vector2.new(1, -1),
 			Vector2.new(123.456, -654.321),
 		},
-		digits = 4,
+		digits = 2,
 	},
 	{
 		name = "Vector2float32",

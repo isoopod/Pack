@@ -113,8 +113,9 @@ describe("BufferFixed", function()
 			end
 
 			it("should error when writing oversized buffers", function()
-				local largeBuffer = buffer.fromstring(string.rep("a", length + 1))
 				expect(function()
+					-- Keep this inside the expect because this line will error at max buffer size
+					local largeBuffer = buffer.fromstring(string.rep("a", length + 1))
 					schema:Write(largeBuffer)
 				end).toThrow()
 			end)

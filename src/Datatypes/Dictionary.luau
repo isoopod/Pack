@@ -15,7 +15,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 	local structure = table.create(len) :: { any }
 
 	for k in format do
-		table.insert(structure, k)
+		table.insert(structure, k :: any)
 	end
 
 	table.sort(structure)

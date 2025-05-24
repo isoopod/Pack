@@ -10,7 +10,7 @@ local datatype = table.freeze({
 	Eval = "R3i16",
 	Read = function(reader: types.ReaderData): Region3int16
 		local min = Vector3int16.new(Reader.i16(reader), Reader.i16(reader), Reader.i16(reader))
-		local max = Vector3int16.new(Reader.i16(reader), Reader.i16(reader), Reader.f32(reader))
+		local max = Vector3int16.new(Reader.i16(reader), Reader.i16(reader), Reader.i16(reader))
 
 		return Region3int16.new(min, max)
 	end,

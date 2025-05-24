@@ -7,7 +7,7 @@ local it = JestGlobals.it
 local expect = JestGlobals.expect
 local describe = JestGlobals.describe
 
-local function testStringType(name, datatype, len)
+local function testStringType(name, datatype, len: number)
 	local schema = Pack:Define(datatype)
 
 	describe(name, function()
@@ -26,7 +26,7 @@ local function testStringType(name, datatype, len)
 		end)
 
 		it("should round-trip maximum sized string", function()
-			local expected = string.rep("x", math.min(2 ^ len, 2 ^ 30 - 4))
+			local expected = string.rep("x", math.min(2 ^ len - 1, 2 ^ 30 - 4))
 			local buf = schema:Write(expected)
 			local actual = schema:Read(buf)
 			expect(actual).toBe(expected)
@@ -34,10 +34,10 @@ local function testStringType(name, datatype, len)
 	end)
 end
 
-testStringType("String8", Pack.String8)
-testStringType("String16", Pack.String16)
-testStringType("String24", Pack.String24)
-testStringType("String32", Pack.String32)
+testStringType("String8", Pack.String8, 8)
+testStringType("String16", Pack.String16, 16)
+testStringType("String24", Pack.String24, 24)
+testStringType("String32", Pack.String32, 32)
 
 -- Test for StringFixed
 

@@ -26,7 +26,7 @@ describe("Ints", function()
 				end
 			end)
 
-			it("should error on out-of-range values", function()
+			it("should wrap on out-of-range values", function()
 				local outOfRangePos = cases[#cases] - 1
 				local buf1 = schema:Write(outOfRangePos)
 				local res1 = schema:Read(buf1)

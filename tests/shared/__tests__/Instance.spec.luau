@@ -7,8 +7,6 @@ local it = JestGlobals.it
 local expect = JestGlobals.expect
 local describe = JestGlobals.describe
 
-local Writer = require(ReplicatedStorage.Pack.Writer)
-
 local schema = Pack:Define(Pack.Instance)
 
 describe("Instance", function()
@@ -54,11 +52,7 @@ describe("Instance", function()
 
 	it("should return nil when reading an unknown ref", function()
 		-- Create a fake buffer with ref index not matching any tagged instance
-		local writer = { data = {}, position = 1 }
-		Writer.alloc(writer, 4)
-		Writer.u32(writer, 99999) -- arbitrary large ref
-		local packet = writer
-
+		local packet = buffer.fromstring("FFFF") -- Arbitrary large 4 byte number
 		local result = schema:Read(packet)
 		expect(result).toBeNil()
 	end)

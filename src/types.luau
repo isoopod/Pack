@@ -1,3 +1,6 @@
+--!strict
+--# selene:allow(undefined_variable)
+
 -- Shared types within pack
 
 export type Schema<T, U...> = {
@@ -218,13 +221,12 @@ export type Datatypes = {
 	EnumItem: (Enum) -> any,
 
 	Custom: <T>(read: (Reader) -> T, write: (Writer, T) -> ()) -> T,
-	Object: <T, U>(metatable: T, classData: U) -> typeof(setmetatable({} :: U, {} :: T)),
+	Object: <T, U>(metatable: T, classData: U) -> setmetatable<U, T>,
 	Transformer: <T, U>(format: U, encode: ((T) -> U)?, decode: ((U) -> T)?) -> T,
 
 	Array: <T>(type: T) -> { T },
 	Dictionary: <T>(format: T) -> T,
-	-- Eventually needs to use a type function to all keys of T nullable
-	SparseDictionary: <T, U>(optionalFormat: T, requiredFormat: U?) -> T | U | any,
+	SparseDictionary: <T, U>(optionalFormat: T, requireFormat: U?) -> nullableKeys<T> & U,
 	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
 
 	Null: nil,
@@ -244,5 +246,29 @@ export type Pack = {
 	Reader: Reader,
 	Writer: Writer,
 } & Datatypes
+
+-- Makes every property of a table type nullable (i.e. T[K] -> T[K] | nil)
+type function nullableKeys(ty: type)
+	-- ensure we only operate on table types
+	if not ty:is("table") then error("nullableKeys can only be called on table types") end
+
+	-- create a fresh table-type to populate
+	local newTable = types.newtable()
+
+	-- iterate over each key (singleton string type) in the original table
+	for prop in ty:properties() do
+		-- get the original property’s read type
+		local origType = ty:readproperty(prop)
+		if origType then
+			-- union it with nil
+			local nilType = types.singleton(nil)
+			local unionType = types.unionof(origType, nilType)
+			-- set both read+write to the new nullable union
+			newTable:setproperty(prop, unionType)
+		end
+	end
+
+	return newTable
+end
 
 return nil

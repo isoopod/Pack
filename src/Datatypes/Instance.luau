@@ -26,12 +26,10 @@ local Instance_Refs = SharedTableRegistry:GetSharedTable("PACK_INSTANCE_REFS")
 
 -- You can enable this to have the server ref count save on close, allowing refs to persist in saving places
 local setcount: (number) -> ()
-if IS_SERVER and PACK_CONFIG.PERSIST_INSTACE_REFS then
-	setcount = function(count: number)
-		script:SetAttribute("n", count)
-	end
-	Instance_Refs.count = script:GetAttribute("n") or -1
-end
+if IS_SERVER and PACK_CONFIG.PERSIST_INSTACE_REFS then setcount = function(count: number)
+	script:SetAttribute("n", count)
+end end
+Instance_Refs.count = script:GetAttribute("n") or -1
 
 local datatype = table.freeze({
 	Eval = "Inst_Ref",

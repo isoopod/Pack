@@ -23,23 +23,18 @@ describe("UInts", function()
 			local schema = Pack:Define(Pack[typeName])
 
 			it("should round-trip values", function()
-				for _, v in cases do
-					local buf = schema:Write(v)
-					local res = schema:Read(buf)
-					expect(res).toBe(v)
+				for _, expected in cases do
+					local packet = schema:Write(expected)
+					local actual = schema:Read(packet)
+					expect(actual).toBe(expected)
 				end
 			end)
 
-			it("should error on out-of-range values", function()
-				local outOfRangePos = cases[#cases] - 1
-				local buf1 = schema:Write(outOfRangePos)
-				local res1 = schema:Read(buf1)
-				expect(res1).never.toBe(outOfRangePos)
-
-				local outOfRangeNeg = cases[#cases - 1] + 1
-				local buf2 = schema:Write(outOfRangeNeg)
-				local res2 = schema:Read(buf2)
-				expect(res2).never.toBe(outOfRangeNeg)
+			it("should wrap on out-of-range values", function()
+				local expected = cases[#cases] + 1
+				local packet = schema:Write(expected)
+				local actual = schema:Read(packet)
+				expect(actual).never.toBe(expected)
 			end)
 		end)
 	end

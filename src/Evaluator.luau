@@ -1,6 +1,7 @@
 --!strict
 --!optimize 2
 --!native
+
 local types = require(script.Parent.types)
 
 type evaluators = {
@@ -47,7 +48,7 @@ evaluator.indexToDatatype = {
 	[3] = datatypes.BrickColor,
 	[4] = datatypes.Buffer8,
 	[5] = datatypes.Buffer16,
-	[6] = datatypes.buffer24,
+	[6] = datatypes.Buffer24,
 	[7] = datatypes.Buffer32,
 	[8] = datatypes.BufferFixed,
 	[9] = datatypes.CFrame,

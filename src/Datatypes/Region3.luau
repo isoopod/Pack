@@ -16,10 +16,10 @@ local datatype = table.freeze({
 	end,
 	Write = function(writer: types.WriterData, value: Region3)
 		local position = value.CFrame.Position
-		local size = value.Size
+		local halfSize = value.Size / 2
 
-		local min = position - size
-		local max = position + size
+		local min = position - halfSize
+		local max = position + halfSize
 
 		Writer.alloc(writer, 24)
 		Writer.f32(writer, min.X)

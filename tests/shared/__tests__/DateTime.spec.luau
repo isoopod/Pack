@@ -25,17 +25,16 @@ describe("DateTime", function()
 	end)
 
 	it("should correctly handle a negative timestamp (pre-1970)", function()
-		local negative = DateTime.fromUnixTimestampMillis(-123456789)
+		local negative = DateTime.fromUnixTimestampMillis(-17987443200000) -- Min timestamp millis
 		local buffer = schema:Write(negative)
 		local result = schema:Read(buffer)
-		expect(result.UnixTimestampMillis).toBe(-123456789)
+		expect(result.UnixTimestampMillis).toBe(-17987443200000)
 	end)
 
 	it("should correctly handle a large timestamp within f64 precision", function()
-		-- 2^53 is the max integer exactly representable by f64
-		local maxExact = DateTime.fromUnixTimestampMillis(2 ^ 53)
+		local maxExact = DateTime.fromUnixTimestampMillis(253402300799999) -- Max timestamp millis
 		local buffer = schema:Write(maxExact)
 		local result = schema:Read(buffer)
-		expect(result.UnixTimestampMillis).toBe(2 ^ 53)
+		expect(result.UnixTimestampMillis).toBe(253402300799999)
 	end)
 end)
