@@ -6,7 +6,7 @@ local types = require(script.Parent.Parent.types)
 
 -- Wrapper to transform raw data to and from a more efficient format for storage, or apply data normalization
 
-local function defaultTransform(value)
+local function defaultTransform(value): any
 	return value
 end
 
