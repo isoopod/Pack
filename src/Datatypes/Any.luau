@@ -1,10 +1,9 @@
 --!strict
 --!native
 --!optimize 2
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Array = require(script.Parent.Array)
-local Evaluator = require(ReplicatedStorage.Pack.Evaluator)
+local Evaluator = require(script.Parent.Parent.Evaluator)
 local Map = require(script.Parent.Map)
 local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
