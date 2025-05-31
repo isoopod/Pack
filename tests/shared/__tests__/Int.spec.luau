@@ -11,6 +11,7 @@ local intCases = {
 	Int8 = { 0, 1, -1, 127, -128 },
 	Int16 = { 0, 1, -1, 32767, -32768 },
 	Int32 = { 0, 1, -1, 2147483647, -2147483648 },
+	Int56 = { 0, 1, -1, 2 ^ 53, -2 ^ 53 }, -- No -1 for max needed
 }
 
 describe("Ints", function()

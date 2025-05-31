@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 ---
-
+<!-- markdownlint-disable MD033 -->
 # Primitive Datatypes
 
 In Pack, a primitive datatype refers to datatypes that contain only their own data. By this definition, Datatypes like Vector3 are treated as primitives, where they might normally be called compount datatypes or aggregate datatypes.
@@ -159,6 +159,16 @@ Range: -32,768 – 32,767
 Encodes a 32-bit signed integer in 4 bytes.
 Range: -2,147,483,648 – 2,147,483,647
 
+## Int56
+
+:::note[Aliases]
+**IntLong** is an alias for Int56 and can be used instead
+:::
+Encodes any integer exactly representable by Doubles in 7 bytes.
+Range: [-9,007,199,254,740,992–9,007,199,254,740,992]
+
+Doubles can exactly represent integers between ±2<sup>53</sup> so the 56 comes from the 7 bytes and not the precision.
+
 ## Null
 
 Represents nothing, directly uses zero bytes. For use in the Union structure (WIP)
@@ -254,7 +264,7 @@ We assume the offset will be within the range of a int16. If this is not the cas
 **UByte** is an alias for UInt8 and can be used instead
 :::
 Enocdes an 8-bit unsigned integer in a single byte.  
-Range: 0 – 255
+Range: [0–255]
 
 ## UInt16
 
@@ -262,7 +272,7 @@ Range: 0 – 255
 **UShort** is an alias for UInt16 and can be used instead
 :::
 Encodes a 16-bit unsigned integer in 2 bytes.  
-Range: 0 – 65,565
+Range: [0–65,565]
 
 ## UInt32
 
@@ -270,7 +280,20 @@ Range: 0 – 65,565
 **UInt** is an alias for UInt32 and can be used instead
 :::
 Encodes a 32-bit unsigned integer in 4 bytes.
-Range: 0 – 4,294,967,295
+Range: [0–4,294,967,295]
+
+## UInt56
+
+:::note[Aliases]
+**ULong** is an alias for UInt56 and can be used instead
+:::
+Encodes a 53-bit unsigned integer in 7 bytes (hence 56 instead of 53).
+Range: [0–9,007,199,254,740,992]
+
+The reason we use 53 bits is because Doubles (the luau number type) only hold integers exactly up to 2<sup>53</sup>.
+This means the traditional ULong size of 64-bit is unpractical.
+
+The intended use case for UInt56 is for UserIds and AssetIds, or other large unsigned integers.
 
 ## Vector2float32
 

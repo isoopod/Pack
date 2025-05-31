@@ -15,6 +15,7 @@ local intCases = {
 	UInt8 = { 0, 1, max(8) },
 	UInt16 = { 0, 1, max(16) },
 	UInt32 = { 0, 1, max(32) },
+	UInt56 = { 0, 1, max(53) },
 }
 
 describe("UInts", function()
