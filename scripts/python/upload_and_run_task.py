@@ -5,7 +5,7 @@ import json
 
 from luau_execution_task import createTask, pollForTaskCompletion, getTaskLogs
 
-ROBLOX_API_KEY = os.environ["ROBLOX_API_KEY"]
+ROBLOX_API_KEY = os.environ["ROBLOX_API_KEY"].strip()
 ROBLOX_UNIVERSE_ID = os.environ["ROBLOX_UNIVERSE_ID"]
 ROBLOX_PLACE_ID = os.environ["ROBLOX_PLACE_ID"]
 
