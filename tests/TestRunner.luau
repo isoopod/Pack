@@ -1,7 +1,10 @@
 -- Require this module from the command bar in a local test
 -- Also, make sure loadstring is enabled.
 
-if not game:GetService("RunService"):IsRunning() then error("Only run TestRunner in a local test.") end
+local processServiceExists, ProcessService = pcall(function()
+	local service = "ProcessService"
+	return game:GetService(service)
+end)
 
 local PACK_CONFIG = (game:GetService("SharedTableRegistry"):GetSharedTable("PACK_CONFIG"))
 PACK_CONFIG.__DEBUG__ = true
@@ -16,5 +19,11 @@ local status, result = runCLI(ReplicatedStorage.shared, {
 }, { ReplicatedStorage.shared }):awaitStatus()
 
 if status == "Rejected" then print(result) end
+
+if status == "Resolved" and result.results.numFailedTestSuites == 0 and result.results.numFailedTests == 0 then
+	if processServiceExists then ProcessService:ExitAsync(0) end
+end
+
+if processServiceExists then ProcessService:ExitAsync(1) end
 
 return nil
