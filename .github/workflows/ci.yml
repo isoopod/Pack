@@ -21,6 +21,9 @@ jobs:
         with:
           path: ~/.aftman
           key: tools-${{ hashFiles('aftman.toml') }}
+      - name: Ensure shell scripts are executable
+        run: |
+          find . -type f -name "*.sh" -exec chmod +x {} \;
 
   linting:
     name: Lint with Selene
