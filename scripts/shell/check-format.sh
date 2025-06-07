@@ -2,5 +2,5 @@
 
 set -e
 
-stylua src
-stylua tests
+$HOME/.aftman/bin/stylua src
+$HOME/.aftman/bin/stylua tests
