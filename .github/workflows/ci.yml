@@ -6,6 +6,9 @@ on:
   push:
     branches: ["main"]
 
+  # Manual testing
+  workflow_dispatch:
+
 jobs:
   install-tools:
     name: Install tools
