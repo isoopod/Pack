@@ -164,7 +164,7 @@ export type Datatypes = {
 	UShort: number,
 	UInt32: number,
 	UInt: number,
-	UInt56: number,
+	UInt64: number,
 	ULong: number,
 
 	Int8: number,
@@ -173,7 +173,7 @@ export type Datatypes = {
 	Short: number,
 	Int32: number,
 	Int: number,
-	Int56: number,
+	Int64: number,
 	Long: number,
 
 	Float16: number,

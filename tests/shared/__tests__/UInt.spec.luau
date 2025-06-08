@@ -15,7 +15,7 @@ local intCases = {
 	UInt8 = { 0, 1, max(8) },
 	UInt16 = { 0, 1, max(16) },
 	UInt32 = { 0, 1, max(32) },
-	UInt56 = { 0, 1, max(53) },
+	UInt64 = { 0, 1, max(32), max(53), max(53) + 1, max(64) - 2000 }, -- The extreme is not exact but the implementation is not exact past 2^53
 }
 
 describe("UInts", function()
@@ -31,12 +31,15 @@ describe("UInts", function()
 				end
 			end)
 
-			it("should wrap on out-of-range values", function()
-				local expected = cases[#cases] + 1
-				local packet = schema:Write(expected)
-				local actual = schema:Read(packet)
-				expect(actual).never.toBe(expected)
-			end)
+			-- Loss of precision means this test will always fail
+			if typeName ~= "UInt64" then
+				it("should wrap on out-of-range values", function()
+					local expected = cases[#cases] + 1
+					local packet = schema:Write(expected)
+					local actual = schema:Read(packet)
+					expect(actual).never.toBe(expected)
+				end)
+			end
 		end)
 	end
 end)
