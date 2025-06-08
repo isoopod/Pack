@@ -7,6 +7,7 @@
 -- Its the same idea as StringBuilder in Java.
 
 --Modules
+local BitWriter = require("./BitWriter")
 local types = require("./types")
 
 --[=[
@@ -370,11 +371,10 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 	Creates a packet buffer from all queued operations in a single pass 
 ]=]
 function Writer.Finalize(self: types.WriterData): buffer
-	local b = buffer.create(self._len)
+	local b = buffer.create(self._len + math.ceil(self._bitLen / 8))
 	local cursor = 0
 
-	for i = 1, #self._queue do
-		local v: any = self._queue[i]
+	for _, v in self._queue :: { any } do
 		-- Slightly cheaper than type() call
 		local x = v.x
 		if x then
@@ -384,6 +384,9 @@ function Writer.Finalize(self: types.WriterData): buffer
 			cursor += WriteFunctions[v[1]](b, cursor, unpack(v, 2))
 		end
 	end
+
+	-- Build the reserved bit buffer at the end of the packet
+	BitWriter.Finalize(self, b)
 
 	return b
 end

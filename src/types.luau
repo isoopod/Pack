@@ -9,9 +9,14 @@ export type Schema<T, U...> = {
 }
 
 export type ReaderData = {
-	Cursor: number,
 	refs: refs,
+
+	-- Main buffer
+	Cursor: number,
 	_buffer: buffer,
+
+	-- Bit buffer
+	BitCursor: number,
 }
 
 export type Reader = {

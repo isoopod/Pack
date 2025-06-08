@@ -255,6 +255,8 @@ function Reader.new(packet: buffer): types.ReaderData
 	self.Cursor = 0
 	self._buffer = packet
 
+	self.BitCursor = buffer.len(packet) * 8
+
 	return self :: any
 end
 

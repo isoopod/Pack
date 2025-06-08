@@ -59,11 +59,13 @@ function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 		tuple[i] = self._readers[i](reader)
 	end
 
-	if reader.Cursor ~= buffer.len(packet) then
+	local len = buffer.len(packet)
+	local totalBytesRead = reader.Cursor + math.ceil((len * 8 - reader.BitCursor) / 8)
+	if totalBytesRead ~= len then
 		-- If the provided packet is longer than what we actually read, we know something has gone wrong
-		-- This prevents cases where unrelated data that somehow doesnt cause a parse error will be caught
+		-- This prevents most cases where unrelated data that somehow doesnt cause a parse error will be caught
 		-- This can happen if a created packet gets read by the wrong schema, or an unrelated buffer is read in place of the packet
-		error(`Packet len mismatch: Expected to read {buffer.len(packet)} bytes, only read {reader.Cursor}.`)
+		error(`Packet len mismatch: Expected to read {len} bytes, only read {totalBytesRead}.`)
 	end
 
 	return unpack(tuple)
