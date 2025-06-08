@@ -3,7 +3,7 @@
 --!optimize 2
 
 --Modules
-local types = require("./types")
+local types = require(script.Parent.types)
 
 --[=[
 	@class Reader

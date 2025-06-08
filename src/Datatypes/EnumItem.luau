@@ -3,9 +3,9 @@
 
 -- 2025/02/5: Enum:FromValue and Enum:FromName are not recognised by Luau LSP, so this file will not use strict mode for now.
 
-local Reader = require("../Reader")
-local Writer = require("../Writer")
-local types = require("../types")
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
+local types = require(script.Parent.Parent.types)
 
 local read_u8 = Reader.u8
 local read_u16 = Reader.u16

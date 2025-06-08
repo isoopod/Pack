@@ -2,12 +2,12 @@
 --!native
 --!optimize 2
 
-local Array = require("./Array")
-local Evaluator = require("../Evaluator")
-local Map = require("./Map")
-local Reader = require("../Reader")
-local Writer = require("../Writer")
-local types = require("../types")
+local Array = require(script.Parent.Array)
+local Evaluator = require(script.Parent.Parent.Evaluator)
+local Map = require(script.Parent.Map)
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
+local types = require(script.Parent.Parent.types)
 
 -- Basic search for primitive datatypes
 -- stylua: ignore

@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require("./types")
+local types = require(script.Parent.types)
 
 --[=[
     @class BitWriter

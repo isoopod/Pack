@@ -3,9 +3,9 @@
 --!optimize 2
 
 -- Modules
-local Reader = require("@self/Reader")
-local Writer = require("@self/Writer")
-local types = require("@self/types")
+local Reader = require(script.Reader)
+local Writer = require(script.Writer)
+local types = require(script.types)
 
 local Pack = {}
 

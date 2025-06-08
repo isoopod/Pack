@@ -2,10 +2,10 @@
 --!native
 --!optimize 2
 
-local Evaluator = require("../Evaluator")
-local Reader = require("../Reader")
-local Writer = require("../Writer")
-local types = require("../types")
+local Evaluator = require(script.Parent.Parent.Evaluator)
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
+local types = require(script.Parent.Parent.types)
 
 local read_u8 = Reader.u8
 

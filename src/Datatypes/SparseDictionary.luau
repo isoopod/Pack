@@ -3,7 +3,7 @@
 --!optimize 2
 
 local BitField = require(script.Parent.BitField)
-local types = require("../types")
+local types = require(script.Parent.Parent.types)
 
 return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, requiredFormat: { [any]: types.DatatypeInterface<any> }?): types.DatatypeInterface<{}>
 	-- In order to make it so we can read and write a dictionary in the same order, we will

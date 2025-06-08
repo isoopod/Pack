@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require("../types")
+local types = require(script.Parent.Parent.types)
 
 -- Wrap a custom read and write function to create your own datatype for use in a schema.
 -- If you have a custom datatype that needs to be used in many schemas, you should create a datatype module for that.

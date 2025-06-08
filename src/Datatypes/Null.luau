@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require("../types")
+local types = require(script.Parent.Parent.types)
 
 local datatype: types.DatatypeInterface<nil> = table.freeze({
 	Eval = "nil",

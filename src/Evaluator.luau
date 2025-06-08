@@ -2,7 +2,7 @@
 --!optimize 2
 --!native
 
-local types = require("./types")
+local types = require(script.Parent.types)
 
 type evaluators = {
 	[string]: (value: any, datatype: types.DatatypeInterface<any>) -> boolean,

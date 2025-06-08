@@ -10,9 +10,9 @@
 	they use work correctly in luau
 --]]
 
-local Reader = require("../Reader")
-local Writer = require("../Writer")
-local types = require("../types")
+local Reader = require(script.Parent.Parent.Reader)
+local Writer = require(script.Parent.Parent.Writer)
+local types = require(script.Parent.Parent.types)
 
 local read_u32 = Reader.u32
 local read_i32 = Reader.i32

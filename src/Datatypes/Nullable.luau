@@ -2,9 +2,9 @@
 --!native
 --!optimize 2
 
-local BitReader = require("../BitReader")
-local BitWriter = require("../BitWriter")
-local types = require("../types")
+local BitReader = require(script.Parent.Parent.BitReader)
+local BitWriter = require(script.Parent.Parent.BitWriter)
+local types = require(script.Parent.Parent.types)
 
 local bitr_read = BitReader.read
 

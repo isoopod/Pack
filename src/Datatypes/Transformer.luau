@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require("../types")
+local types = require(script.Parent.Parent.types)
 
 -- Wrapper to transform raw data to and from a more efficient format for storage, or apply data normalization
 

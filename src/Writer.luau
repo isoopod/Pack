@@ -7,8 +7,8 @@
 -- Its the same idea as StringBuilder in Java.
 
 --Modules
-local BitWriter = require("./BitWriter")
-local types = require("./types")
+local BitWriter = require(script.Parent.BitWriter)
+local types = require(script.Parent.types)
 
 --[=[
 	@class Writer
