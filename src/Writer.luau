@@ -80,7 +80,7 @@ end
 	Orders a 32-bit unsigned integer to be written into the packet 
 ]=]
 function Writer.u32(self: types.WriterData, value: number)
-	table.insert(self._queue, vector.create(OP_U32, value))
+	table.insert(self._queue, { OP_U32, value })
 end
 
 --[=[
@@ -116,7 +116,7 @@ end
 	Orders a 32-bit signed integer to be written into the packet 
 ]=]
 function Writer.i32(self: types.WriterData, value: number)
-	table.insert(self._queue, vector.create(OP_I32, value))
+	table.insert(self._queue, { OP_I32, value })
 end
 
 --[=[
@@ -198,7 +198,7 @@ end
 	Orders a 64-bit floating point number to be written into the packet 
 ]=]
 function Writer.f64(self: types.WriterData, value: number)
-	table.insert(self._queue, vector.create(OP_F64, value))
+	table.insert(self._queue, { OP_F64, value })
 end
 
 --[=[
@@ -386,7 +386,7 @@ function Writer.Finalize(self: types.WriterData): buffer
 	end
 
 	-- Build the reserved bit buffer at the end of the packet
-	BitWriter.Finalize(self, b)
+	if self._bitLen ~= 0 then BitWriter.Finalize(self, b) end
 
 	return b
 end
