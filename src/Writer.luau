@@ -80,7 +80,7 @@ end
 	Orders a 32-bit unsigned integer to be written into the packet 
 ]=]
 function Writer.u32(self: types.WriterData, value: number)
-	table.insert(self._queue, vector.create(OP_U16, value))
+	table.insert(self._queue, vector.create(OP_U32, value))
 end
 
 --[=[

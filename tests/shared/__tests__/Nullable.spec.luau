@@ -11,7 +11,7 @@ local schema = Pack:Define(Pack.Nullable(Pack.String16))
 
 describe("Nullable", function()
 	it("should correctly encode and decode a non-nil string", function()
-		local input = "hello world"
+		local input = "Hello World!"
 		local encoded = schema:Write(input)
 		local decoded = schema:Read(encoded)
 
@@ -31,7 +31,7 @@ describe("Nullable", function()
 		local input2 = "non-nil"
 
 		local encoded1 = schema:Write(input1)
-		local encoded2 = schema:Encode(input2)
+		local encoded2 = schema:Write(input2)
 
 		expect(encoded1).never.toEqual(encoded2)
 	end)
