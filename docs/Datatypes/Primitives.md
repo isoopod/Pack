@@ -53,7 +53,7 @@ Encodes a buffer of any length with 4 bytes of overhead. The maximum length with
 
 ## CFrame
 
-Encodes a CFrame as either 13 or 19 bytes. A standard Vector3 is used for position. Axis-Aligned CFrames are 13 bytes, otherwise for random orientation CFrames they are encoded in 19 bytes using a Quaternion for rotation, with an average percision of 0.00461° (more than enough).
+Encodes a CFrame as either 13 or 19 bytes. A standard Vector3 is used for position. Axis-Aligned CFrames are 13 bytes, otherwise for random orientation CFrames they are encoded in 19 bytes using a Quaternion for rotation, with an average precision of 0.00461° (more than enough).
 
 ## Color3
 
@@ -69,7 +69,7 @@ Enodes a Color3 value in full using 12 bytes. This is for when you have colors w
 
 ## DateTime
 
-Encodes a DateTime with millisecond percision using 8 bytes.
+Encodes a DateTime with millisecond precision using 8 bytes.
 
 ## EnumItem
 
@@ -86,8 +86,8 @@ Pack:DefineSchema(Pack.EnumItem(Enum.KeyCode))
 Encodes a 16-bit floating point number using 2 bytes
 
 Range:
-    - Subnormal: ±6.1×10⁻⁵
-    - Normal: ±6.5×10⁴
+    - Subnormal: ±6.1×10<sup>-5</sup>
+    - Normal: ±6.5×10<sup>4</sup>
 Precision: ~3.3 decimal places
 
 ## Float24
@@ -95,8 +95,8 @@ Precision: ~3.3 decimal places
 Encodes a 24-bit floating point number using 3 bytes
 
 Range:
-    - Subnormal: ±1×10⁻¹⁹
-    - Normal: ±2×10¹⁹
+    - Subnormal: ±1×10<sup>-19</sup>
+    - Normal: ±2×10<sup>19</sup>
 Precision: ~5.9 decimal places
 
 ## Float32
@@ -107,8 +107,8 @@ Precision: ~5.9 decimal places
 Encodes a 32-bit floating point number using 4 bytes
 
 Range:
-    - Subnormal: ±1.2×10⁻³⁸
-    - Normal: ±3.4×10³⁸
+    - Subnormal: ±1.2×10<sup>-38</sup>
+    - Normal: ±3.4×10<sup>38</sup>
 Precision: ~7.2 decimal places
 
 ## Float64
@@ -119,8 +119,8 @@ Precision: ~7.2 decimal places
 Enocdes a 64-bit floating point number using 8 bytes. This is the type used by lua numbers. It is also the only numeric type that can be used for UserIds, as those have passed the 32-bit unsigned integer limit.
 
 Range:
-    - Subnormal: ±2.2×10⁻³⁰⁸
-    - Normal: ±1.8×10³⁰⁸
+    - Subnormal: ±2.2×10<sup>-308</sup>
+    - Normal: ±1.8×10<sup>308</sup>
 Precision: ~15.9 decimal places
 
 ## Instance
@@ -141,7 +141,7 @@ In saving places, references persist between server runtimes.
 **Byte** is an alias for Int8 and can be used instead
 :::
 Enocdes an 8-bit signed integer in a single byte.  
-Range: -128 – 127
+Range: -128 – +127
 
 ## Int16
 
@@ -149,7 +149,7 @@ Range: -128 – 127
 **Short** is an alias for Int16 and can be used instead
 :::
 Encodes a 16-bit signed integer in 2 bytes.  
-Range: -32,768 – 32,767
+Range: -32,768 – +32,767
 
 ## Int32
 
@@ -157,17 +157,25 @@ Range: -32,768 – 32,767
 **Int** is an alias for Int32 and can be used instead
 :::
 Encodes a 32-bit signed integer in 4 bytes.
-Range: -2,147,483,648 – 2,147,483,647
+Range: -2,147,483,648 – +2,147,483,647
 
-## Int56
+## Int64
 
 :::note[Aliases]
-**IntLong** is an alias for Int56 and can be used instead
+**Long** is an alias for Int64 and can be used instead
 :::
-Encodes any integer exactly representable by Doubles in 7 bytes.
-Range: [-9,007,199,254,740,992–9,007,199,254,740,992]
+Encodes a 64-bit signed integer using 8 bytes.
 
-Doubles can exactly represent integers between ±2<sup>53</sup> so the 56 comes from the 7 bytes and not the precision.
+This datatype is implemented using two 32-bit segments due to Luau's `number` type limitations, which only supports exact representation up to 2<sup>53</sup> − 1.
+The value is split into a low and high 32-bit integer in little-endian order (low first, then high), and recombined on read.
+
+Range (exact): −9,007,199,254,740,991 – +9,007,199,254,740,991
+
+Values beyond this safe range lose precision due to the limitations of Luau’s number type (IEEE 754 double).
+Use only for integers within ±2<sup>53</sup> for guaranteed correctness.  
+See [Wikipedia](https://en.wikipedia.org/wiki/Double-precision_floating-point_format#Precision_limitations_on_integer_values) for how Doubles lose integer precision.
+
+Int64 values used in the Roblox ecosystem, such as AssetIds and UserIds take Luau's number limitations into account, so Int64 and UInt64 can be used to store these.
 
 ## Null
 
@@ -282,18 +290,18 @@ Range: [0–65,565]
 Encodes a 32-bit unsigned integer in 4 bytes.
 Range: [0–4,294,967,295]
 
-## UInt56
+## UInt64
 
 :::note[Aliases]
 **ULong** is an alias for UInt56 and can be used instead
 :::
-Encodes a 53-bit unsigned integer in 7 bytes (hence 56 instead of 53).
-Range: [0–9,007,199,254,740,992]
+Encodes a 64-bit unsigned integer using 8 bytes.
 
-The reason we use 53 bits is because Doubles (the luau number type) only hold integers exactly up to 2<sup>53</sup>.
-This means the traditional ULong size of 64-bit is unpractical.
+Like [Int64](#int64), this is encoded by splitting the number into low and high 32-bit unsigned segments in little-endian order (low first, then high), and combining them when reading.
+Range (exact): [0–9,007,199,254,740,992]
 
-The intended use case for UInt56 is for UserIds and AssetIds, or other large unsigned integers.
+Although UInt64 can store exact integers up to 2<sup>53</sup>, Luau numbers lose precision above 2<sup>53</sup>.  
+Refer to [Int64](#int64) for more info.
 
 ## Vector2float32
 

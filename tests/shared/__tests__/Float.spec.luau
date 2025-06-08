@@ -21,7 +21,7 @@ local specialCases = {
 	NegInfinity = -math.huge,
 }
 
-local percision = {
+local precision = {
 	Float16 = -1,
 	Float24 = 0,
 	Float32 = 3,
@@ -36,7 +36,7 @@ describe("Floats", function()
 				for _, v in floatCases do
 					local buf = schema:Write(v)
 					local res = schema:Read(buf)
-					expect(res).toBeCloseTo(v, percision[bitType])
+					expect(res).toBeCloseTo(v, precision[bitType])
 				end
 			end)
 

@@ -20,7 +20,7 @@ local floor = math.floor
 local INF = math.huge
 local EPSILON = 1e-6
 local PRECISION = 0xffff / sqrt(0.5) -- The smaller 3 values in a rotation quaternion fit between [-sqrt(2) / 2, sqrt(2) / 2]
--- This allows for more percision for the same number of bits
+-- This allows for more precision for the same number of bits
 
 -- Convert a CFrame to a normailised quaternion for encoding
 local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, number)
