@@ -41,20 +41,34 @@ def run_luau_task(universe_id, place_id, place_version, script_file):
     print("Executing Luau task")
     script_contents = read_file(script_file).decode("utf8")
 
-    task = createTask(
-        ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
-    )
-    task = awaitTaskCompletion(ROBLOX_API_KEY, task["path"])
-    logs = getTaskLogs(ROBLOX_API_KEY, task["path"])
+    for attempt in range(1, 4):
+        task = createTask(
+            ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
+        )
 
-    print(logs)
+        data = awaitTaskCompletion(ROBLOX_API_KEY, task["path"], 60)
+        if data is not None:
 
-    if task["state"] == "COMPLETE":
-        print("Lua task completed successfully")
-        exit(0)
-    else:
-        print("Luau task failed", file=sys.stderr)
-        exit(1)
+            logs = getTaskLogs(ROBLOX_API_KEY, data["path"])
+
+            print(logs)
+
+            match data["state"]:
+                case "COMPLETE":
+                    print("Lua task completed successfully")
+                    exit(0)
+                case "FAILED":
+                    print(data["error"])
+                    print("Luau task failed", file=sys.stderr)
+                    exit(1)
+                case "CANCELLED":
+                    print("Lua task cancelled")
+                    exit(1)
+
+        print(f"Task failed to resolve (stuck in PROCESSING) attempt {attempt}/3.")
+    
+    print("Task failed to resolve 3 times. Aborting")
+    exit(1)
 
 
 if __name__ == "__main__":

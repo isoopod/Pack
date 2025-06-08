@@ -198,7 +198,7 @@ def awaitTaskCompletion(api_key: str, path: str, timeout: float=30):
 
         if time.time() - start > timeout:
             logging.warning(f"awaitTaskCompletion timed out after {timeout} seconds.")
-            exit(1)
+            return None
 
         time.sleep(2)
     
