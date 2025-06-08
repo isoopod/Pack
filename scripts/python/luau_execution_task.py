@@ -120,7 +120,8 @@ def createTask(api_key, script, universe_id, place_id, place_version):
         'x-api-key': api_key
     }
     data = {
-        'script': script
+        'script': script,
+        'timeout': "30s"
     }
     url = f'https://apis.roblox.com/cloud/v2/universes/{universe_id}/places/{place_id}/'
     if place_version:
@@ -152,6 +153,7 @@ def pollForTaskCompletion(api_key, path):
             sys.exit(1)
 
         task = json.loads(response.read())
+        print(task)
         if task['state'] != 'PROCESSING':
             sys.stderr.write('\n')
             sys.stderr.flush()
@@ -160,6 +162,48 @@ def pollForTaskCompletion(api_key, path):
             sys.stderr.write('.')
             sys.stderr.flush()
             time.sleep(3)
+
+def getTaskStatus(api_key: str, path: str):
+    headers = {
+        'x-api-key': api_key
+    }
+    url = f'https://apis.roblox.com/cloud/v2/{path}'
+
+    try:
+        response = makeRequest(url, headers=headers)
+    except urllib.error.HTTPError as e:
+        logging.error(f'Get task request failed, response body:\n{e.fp.read()}')
+        sys.exit(1)
+
+    return json.loads(response.read())
+
+def awaitTaskCompletion(api_key: str, path: str, timeout: float=30):
+    start = time.time()
+
+    lastState = ""
+    data = None
+    while True:
+        data = getTaskStatus(api_key, path)
+
+        state = data["state"]
+        if state != lastState:
+            print(f"\nState changed: {state}")
+            lastState = state
+        else:
+            sys.stderr.write('.')
+            sys.stderr.flush()
+        
+        if state == "COMPLETE" or state == "FAILED" or state == "CANCELLED":
+            break
+
+        if time.time() - start > timeout:
+            logging.warning(f"awaitTaskCompletion timed out after {timeout} seconds.")
+            exit(1)
+
+        time.sleep(2)
+    
+    return data
+
 
 def getTaskLogs(api_key, task_path):
     headers = {

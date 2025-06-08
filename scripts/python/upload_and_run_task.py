@@ -3,12 +3,11 @@ import sys
 import urllib.request
 import json
 
-from luau_execution_task import createTask, pollForTaskCompletion, getTaskLogs
+from luau_execution_task import createTask, awaitTaskCompletion, getTaskLogs
 
 ROBLOX_API_KEY = os.environ["ROBLOX_API_KEY"].strip()
 ROBLOX_UNIVERSE_ID = os.environ["ROBLOX_UNIVERSE_ID"]
 ROBLOX_PLACE_ID = os.environ["ROBLOX_PLACE_ID"]
-
 
 def read_file(file_path):
     with open(file_path, "rb") as file:
@@ -45,7 +44,7 @@ def run_luau_task(universe_id, place_id, place_version, script_file):
     task = createTask(
         ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
     )
-    task = pollForTaskCompletion(ROBLOX_API_KEY, task["path"])
+    task = awaitTaskCompletion(ROBLOX_API_KEY, task["path"])
     logs = getTaskLogs(ROBLOX_API_KEY, task["path"])
 
     print(logs)
