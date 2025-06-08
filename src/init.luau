@@ -151,8 +151,8 @@ function Pack.__index(self, key)
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
-	local s, datatype = pcall(require, `@self/Datatypes/{key}`)
-	assert(s, `Unable to access datatype Pack.{key}. Datatype not found.`)
+	local s, datatype = pcall(require, script.Datatypes:FindFirstChild(key))
+	assert(s, `Unable to access datatype Pack.{key}. Datatype not found: {datatype}`)
 	cache[key] = datatype
 	rawset(self, "_cachedDatatypes", cache)
 	return datatype
