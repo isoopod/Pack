@@ -8,3 +8,5 @@
 /wally.lock
 /sourcemap.json
 /DevPackages
+
+**/__pycache__
