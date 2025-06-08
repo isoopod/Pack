@@ -3,7 +3,7 @@
 --!optimize 2
 
 --Modules
-local types = require(script.Parent.types)
+local types = require("./types")
 
 --[=[
 	@class Reader
@@ -13,22 +13,6 @@ local types = require(script.Parent.types)
 
 local NAN = 0 / 0
 local INF = math.huge
-
-local readu8 = buffer.readu8
-local readu16 = buffer.readu16
-local readu32 = buffer.readu32
-local readi8 = buffer.readi8
-local readi16 = buffer.readi16
-local readi32 = buffer.readi32
-local readf32 = buffer.readf32
-local readf64 = buffer.readf64
--- selene: allow(incorrect_standard_library_use)
-local readbits = buffer.readbits
-local readstring = buffer.readstring
-
-local lshift = bit32.lshift
-local rshift = bit32.rshift
-local band = bit32.band
 
 local Reader = {}
 
@@ -55,7 +39,7 @@ end
 	Reads an unsigned 8-bit integer from the buffer and moves the cursor forwards 1 byte.
 ]=]
 function Reader.u8(self: types.ReaderData): number
-	local value = readu8(self._buffer, self.Cursor)
+	local value = buffer.readu8(self._buffer, self.Cursor)
 	self.Cursor += 1
 	return value
 end
@@ -68,7 +52,7 @@ end
 	Reads an unsigned 16-bit integer from the buffer and moves the cursor forwards 2 bytes.
 ]=]
 function Reader.u16(self: types.ReaderData): number
-	local value = readu16(self._buffer, self.Cursor)
+	local value = buffer.readu16(self._buffer, self.Cursor)
 	self.Cursor += 2
 	return value
 end
@@ -81,7 +65,7 @@ end
 	Reads an unsigned 32-bit integer from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.u32(self: types.ReaderData): number
-	local value = readu32(self._buffer, self.Cursor)
+	local value = buffer.readu32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -94,7 +78,7 @@ end
 	Reads a signed 8-bit integer from the buffer and moves the cursor forwards 1 byte.
 ]=]
 function Reader.i8(self: types.ReaderData): number
-	local value = readi8(self._buffer, self.Cursor)
+	local value = buffer.readi8(self._buffer, self.Cursor)
 	self.Cursor += 1
 	return value
 end
@@ -107,7 +91,7 @@ end
 	Reads a signed 16-bit integer from the buffer and moves the cursor forwards 2 bytes.
 ]=]
 function Reader.i16(self: types.ReaderData): number
-	local value = readi16(self._buffer, self.Cursor)
+	local value = buffer.readi16(self._buffer, self.Cursor)
 	self.Cursor += 2
 	return value
 end
@@ -120,7 +104,7 @@ end
 	Reads a signed 32-bit integer from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.i32(self: types.ReaderData): number
-	local value = readi32(self._buffer, self.Cursor)
+	local value = buffer.readi32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -138,7 +122,7 @@ end
 	:::
 ]=]
 function Reader.nBitUint(self: types.ReaderData, n: number, bitOffset: number): number
-	return readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
+	return buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
 end
 
 --[=[
@@ -154,10 +138,10 @@ end
 	:::
 ]=]
 function Reader.nBitInt(self: types.ReaderData, n: number, bitOffset: number): number
-	local value = readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
-	local sign = lshift(1, n - 1)
+	local value = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
+	local sign = bit32.lshift(1, n - 1)
 
-	if band(value, sign) ~= 0 then return value - 2 ^ n end
+	if bit32.band(value, sign) ~= 0 then return value - 2 ^ n end
 	return value
 end
 
@@ -179,12 +163,12 @@ end
 ]=]
 function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffset: number): number
 	local totalBits = 1 + n + m
-	local combined = readbits(self._buffer, self.Cursor * 8 + bitOffset, totalBits)
+	local combined = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, totalBits)
 
-	local sign = rshift(combined, n + m)
-	local maxExponent = lshift(1, n) - 1
-	local storedExponent = band(rshift(combined, m), maxExponent)
-	local mantissa = band(combined, lshift(1, m) - 1)
+	local sign = bit32.rshift(combined, n + m)
+	local maxExponent = bit32.lshift(1, n) - 1
+	local storedExponent = bit32.band(bit32.rshift(combined, m), maxExponent)
+	local mantissa = bit32.band(combined, bit32.lshift(1, m) - 1)
 
 	-- If the value is zero, return immediately.
 	if storedExponent == 0 and mantissa == 0 then return 0 end
@@ -198,7 +182,7 @@ function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffse
 		end
 	end
 
-	local bias = lshift(1, n - 1) - 1
+	local bias = bit32.lshift(1, n - 1) - 1
 	local exponent: number, value: number
 
 	if storedExponent == 0 then
@@ -224,7 +208,7 @@ end
 	Reads a 32-bit floating point number from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.f32(self: types.ReaderData): number
-	local value = readf32(self._buffer, self.Cursor)
+	local value = buffer.readf32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -237,7 +221,7 @@ end
 	Reads a 64-bit floating point number from the buffer and moves the cursor forwards 8 bytes.
 ]=]
 function Reader.f64(self: types.ReaderData): number
-	local value = readf64(self._buffer, self.Cursor)
+	local value = buffer.readf64(self._buffer, self.Cursor)
 	self.Cursor += 8
 	return value
 end
@@ -251,7 +235,7 @@ end
 	Reads a string of length `count` bytes from the buffer and pushes the cursor `count` bytes forwards.
 ]=]
 function Reader.string(self: types.ReaderData, count: number): string
-	local value = readstring(self._buffer, self.Cursor, count)
+	local value = buffer.readstring(self._buffer, self.Cursor, count)
 	self.Cursor += count
 	return value
 end

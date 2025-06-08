@@ -2,6 +2,7 @@ std = "roblox"
 
 [lints]
 multiple_statements = "allow"
+incorrect_standard_library_use = "allow"
 
 [config]
 multiple_statements = { one_line_if = "allow" }

@@ -10,9 +10,16 @@
 	they use work correctly in luau
 --]]
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_u32 = Reader.u32
+local read_i32 = Reader.i32
+
+local write_alloc = Writer.alloc
+local write_u32 = Writer.u32
+local write_i32 = Writer.i32
 
 local POW32 = 2 ^ 32
 
@@ -21,22 +28,22 @@ local datatype64 = table.freeze({
 
 	Read = function(reader: types.ReaderData): number
 		-- Read low unsigned and high signed segments
-		local low = Reader.u32(reader)
-		local high = Reader.i32(reader)
+		local low = read_u32(reader)
+		local high = read_i32(reader)
 
 		-- Reconstruct signed 64-bit int
 		return high * POW32 + low
 	end,
 
 	Write = function(writer: types.WriterData, value: number)
-		Writer.alloc(writer, 8)
+		write_alloc(writer, 8)
 
 		-- Split into low unsigned and high signed segments
 		local low = value % POW32
 		local high = value // POW32
 
-		Writer.u32(writer, low)
-		Writer.i32(writer, high)
+		write_u32(writer, low)
+		write_i32(writer, high)
 	end,
 }) :: types.DatatypeInterface<number>
 

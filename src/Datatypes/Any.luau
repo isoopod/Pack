@@ -2,50 +2,19 @@
 --!native
 --!optimize 2
 
-local Array = require(script.Parent.Array)
-local Evaluator = require(script.Parent.Parent.Evaluator)
-local Map = require(script.Parent.Map)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Array = require("./Array")
+local Evaluator = require("../Evaluator")
+local Map = require("./Map")
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
 
 -- Basic search for primitive datatypes
+-- stylua: ignore
 local searchOrder = {
-	"u8",
-	"u16",
-	"u32",
-	"i8",
-	"i16",
-	"i32",
-	"f16",
-	"f24",
-	"f32",
-	"f64",
-	"bool",
-	"s8",
-	"s16",
-	"s24",
-	"s32",
-	"V3f32",
-	"V3f64",
-	"V2f32",
-	"V2f64",
-	"CFrame",
-	"Instance",
-	"nil",
-	"Color3",
-	"Color3Raw",
-	"R3",
-	"UD",
-	"UD2",
-	"buffer8",
-	"buffer16",
-	"buffer24",
-	"buffer32",
-	"DateTime",
-	"V3i16",
-	"V2i16",
-	"R3i16",
+	"u8", "u16", "u32", "i8", "i16", "i32", "f16", "f24", "f32", "f64", "bool", "s8", "s16", "s24", "s32", "V3f32", "V3f64",
+	"V2f32", "V2f64", "CFrame", "Instance", "nil", "Color3", "Color3Raw", "R3", "UD", "UD2", "buffer8", "buffer16", "buffer24", "buffer32",
+	"DateTime", "V3i16", "V2i16", "R3i16",
 }
 
 local idToEval = {}

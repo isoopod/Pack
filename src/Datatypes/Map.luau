@@ -2,9 +2,14 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_u16 = Reader.u16
+
+local write_alloc = Writer.alloc
+local write_u16 = Writer.u16
 
 return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.DatatypeInterface<V>): types.DatatypeInterface<{ [K]: V }>
 	local kread, kwrite = keyType.Read, keyType.Write
@@ -21,7 +26,7 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 	valueType = datatype.Val
 
 	datatype.Read = function(reader: types.ReaderData): { [K]: V }
-		local len = Reader.u16(reader)
+		local len = read_u16(reader)
 
 		local map = {}
 
@@ -38,8 +43,8 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 			len += 1
 		end
 
-		Writer.alloc(writer, 2)
-		Writer.u16(writer, len)
+		write_alloc(writer, 2)
+		write_u16(writer, len)
 
 		for k, v in value do
 			kwrite(writer, k)

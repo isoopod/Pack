@@ -2,20 +2,25 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_f32 = Reader.f32
+
+local write_alloc = Writer.alloc
+local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "V3",
 	Read = function(reader: types.ReaderData): vector
-		return vector.create(Reader.f32(reader), Reader.f32(reader), Reader.f32(reader))
+		return vector.create(read_f32(reader), read_f32(reader), read_f32(reader))
 	end,
 	Write = function(writer: types.WriterData, value: vector)
-		Writer.alloc(writer, 12)
-		Writer.f32(writer, value.x)
-		Writer.f32(writer, value.y)
-		Writer.f32(writer, value.z)
+		write_alloc(writer, 12)
+		write_f32(writer, value.x)
+		write_f32(writer, value.y)
+		write_f32(writer, value.z)
 	end,
 }) :: types.DatatypeInterface<vector>
 

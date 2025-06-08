@@ -2,7 +2,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.types)
+local types = require("../types")
 
 -- Allows marshalling objects given the class metatable and data structure
 -- Note that this creates a duplicate of the object, not a reference to the original.

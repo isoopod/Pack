@@ -2,20 +2,25 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_f32 = Reader.f32
+
+local write_alloc = Writer.alloc
+local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "Color3Raw",
 	Read = function(reader: types.ReaderData): Color3
-		return Color3.new(Reader.f32(reader), Reader.f32(reader), Reader.f32(reader))
+		return Color3.new(read_f32(reader), read_f32(reader), read_f32(reader))
 	end,
 	Write = function(writer: types.WriterData, value: Color3)
-		Writer.alloc(writer, 12)
-		Writer.f32(writer, value.R)
-		Writer.f32(writer, value.G)
-		Writer.f32(writer, value.B)
+		write_alloc(writer, 12)
+		write_f32(writer, value.R)
+		write_f32(writer, value.G)
+		write_f32(writer, value.B)
 	end,
 }) :: types.DatatypeInterface<Color3>
 

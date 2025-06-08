@@ -2,9 +2,13 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_u16 = Reader.u16
+local write_alloc = Writer.alloc
+local write_u16 = Writer.u16
 
 return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterface<{ T }>
 	local read, write = valueType.Read, valueType.Write
@@ -13,7 +17,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 		Eval = "Array",
 		Of = valueType.Eval,
 		Read = function(reader: types.ReaderData): { T }
-			local len = Reader.u16(reader)
+			local len = read_u16(reader)
 			local array = table.create(len) :: { T }
 
 			for i = 1, len do
@@ -24,8 +28,8 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 		end,
 		Write = function(writer: types.WriterData, value: { T })
 			local len = #value
-			Writer.alloc(writer, 2)
-			Writer.u16(writer, len)
+			write_alloc(writer, 2)
+			write_u16(writer, len)
 
 			for i = 1, len do
 				write(writer, value[i])

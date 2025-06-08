@@ -1,25 +1,30 @@
 --!strict
 --!native
 --!optimize 2
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Evaluator = require(ReplicatedStorage.Pack.Evaluator)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Evaluator = require("../Evaluator")
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_u8 = Reader.u8
+
+local write_alloc = Writer.alloc
+local write_u8 = Writer.u8
 
 return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	local args = { ... }
 	return table.freeze({
 		Read = function(reader: types.ReaderData): any
-			local dt = Reader.u8(reader)
-			return require(Evaluator.indexToDatatype[dt]).Read(reader)
+			local i = read_u8(reader)
+			return args[i].Read(reader)
 		end,
 		Write = function(writer: types.WriterData, value: any)
-			for _, dt in args do
+			for i, dt in args do
 				if not dt.Eval then continue end
 				if Evaluator.evaluators[dt.Eval](value, dt) then
-					Writer.u8(writer, Evaluator.evalToId[dt.Eval])
+					write_alloc(writer, 1)
+					write_u8(writer, i)
 					dt.Write(writer, value)
 				end
 			end

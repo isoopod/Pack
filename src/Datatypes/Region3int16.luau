@@ -2,15 +2,20 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_i16 = Reader.i16
+
+local write_alloc = Writer.alloc
+local write_i16 = Writer.i16
 
 local datatype = table.freeze({
 	Eval = "R3i16",
 	Read = function(reader: types.ReaderData): Region3int16
-		local min = Vector3int16.new(Reader.i16(reader), Reader.i16(reader), Reader.i16(reader))
-		local max = Vector3int16.new(Reader.i16(reader), Reader.i16(reader), Reader.i16(reader))
+		local min = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
+		local max = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
 
 		return Region3int16.new(min, max)
 	end,
@@ -18,13 +23,13 @@ local datatype = table.freeze({
 		local min = value.Min
 		local max = value.Max
 
-		Writer.alloc(writer, 12)
-		Writer.i16(writer, min.X)
-		Writer.i16(writer, min.Y)
-		Writer.i16(writer, min.Z)
-		Writer.i16(writer, max.X)
-		Writer.i16(writer, max.Y)
-		Writer.i16(writer, max.Z)
+		write_alloc(writer, 12)
+		write_i16(writer, min.X)
+		write_i16(writer, min.Y)
+		write_i16(writer, min.Z)
+		write_i16(writer, max.X)
+		write_i16(writer, max.Y)
+		write_i16(writer, max.Z)
 	end,
 }) :: types.DatatypeInterface<Region3int16>
 

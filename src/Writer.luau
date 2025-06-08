@@ -7,7 +7,7 @@
 -- Its the same idea as StringBuilder in Java.
 
 --Modules
-local types = require(script.Parent.types)
+local types = require("./types")
 
 --[=[
 	@class Writer
@@ -16,22 +16,6 @@ local types = require(script.Parent.types)
 ]=]
 
 local INF = math.huge
-
-local writeu8 = buffer.writeu8
-local writeu16 = buffer.writeu16
-local writeu32 = buffer.writeu32
-local writei8 = buffer.writei8
-local writei16 = buffer.writei16
-local writei32 = buffer.writei32
-local writef32 = buffer.writef32
-local writef64 = buffer.writef64
--- selene: allow(incorrect_standard_library_use)
-local writebits = buffer.writebits
-local fromstring = buffer.fromstring
-
-local len = buffer.len
-local copy = buffer.copy
-local create = buffer.create
 
 local OP_U8 = 1
 local OP_U16 = 2
@@ -46,16 +30,6 @@ local OP_F32 = 10
 local OP_F64 = 11
 local OP_STR = 12
 local OP_MOV = 13
-
-local lshift = bit32.lshift
-local bor = bit32.bor
-
-local abs = math.abs
-local clamp = math.clamp
-local floor = math.floor
-local frexp = math.frexp
-
-local insert = table.insert
 
 local Writer = {}
 
@@ -81,7 +55,7 @@ end
 	Orders an 8-bit unsigned integer to be written into the packet 
 ]=]
 function Writer.u8(self: types.WriterData, value: number)
-	insert(self._queue, { OP_U8, value })
+	table.insert(self._queue, vector.create(OP_U8, value))
 end
 
 --[=[
@@ -93,7 +67,7 @@ end
 	Orders a 16-bit unsigned integer to be written into the packet 
 ]=]
 function Writer.u16(self: types.WriterData, value: number)
-	insert(self._queue, { OP_U16, value })
+	table.insert(self._queue, vector.create(OP_U16, value))
 end
 
 --[=[
@@ -105,7 +79,7 @@ end
 	Orders a 32-bit unsigned integer to be written into the packet 
 ]=]
 function Writer.u32(self: types.WriterData, value: number)
-	insert(self._queue, { OP_U32, value })
+	table.insert(self._queue, vector.create(OP_U16, value))
 end
 
 --[=[
@@ -117,7 +91,7 @@ end
 	Orders an 8-bit signed integer to be written into the packet 
 ]=]
 function Writer.i8(self: types.WriterData, value: number)
-	insert(self._queue, { OP_I8, value })
+	table.insert(self._queue, vector.create(OP_I8, value))
 end
 
 --[=[
@@ -129,7 +103,7 @@ end
 	Orders a 16-bit signed integer to be written into the packet 
 ]=]
 function Writer.i16(self: types.WriterData, value: number)
-	insert(self._queue, { OP_I16, value })
+	table.insert(self._queue, vector.create(OP_I16, value))
 end
 
 --[=[
@@ -141,7 +115,7 @@ end
 	Orders a 32-bit signed integer to be written into the packet 
 ]=]
 function Writer.i32(self: types.WriterData, value: number)
-	insert(self._queue, { OP_I32, value })
+	table.insert(self._queue, vector.create(OP_I32, value))
 end
 
 --[=[
@@ -159,7 +133,7 @@ end
 	:::
 ]=]
 function Writer.nBitUint(self: types.WriterData, value: number, n: number, bitOffset: number)
-	insert(self._queue, { OP_NBITU, value, n, bitOffset })
+	table.insert(self._queue, { OP_NBITU, value, n, bitOffset })
 end
 
 --[=[
@@ -177,7 +151,7 @@ end
 	:::
 ]=]
 function Writer.nBitInt(self: types.WriterData, value: number, n: number, bitOffset: number)
-	insert(self._queue, { OP_NBITI, value, n, bitOffset })
+	table.insert(self._queue, { OP_NBITI, value, n, bitOffset })
 end
 
 --[=[
@@ -199,7 +173,7 @@ end
 	:::
 ]=]
 function Writer.nBitFloat(self: types.WriterData, value: number, n: number, m: number, bitOffset: number)
-	insert(self._queue, { OP_NBITF, value, n, m, bitOffset })
+	table.insert(self._queue, { OP_NBITF, value, n, m, bitOffset })
 end
 
 --[=[
@@ -211,7 +185,7 @@ end
 	Orders a 32-bit floating point number to be written into the packet 
 ]=]
 function Writer.f32(self: types.WriterData, value: number)
-	insert(self._queue, { OP_F32, value })
+	table.insert(self._queue, vector.create(OP_F32, value))
 end
 
 --[=[
@@ -223,7 +197,7 @@ end
 	Orders a 64-bit floating point number to be written into the packet 
 ]=]
 function Writer.f64(self: types.WriterData, value: number)
-	insert(self._queue, { OP_F64, value })
+	table.insert(self._queue, vector.create(OP_F64, value))
 end
 
 --[=[
@@ -241,11 +215,11 @@ end
 	This is so the length of the string can be written before writing the string itself, for variable length strings.
 ]=]
 function Writer.string(self: types.WriterData, value: string, count: number?): (number, () -> ())
-	local s = fromstring(value)
-	local blen = clamp(len(s), 0, count or math.huge)
+	local s = buffer.fromstring(value)
+	local blen = math.clamp(buffer.len(s), 0, count or math.huge)
 	self._len += blen
 	return blen, function()
-		insert(self._queue, { OP_STR, s, blen, count })
+		table.insert(self._queue, { OP_STR, s, blen, count })
 	end
 end
 
@@ -260,7 +234,7 @@ end
 	:::
 ]=]
 function Writer.moveCursor(self: types.WriterData, delta: number)
-	insert(self._queue, { OP_MOV, delta })
+	table.insert(self._queue, vector.create(OP_MOV, delta))
 end
 
 function Writer.addRef(self: types.WriterData, ref: any)
@@ -271,35 +245,35 @@ end
 
 local WriteFunctions: { (buffer, number, ...any) -> number } = {
 	[OP_U8] = function(b: buffer, cursor: number, value: number): number
-		writeu8(b, cursor, value)
+		buffer.writeu8(b, cursor, value)
 		return 1
 	end,
 	[OP_U16] = function(b: buffer, cursor: number, value: number): number
-		writeu16(b, cursor, value)
+		buffer.writeu16(b, cursor, value)
 		return 2
 	end,
 	[OP_U32] = function(b: buffer, cursor: number, value: number): number
-		writeu32(b, cursor, value)
+		buffer.writeu32(b, cursor, value)
 		return 4
 	end,
 	[OP_I8] = function(b: buffer, cursor: number, value: number): number
-		writei8(b, cursor, value)
+		buffer.writei8(b, cursor, value)
 		return 1
 	end,
 	[OP_I16] = function(b: buffer, cursor: number, value: number): number
-		writei16(b, cursor, value)
+		buffer.writei16(b, cursor, value)
 		return 2
 	end,
 	[OP_I32] = function(b: buffer, cursor: number, value: number): number
-		writei32(b, cursor, value)
+		buffer.writei32(b, cursor, value)
 		return 4
 	end,
 	[OP_NBITU] = function(b: buffer, cursor: number, value: number, n: number, bitOffset: number): number
-		writebits(b, cursor * 8 + bitOffset, n, value)
+		buffer.writebits(b, cursor * 8 + bitOffset, n, value)
 		return 0
 	end,
 	[OP_NBITI] = function(b: buffer, cursor: number, value: number, n: number, bitOffset: number): number
-		writebits(b, cursor * 8 + bitOffset, n, value < 0 and value + 2 ^ n or value)
+		buffer.writebits(b, cursor * 8 + bitOffset, n, value < 0 and value + 2 ^ n or value)
 		return 0
 	end,
 	-- TODO: dedicated half-float and float24 to optimize out bias calculation
@@ -313,23 +287,23 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 		if value ~= value then
 			-- NaN: IEEE 754 requires exponent to be all ones and mantissa non-zero.
 			sign = 0
-			storedExponent = (lshift(1, n)) - 1
+			storedExponent = (bit32.lshift(1, n)) - 1
 			mantissa = 1 -- any non-zero value within m bits
 		elseif value == INF or value == -INF then
 			sign = value < 0 and 1 or 0
-			storedExponent = (lshift(1, n)) - 1
+			storedExponent = (bit32.lshift(1, n)) - 1
 			mantissa = 0
 		else
 			sign = value < 0 and 1 or 0
-			local fAbs = abs(value)
-			local bias = (lshift(1, n - 1)) - 1
+			local fAbs = math.abs(value)
+			local bias = (bit32.lshift(1, n - 1)) - 1
 			if fAbs == 0 then
 				-- Zero is represented with all exponent and mantissa bits zero.
 				storedExponent = 0
 				mantissa = 0
 			else
 				-- Get normalized fraction and exponent via frexp.
-				local fNormalized, exponent = frexp(fAbs)
+				local fNormalized, exponent = math.frexp(fAbs)
 				-- Adjust to have fNormalized in [1,2) and e = exponent - 1.
 				local e = exponent - 1
 
@@ -339,14 +313,14 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 					-- The implicit bit is removed; fraction = fNormalized * 2 - 1.
 					local fraction = (fNormalized * 2) - 1
 					-- Round the mantissa to nearest.
-					mantissa = floor(fraction * (2 ^ m) + 0.5)
+					mantissa = math.floor(fraction * (2 ^ m) + 0.5)
 					-- Handle rounding overflow.
 					if mantissa >= (2 ^ m) then
 						mantissa = 0
 						storedExponent = storedExponent + 1
-						if storedExponent >= (lshift(1, n)) - 1 then
+						if storedExponent >= (bit32.lshift(1, n)) - 1 then
 							-- Overflow to infinity.
-							storedExponent = (lshift(1, n)) - 1
+							storedExponent = (bit32.lshift(1, n)) - 1
 							mantissa = 0
 						end
 					end
@@ -357,7 +331,7 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 					--   value = (mantissa / 2^m) * 2^(1 - bias)
 					-- Rearranging gives:
 					--   mantissa = fAbs * 2^(m + bias - 1)
-					mantissa = floor(fAbs * (2 ^ (m + bias - 1)) + 0.5)
+					mantissa = math.floor(fAbs * (2 ^ (m + bias - 1)) + 0.5)
 					-- Clamp to m bits.
 					if mantissa >= (2 ^ m) then mantissa = (2 ^ m) - 1 end
 				end
@@ -365,21 +339,21 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 		end
 
 		-- Combine sign, exponent, and mantissa
-		local combined = bor(lshift(sign, n + m), lshift(storedExponent, m), mantissa)
+		local combined = bit32.bor(bit32.lshift(sign, n + m), bit32.lshift(storedExponent, m), mantissa)
 
-		writebits(b, cursor * 8 + bitOffset, 1 + n + m, combined)
+		buffer.writebits(b, cursor * 8 + bitOffset, 1 + n + m, combined)
 		return 0
 	end,
 	[OP_F32] = function(b: buffer, cursor: number, value: number): number
-		writef32(b, cursor, value)
+		buffer.writef32(b, cursor, value)
 		return 4
 	end,
 	[OP_F64] = function(b: buffer, cursor: number, value: number): number
-		writef64(b, cursor, value)
+		buffer.writef64(b, cursor, value)
 		return 8
 	end,
 	[OP_STR] = function(b: buffer, cursor: number, s: buffer, blen: number, count: number): number
-		copy(b, cursor, s, 0, count)
+		buffer.copy(b, cursor, s, 0, count)
 		s = nil :: any
 		return blen
 	end,
@@ -396,12 +370,19 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 	Creates a packet buffer from all queued operations in a single pass 
 ]=]
 function Writer.Finalize(self: types.WriterData): buffer
-	local b = create(self._len)
+	local b = buffer.create(self._len)
 	local cursor = 0
 
 	for i = 1, #self._queue do
-		local v = self._queue[i]
-		cursor += WriteFunctions[v[1]](b, cursor, unpack(v, 2))
+		local v: any = self._queue[i]
+		-- Slightly cheaper than type() call
+		local x = v.x
+		if x then
+			-- This is a vectorized instruction
+			cursor += WriteFunctions[x](b, cursor, v.y)
+		else
+			cursor += WriteFunctions[v[1]](b, cursor, unpack(v, 2))
+		end
 	end
 
 	return b
@@ -421,6 +402,9 @@ function Writer.new(): types.WriterData
 
 	self._len = 0
 	self._queue = {}
+
+	self._bitLen = 0
+	self._bitQueue = {}
 
 	return self :: any
 end

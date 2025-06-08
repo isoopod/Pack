@@ -2,7 +2,7 @@
 --!optimize 2
 --!native
 
-local types = require(script.Parent.types)
+local types = require("./types")
 
 type evaluators = {
 	[string]: (value: any, datatype: types.DatatypeInterface<any>) -> boolean,
@@ -70,7 +70,7 @@ evaluator.indexToDatatype = {
 	[25] = datatypes.Nullable,
 	[26] = datatypes.Object,
 	[27] = datatypes.Region3,
-	[28] = datatypes.Region3Int16,
+	[28] = datatypes.Region3int16,
 	[29] = datatypes.SparseDictionary,
 	[30] = datatypes.String8,
 	[31] = datatypes.String16,

@@ -6,9 +6,14 @@ local CollectionService = game:GetService("CollectionService")
 local RunService = game:GetService("RunService")
 local SharedTableRegistry = game:GetService("SharedTableRegistry")
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+local Reader = require("../Reader")
+local Writer = require("../Writer")
+local types = require("../types")
+
+local read_u32 = Reader.u32
+
+local write_alloc = Writer.alloc
+local write_u32 = Writer.u32
 
 local IN_ACTOR = script:GetActor() ~= nil
 local IS_SERVER = RunService:IsServer()
@@ -34,7 +39,7 @@ Instance_Refs.count = script:GetAttribute("n") or -1
 local datatype = table.freeze({
 	Eval = "Inst_Ref",
 	Read = function(reader: types.ReaderData): Instance?
-		local ref = Reader.u32(reader)
+		local ref = read_u32(reader)
 
 		return CollectionService:GetTagged(`{PREFIX}{ref}`)[1]
 	end,
@@ -59,8 +64,8 @@ local datatype = table.freeze({
 			if setcount then (setcount :: any)(ref) end
 		end
 
-		Writer.alloc(writer, 4)
-		Writer.u32(writer, ref)
+		write_alloc(writer, 4)
+		write_u32(writer, ref)
 	end,
 }) :: types.DatatypeInterface<Instance?>
 

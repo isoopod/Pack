@@ -3,9 +3,9 @@
 --!optimize 2
 
 -- Modules
-local Reader = require(script.Reader)
-local Writer = require(script.Writer)
-local types = require(script.types)
+local Reader = require("@self/Reader")
+local Writer = require("@self/Writer")
+local types = require("@self/types")
 
 local Pack = {}
 
@@ -149,7 +149,7 @@ function Pack.__index(self, key)
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
-	local s, datatype = pcall(require, script.Datatypes:FindFirstChild(key))
+	local s, datatype = pcall(require, `@self/Datatypes/{key}`)
 	assert(s, `Unable to access datatype Pack.{key}. Datatype not found.`)
 	cache[key] = datatype
 	rawset(self, "_cachedDatatypes", cache)

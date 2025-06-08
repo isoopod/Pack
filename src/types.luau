@@ -35,8 +35,14 @@ export type Reader = {
 export type WriterData = {
 	refs: refs,
 	nRefs: number,
+
+	-- Main buffer
 	_len: number,
-	_queue: { { any } },
+	_queue: { vector | { any } },
+
+	-- Bit buffer
+	_bitLen: number,
+	_bitQueue: { vector },
 }
 
 export type Writer = {
