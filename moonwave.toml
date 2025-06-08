@@ -3,7 +3,7 @@ classes = ["Pack", "Schema"]
 
 [[classOrder]]
 section = "Internal"
-classes = ["Reader", "Writer", "Datatype"]
+classes = ["Datatype", "BitReader", "BitWriter", "Reader", "Writer"]
 
 gitSourceBranch = "main"
 

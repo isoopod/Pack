@@ -33,7 +33,7 @@ describe("Nullable", function()
 		local encoded1 = schema:Write(input1)
 		local encoded2 = schema:Write(input2)
 
-		expect(encoded1).never.toEqual(encoded2)
+		expect(buffer.tostring(encoded1)).never.toEqual(buffer.tostring(encoded2))
 	end)
 
 	it("should only add 1 byte for 8 nullables", function()
