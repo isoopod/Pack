@@ -12,7 +12,7 @@ local mixedSchema = Pack:Define(Pack.Dictionary({
 	A = Pack.UInt8,
 	B = Pack.String16,
 	[0] = Pack.Float32,
-	C = Pack.Bool,
+	C = Pack.Boolean,
 }))
 
 -- Schema for nested dictionary
