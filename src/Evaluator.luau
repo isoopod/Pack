@@ -85,12 +85,10 @@ evaluator.indexToDatatype = {
 	[40] = datatypes.Vector2float16,
 	[41] = datatypes.Vector2float24,
 	[42] = datatypes.Vector2float32,
-	[43] = datatypes.Vector2float64,
 	[44] = datatypes.Vector2int16,
 	[45] = datatypes.Vector3float16,
 	[46] = datatypes.Vector3float24,
 	[47] = datatypes.Vector3float32,
-	[48] = datatypes.Vector3float64,
 	[49] = datatypes.Vector3int16,
 	[50] = datatypes.Transformer,
 } :: { [number]: ModuleScript }
@@ -139,19 +137,18 @@ evaluator.evalToId = {
 	V2f16 = 40,
 	V2f24 = 41,
 	V2f32 = 42,
-	V2f64 = 43,
-	V2int16 = 44, -- Vector2int16 -> Eval = "V2int16"
+	V2int16 = 44,
 	V3f16 = 45,
 	V3f24 = 46,
 	V3f32 = 47,
-	V3f64 = 48,
-	V3int16 = 49, -- Vector3int16 -> Eval = "V3int16"
-	Transformer = 50,
+	V3int16 = 49,
 }
 
-function evaluator.addEvaluator(Eval: string, id: number, module: ModuleScript, func: (value: any, datatype: types.DatatypeInterface<any>) -> boolean)
-	evaluator.indexToDatatype[id] = module
-	evaluator.evalToId[Eval] = id
+function evaluator.addEvaluator(Eval: string, id: number?, module: ModuleScript?, func: (value: any, datatype: types.DatatypeInterface<any>) -> boolean)
+	if id then
+		evaluator.indexToDatatype[id] = module
+		evaluator.evalToId[Eval] = id
+	end
 	evaluator.evaluators[Eval] = func
 end
 
@@ -346,7 +343,7 @@ evaluator.evaluators = {
 			local def = optional[key]
 			if def then
 				if v then
-					if not evaluator.evaluators[def.Eval](v, def :: any) then return false end
+					if not evaluator.evaluators[(def :: any).Eval](v, def :: any) then return false end
 				end
 			else
 				return false
@@ -398,9 +395,6 @@ evaluator.evaluators = {
 	V2f32 = function(value: any)
 		return checkVector2(value, MAX_F32)
 	end,
-	V2f64 = function(value: any)
-		return typeof(value) == "Vector2"
-	end,
 	V3f16 = function(value: any)
 		return checkVector3(value, MAX_F16)
 	end,
@@ -409,9 +403,6 @@ evaluator.evaluators = {
 	end,
 	V3f32 = function(value: any)
 		return checkVector3(value, MAX_F32)
-	end,
-	V3f64 = function(value: any)
-		return type(value) == "vector"
 	end,
 	Transformer = function(value: any, datatype: types.DatatypeInterface<any>)
 		return pcall(function()
