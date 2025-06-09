@@ -44,6 +44,18 @@ describe("SparseDictionary", function()
 		expect(decoded).toEqual(input)
 	end)
 
+	it("errors when missing some required keys", function()
+		local input = {
+			OptionalA = 255,
+			OptionalB = "a",
+			RequiredX = 123,
+		}
+
+		expect(function()
+			schema:Write(input)
+		end).toThrow()
+	end)
+
 	it("ignores insertion order for optional and required fields", function()
 		local t1 = {
 			OptionalA = 1,
