@@ -8,7 +8,7 @@ local expect = JestGlobals.expect
 local describe = JestGlobals.describe
 
 -- Sparse dictionary schema: some keys optional, some required
-local schema = Pack:Define(Pack.SparseDictionary({ OptionalA = Pack.Uint8, OptionalB = Pack.String8 }, { RequiredX = Pack.Int16, RequiredY = Pack.Bool }))
+local schema = Pack:Define(Pack.SparseDictionary({ OptionalA = Pack.UInt8, OptionalB = Pack.String8 }, { RequiredX = Pack.Int16, RequiredY = Pack.Bool }))
 
 describe("SparseDictionary", function()
 	it("encodes and decodes when no optional fields present", function()

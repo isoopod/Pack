@@ -9,7 +9,7 @@ local describe = JestGlobals.describe
 
 -- Schema for mixed-key dictionary (string and numeric keys)
 local mixedSchema = Pack:Define(Pack.Dictionary({
-	A = Pack.Uint8,
+	A = Pack.UInt8,
 	B = Pack.String16,
 	[0] = Pack.Float32,
 	C = Pack.Bool,
@@ -17,7 +17,7 @@ local mixedSchema = Pack:Define(Pack.Dictionary({
 
 -- Schema for nested dictionary
 local nestedSchema = Pack:Define(Pack.Dictionary({
-	Outer = Pack.Uint16,
+	Outer = Pack.UInt16,
 	Inner = Pack.Dictionary({
 		X = Pack.Int8,
 		Y = Pack.String8,
