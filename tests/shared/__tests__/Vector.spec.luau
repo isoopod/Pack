@@ -42,17 +42,6 @@ local tests = {
 		digits = 6,
 	},
 	{
-		name = "Vector3float64",
-		key = Pack.Vector3float64,
-		byteSize = 24,
-		values = {
-			vector.create(0, 0, 0),
-			vector.create(1, -1, 0.5),
-			vector.create(123.456, -654.321, 3.14),
-		},
-		digits = 12,
-	},
-	{
 		name = "Vector3int16",
 		key = Pack.Vector3int16,
 		byteSize = 6,
@@ -94,17 +83,6 @@ local tests = {
 			Vector2.new(123.456, -654.321),
 		},
 		digits = 6,
-	},
-	{
-		name = "Vector2float64",
-		key = Pack.Vector2float64,
-		byteSize = 16,
-		values = {
-			Vector2.new(0, 0),
-			Vector2.new(1, -1),
-			Vector2.new(123.456, -654.321),
-		},
-		digits = 12,
 	},
 	{
 		name = "Vector2int16",

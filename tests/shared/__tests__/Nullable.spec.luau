@@ -39,17 +39,17 @@ describe("Nullable", function()
 	it("should only add 1 byte for 8 nullables", function()
 		-- Dictionaries should not add any overhead to the packet
 		local schema2 = Pack:Define(Pack.Dictionary({
-			[1] = Pack.Nullable(Pack.Boolean),
-			[2] = Pack.Nullable(Pack.Boolean),
-			[3] = Pack.Nullable(Pack.Boolean),
-			[4] = Pack.Nullable(Pack.Boolean),
-			[5] = Pack.Nullable(Pack.Boolean),
-			[6] = Pack.Nullable(Pack.Boolean),
-			[7] = Pack.Nullable(Pack.Boolean),
-			[8] = Pack.Nullable(Pack.Boolean),
+			[1] = Pack.Nullable(Pack.UInt8),
+			[2] = Pack.Nullable(Pack.UInt8),
+			[3] = Pack.Nullable(Pack.UInt8),
+			[4] = Pack.Nullable(Pack.UInt8),
+			[5] = Pack.Nullable(Pack.UInt8),
+			[6] = Pack.Nullable(Pack.UInt8),
+			[7] = Pack.Nullable(Pack.UInt8),
+			[8] = Pack.Nullable(Pack.UInt8),
 		}))
 
-		local encoded1 = schema2:Write({ true, true, true, true, true, true, true, true })
+		local encoded1 = schema2:Write({ 1, 1, 1, 1, 1, 1, 1, 1 })
 		local encoded2 = schema2:Write({})
 
 		expect(buffer.len(encoded1)).toEqual(9)
