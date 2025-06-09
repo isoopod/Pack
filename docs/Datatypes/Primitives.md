@@ -12,7 +12,7 @@ The Any datatype attempts to automatically encode any value inserted, at the cos
 
 ## BitField
 
-A BitField is a highly compressed array of booleans, using bit packing to fit eight booleans into one byte, instead of the usual one.  
+A BitField is a highly compressed array of booleans, utilizing the packet bitbuffer to fix 8 booleans worth of data per byte.  
 To use this datatype, you must pass in a fixed length of how many booleans it is expected to store.  
 When writing to this datatype, it is in the format of an array of booleans. If the array is shorter than the expected length, the last values will be treated as false.  
 Reading it will return the array of booleans in the same order.  
