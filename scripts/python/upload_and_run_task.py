@@ -42,9 +42,14 @@ def run_luau_task(universe_id, place_id, place_version, script_file):
     script_contents = read_file(script_file).decode("utf8")
 
     for attempt in range(1, 4):
-        task = createTask(
-            ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
-        )
+        if attempt == 1:
+            task = createTask(
+                ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
+            )
+        else:
+            task = createTask(
+                ROBLOX_API_KEY, script_contents, universe_id, place_id
+            )
 
         data = awaitTaskCompletion(ROBLOX_API_KEY, task["path"], 60)
         if data is not None:
