@@ -1,6 +1,8 @@
 --!strict
 --# selene:allow(undefined_variable)
 
+local SharedTableRegistry = game:GetService("SharedTableRegistry")
+
 -- Shared types within pack
 
 export type Schema<T, U...> = {
@@ -286,4 +288,10 @@ type function nullableKeys(ty: type)
 	return newTable
 end
 
-return nil
+local config = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
+
+local packConfig = {}
+
+packConfig.DEBUG = config.__DEBUG__
+
+return packConfig

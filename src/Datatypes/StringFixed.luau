@@ -1,7 +1,6 @@
 --!strict
 --!native
 --!optimize 2
-local SharedTableRegistry = game:GetService("SharedTableRegistry")
 
 local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
@@ -11,8 +10,7 @@ local read_string = Reader.string
 
 local write_string = Writer.string
 
-local PACK_CONFIG = (SharedTableRegistry:GetSharedTable("PACK_CONFIG"))
-local DEBUG = PACK_CONFIG.__DEBUG__ == true
+local DEBUG = types.DEBUG
 
 return function(length: number): types.DatatypeInterface<string>
 	return table.freeze({
