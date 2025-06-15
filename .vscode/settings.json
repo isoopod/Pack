@@ -7,4 +7,5 @@
     "luau-lsp.inlayHints.parameterTypes": true,
     "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
     "stylua.targetReleaseVersion": "latest",
+    "luau-lsp.completion.imports.requireStyle": "alwaysRelative",
 }

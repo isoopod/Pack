@@ -5,6 +5,8 @@
 local BitField = require(script.Parent.BitField)
 local types = require(script.Parent.Parent.types)
 
+local DEBUG = types.DEBUG
+
 local typePriority = {
 	["number"] = 1,
 	["string"] = 2,
@@ -105,6 +107,8 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 			local key = occupiedWrite[i]
 			optionalFormat[key].Write(writer, value[key])
 		end
+
+		if DEBUG then DEBUG.SparseDictionary.CheckRequired(reqStructure, value) end
 
 		if requiredFormat then
 			for i = 1, reqLen do

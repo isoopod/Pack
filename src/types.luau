@@ -292,6 +292,6 @@ local config = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
 
 local packConfig = {}
 
-packConfig.DEBUG = config.__DEBUG__
+packConfig.DEBUG = if config.__DEBUG__ then require(script.Parent.Debug) else nil
 
 return packConfig
