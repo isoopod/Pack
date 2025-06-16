@@ -1,5 +1,9 @@
 --!strict
 
+local SharedTableRegistry = game:GetService("SharedTableRegistry")
+local TestService = game:GetService("TestService")
+local PACK_CONFIG = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
+
 -- Any debug logic should be written here to reduce the amount of native code
 
 local Logger = {}
@@ -11,6 +15,7 @@ export type Logger = {
 	Clear: (self: Logger) -> (),
 	SetPrefix: (self: Logger, prefix: string) -> (),
 	SetStatus: (self: Logger, status: number) -> (), -- 0: success 1: warning 2: error
+	StackTrace: (self: Logger, start: number?) -> (),
 	WriteLogs: (self: Logger) -> (),
 }
 
@@ -49,11 +54,35 @@ function Logger.SetStatus(self: _Logger, status: number)
 	self._status = math.max(self._status, status)
 end
 
+function Logger.StackTrace(self: _Logger, start: number?)
+	self:AddLine("Stacktrace:\n")
+	for i = (start or 1), 100 do -- Limit to 100 layers
+		local source: string, name: string, line: number = debug.info(i, "snl")
+		if not source then
+			self:AddLine("\tStacktrace truncated at 100 lines.")
+			break
+		end
+		if line >= 0 then
+			self:AddLine(string.format("\t%s(%d): %s", source, line, name or "anonymous"))
+		else
+			self:AddLine(string.format("\t%s: %s", source, name or "anonymous"))
+		end
+	end
+end
+
 function Logger.WriteLogs(self: _Logger)
-	if self.Status == 0 then return end -- TODO: Verbose logging setting
-	-- TODO: Better error traces
-	if self.Status == 1 then warn(self:Get()) end
-	if self.Status == 2 then error(self:Get()) end
+	if self.Status == 0 then
+		if PACK_CONFIG.Verbose then TestService:Message(self:Get(), script, debug.info(2, "l")) end
+		return
+	end
+
+	self:StackTrace(2)
+
+	if self.Status == 1 then
+		warn(self:Get())
+	elseif self.Status == 2 then
+		TestService:Error(self:Get())
+	end
 end
 
 local debuggers = {}

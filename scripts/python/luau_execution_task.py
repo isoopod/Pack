@@ -114,7 +114,7 @@ def loadAPIKey(api_key_arg):
         logging.error(f"API key appears invalid (not valid base64, loaded from {source}): {str(e)}")
         sys.exit(1)
 
-def createTask(api_key, script, universe_id, place_id, place_version):
+def createTask(api_key, script, universe_id, place_id, place_version=None):
     headers = {
         'Content-Type': 'application/json',
         'x-api-key': api_key
@@ -124,7 +124,7 @@ def createTask(api_key, script, universe_id, place_id, place_version):
         'timeout': "30s"
     }
     url = f'https://apis.roblox.com/cloud/v2/universes/{universe_id}/places/{place_id}/'
-    if place_version:
+    if place_version is not None:
         url += f'versions/{place_version}/'
     url += 'luau-execution-session-tasks'
 
