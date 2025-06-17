@@ -10,10 +10,24 @@ type evaluators = {
 
 -- HELPERS --
 
--- precompute max normals for each floting point format
-local MAX_F16 = (2 - 2 ^ -10) * 2 ^ 15
-local MAX_F24 = (2 - 2 ^ -16) * 2 ^ 63
-local MAX_F32 = (2 - 2 ^ -23) * 2 ^ 127
+-- Precomputed maximum normal values for each float format
+local MAX_F16 = (2 ^ (2 ^ 5 - 1 - 1)) * (2 - 2 ^ -10) -- 5‑bit exponent, 10‑bit mantissa
+local MAX_F24 = (2 ^ (2 ^ 7 - 1 - 1)) * (2 - 2 ^ -16) -- 7‑bit exponent, 16‑bit mantissa
+local MAX_F32 = (2 ^ (2 ^ 8 - 1 - 1)) * (2 - 2 ^ -23) -- 8‑bit exponent, 23‑bit mantissa
+
+-- Fuzzy equality check for floating point numbers
+local function fuzzyEq(a: number, b: number, epsilon: number): boolean
+	return math.abs(a - b) <= epsilon * math.max(1, math.abs(a), math.abs(b))
+end
+
+-- Test whether a value is exactly representable in an IEEE float
+local function CanRepresent(value: number, maxRange: number, mantissaBits: number): boolean
+	if math.abs(value) > maxRange then return false end
+	-- Scale up by mantissa and back to check exactness
+	local scale = 2 ^ mantissaBits
+	local approx = math.round(value * scale) / scale
+	return fuzzyEq(value, approx, 1e-9)
+end
 
 local function checkVector2(value: any, maxAbs: number)
 	if typeof(value) ~= "Vector2" then return false end
@@ -255,15 +269,15 @@ evaluator.evaluators = {
 	end,
 	f16 = function(value: any)
 		if type(value) ~= "number" then return false end
-		return value >= -MAX_F16 and value <= MAX_F16
+		return CanRepresent(value, MAX_F16, 10)
 	end,
 	f24 = function(value: any)
 		if type(value) ~= "number" then return false end
-		return value >= -MAX_F24 and value <= MAX_F24
+		return CanRepresent(value, MAX_F24, 16)
 	end,
 	f32 = function(value: any)
 		if type(value) ~= "number" then return false end
-		return value >= -MAX_F32 and value <= MAX_F32
+		return CanRepresent(value, MAX_F32, 23)
 	end,
 	f64 = function(value: any)
 		return type(value) == "number"
@@ -272,13 +286,13 @@ evaluator.evaluators = {
 		return typeof(value) == "Instance"
 	end,
 	i8 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1) and value % 1 == 0
+		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	i16 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1) and value % 1 == 0
+		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	i32 = function(value: any)
-		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and value % 1 == 0
+		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	Map = function(value: any, datatype: types.DatatypeInterface<any>)
 		if type(value) ~= "table" then return false end
@@ -378,13 +392,13 @@ evaluator.evaluators = {
 		return typeof(value) == "UDim2"
 	end,
 	u8 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 8 and value % 1 == 0
+		return type(value) == "number" and value >= 0 and value < 2 ^ 8 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	u16 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 16 and value % 1 == 0
+		return type(value) == "number" and value >= 0 and value < 2 ^ 16 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	u32 = function(value: any)
-		return type(value) == "number" and value >= 0 and value < 2 ^ 32 and value % 1 == 0
+		return type(value) == "number" and value >= 0 and value < 2 ^ 32 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	V2f16 = function(value: any)
 		return checkVector2(value, MAX_F16)
