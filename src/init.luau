@@ -2,6 +2,20 @@
 --!native
 --!optimize 2
 
+-- Load a Pack config file if provided
+if not script:GetActor() then
+	pcall(function()
+		local PACK_CONFIG = game:GetService("SharedTableRegistry"):GetSharedTable("PACK_CONFIG")
+
+		local config = require(game:GetService("ReplicatedStorage"):FindFirstChild("pack-config"))
+
+		if config.debug then
+			if game:GetService("RunService"):IsStudio() or not config.debug.onlyInStudio then PACK_CONFIG.__DEBUG__ = config.debug.enabled end
+			PACK_CONFIG.Verbose = config.debug.verbose
+		end
+	end)
+end
+
 -- Modules
 local Reader = require(script.Reader)
 local Writer = require(script.Writer)

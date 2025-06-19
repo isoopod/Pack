@@ -8,4 +8,5 @@
     "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
     "stylua.targetReleaseVersion": "latest",
     "luau-lsp.completion.imports.requireStyle": "alwaysRelative",
+    "roblox-ui.sourcemap.rojoProjectFile": "dev.project.json",
 }

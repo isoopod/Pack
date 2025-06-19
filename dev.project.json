@@ -12,6 +12,9 @@
             },
             "shared": {
                 "$path": "tests/shared"
+            },
+            "pack-config": {
+                "$path": "tests/pack-config.toml"
             }
         },
 
