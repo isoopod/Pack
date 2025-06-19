@@ -87,6 +87,16 @@ end
 
 local debuggers = {}
 
+debuggers.Array = {
+	CheckLenType = function(t: any)
+		if type(t) ~= "table" or t.Eval == nil or not string.match(t.Eval :: any, "^u%d%d?$") then
+			local dt = "unknown"
+			if type(t) == "table" and t.Write and type(t.Write) == "function" then dt = debug.info(t.Write :: () -> (), "s") end
+			warn(`Arrays should only use unsigned integers for lengthType. Got {dt}`)
+		end
+	end,
+}
+
 debuggers.SparseDictionary = {
 	CheckRequired = function(required: { any }, values: { [any]: any })
 		local logs = Logger.new()

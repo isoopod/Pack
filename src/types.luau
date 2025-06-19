@@ -241,7 +241,7 @@ export type Datatypes = {
 	Object: <T, U>(metatable: T, classData: U) -> setmetatable<U, T>,
 	Transformer: <T, U>(format: U, encode: ((T) -> U)?, decode: ((U) -> T)?) -> T,
 
-	Array: <T>(type: T) -> { T },
+	Array: <T>(type: T, lengthType: number?) -> { T }, -- Lengthtype is any Unsigned Integer datatype
 	Dictionary: <T>(format: T) -> T,
 	SparseDictionary: <T, U>(optionalFormat: T, requireFormat: U?) -> nullableKeys<T> & U,
 	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },

@@ -10,7 +10,9 @@ In Pack, structural datatypes are types that do not hold their own data, but ins
 
 An array is an ordered collection of values with the same type.  
 Arrays are one-based for consistency with lua.  
-Arrays have two bytes of overhead and can contain a maximum of 65,565 elements.
+Arrays have two bytes of overhead and can contain a maximum of 65,565 elements by deafult.  
+The type of number the array uses to encode the length can be changed with the second argument
+and should be an unsigned integer. By default this is UInt16.
 
 ```lua
 Pack:DefineSchema(Pack.Array(Pack.Vector3))
