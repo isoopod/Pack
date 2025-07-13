@@ -3,24 +3,42 @@
 --!optimize 2
 
 local Array = require(script.Parent.Array)
-local Evaluator = require(script.Parent.Parent.Evaluator)
+local Boolean = require(script.Parent.Boolean)
+local Buffer16 = require(script.Parent.Buffer16)
+local Buffer24 = require(script.Parent.Buffer24)
+local Buffer32 = require(script.Parent.Buffer32)
+local Buffer8 = require(script.Parent.Buffer8)
+local CFrame = require(script.Parent.CFrame)
+local Color3 = require(script.Parent.Color3)
+local Color3float32 = require(script.Parent.Color3float32)
+local DateTime = require(script.Parent.DateTime)
+local Float16 = require(script.Parent.Float16)
+local Float24 = require(script.Parent.Float24)
+local Float32 = require(script.Parent.Float32)
+local Float64 = require(script.Parent.Float64)
+local Instance = require(script.Parent.Instance)
+local Int16 = require(script.Parent.Int16)
+local Int32 = require(script.Parent.Int32)
+local Int8 = require(script.Parent.Int8)
 local Map = require(script.Parent.Map)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
+local Null = require(script.Parent.Null)
+local Region3 = require(script.Parent.Region3)
+local Region3int16 = require(script.Parent.Region3int16)
+local String16 = require(script.Parent.String16)
+local String24 = require(script.Parent.String24)
+local String32 = require(script.Parent.String32)
+local String8 = require(script.Parent.String8)
+local UDim = require(script.Parent.UDim)
+local UDim2 = require(script.Parent.UDim2)
+local UInt16 = require(script.Parent.UInt16)
+local UInt32 = require(script.Parent.UInt32)
+local UInt8 = require(script.Parent.UInt8)
+local Union = require(script.Parent.Union)
+local Vector2float32 = require(script.Parent.Vector2float32)
+local Vector2int16 = require(script.Parent.Vector2int16)
+local Vector3float32 = require(script.Parent.Vector3float32)
+local Vector3int16 = require(script.Parent.Vector3int16)
 local types = require(script.Parent.Parent.types)
-
--- Basic search for primitive datatypes
--- stylua: ignore
-local searchOrder = {
-	"u8", "u16", "u32", "i8", "i16", "i32", "f16", "f24", "f32", "f64", "bool", "s8", "s16", "s24", "s32", "V2f32", 
-	"V2f64", "CFrame", "Instance", "nil", "Color3", "Color3Raw", "R3", "UD", "UD2", "buffer8", "buffer16", "buffer24", 
-	"buffer32", "DateTime", "V3i16", "V2i16", "R3i16",
-}
-
-local idToEval = {}
-for k, v in Evaluator.evalToId do
-	idToEval[v] = k
-end
 
 local datatype = {}
 
@@ -30,49 +48,50 @@ local tbl = Map(datatype, datatype)
 -- Array of any
 local array = Array(datatype)
 
+local any = Union(
+	UInt8,
+	UInt16,
+	UInt32,
+	Int8,
+	Int16,
+	Int32,
+	Float16,
+	Float24,
+	Float32,
+	Float64,
+	Boolean,
+	String8,
+	String16,
+	String24,
+	String32,
+	Vector3float32,
+	Vector2float32,
+	CFrame,
+	Instance,
+	Null,
+	Color3,
+	Color3float32,
+	Region3,
+	UDim2,
+	UDim,
+	Buffer8,
+	Buffer16,
+	Buffer24,
+	Buffer32,
+	DateTime,
+	Vector3int16,
+	Vector2int16,
+	Region3int16,
+	array,
+	tbl
+)
+
 datatype.Eval = "Any"
 datatype.Read = function(reader: types.ReaderData): any
-	-- TODO
-	local dtId = Reader.u8(reader)
-	local s, dt = pcall(require, Evaluator.indexToDatatype[dtId])
-	assert(s, "Get datatype from ID failed")
-	return dt.Read(reader)
+	return any.Read(reader)
 end
 datatype.Write = function(writer: types.WriterData, value: any)
-	-- Attempt to find a valid representation for value
-	for _, v in searchOrder do
-		if Evaluator.evaluators[v](value, nil :: any) then
-			Writer.alloc(writer, 1)
-			Writer.u8(writer, Evaluator.evalToId[v])
-			local s, dt = pcall(require :: any, Evaluator.indexToDatatype[Evaluator.evalToId[v]])
-			assert(s, "Get datatype from Eval failed")
-			dt.Write(writer, value)
-			return
-		end
-	end
-
-	-- Handle other cases
-	if type(value) == "table" then
-		-- Check if the table is an array
-		local expectedIndex: any = 1
-		for i in value do
-			if i ~= expectedIndex then
-				expectedIndex = nil
-				break
-			end
-			expectedIndex += 1
-		end
-
-		-- expectedIndex will be nil if not an array
-		if expectedIndex then
-			Writer.u8(writer, Evaluator.evalToId[array.Eval :: string])
-			array.Write(writer, value :: any)
-		else
-			-- For now, treat tables as map [any]: any
-			Writer.u8(writer, Evaluator.evalToId[tbl.Eval :: string])
-			tbl.Write(writer, value :: any)
-		end
-	end
+	any.Write(writer, value)
 end
 
 return table.freeze(datatype)
