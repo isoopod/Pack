@@ -54,6 +54,9 @@ function evaluator.addEvaluator(Eval: string, func: (value: any, datatype: types
 end
 
 evaluator.evaluators = {
+	Any = function()
+		return true
+	end,
 	Array = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		local of = datatype.Of
 		local ofEval = of and of.Eval
