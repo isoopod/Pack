@@ -11,7 +11,7 @@ local describe = JestGlobals.describe
 local mixedSchema = Pack:Define(Pack.Dictionary({
 	A = Pack.UInt8,
 	B = Pack.String16,
-	[0] = Pack.Float32,
+	[1] = Pack.Color3,
 	C = Pack.Boolean,
 }))
 
@@ -29,7 +29,7 @@ describe("Mixed Table Dictionaries", function()
 		local expected = {
 			A = 42,
 			B = "hello",
-			[0] = 2.718,
+			[1] = Color3.fromRGB(255, 0, 0),
 			C = true,
 		}
 		local encoded = mixedSchema:Write(expected)
@@ -38,11 +38,11 @@ describe("Mixed Table Dictionaries", function()
 	end)
 
 	it("ignores insertion order when encoding mixed-key tables", function()
-		local t1 = { A = 1, B = "x", [0] = 0.1, C = false }
+		local t1 = { A = 1, B = "x", [1] = Color3.new(0, 1, 0), C = false }
 
 		local t2 = {}
 		t2.C = false
-		t2[0] = 0.1
+		t2[1] = Color3.new(0, 1, 0)
 		t2.B = "x"
 		t2.A = 1
 
@@ -52,8 +52,8 @@ describe("Mixed Table Dictionaries", function()
 	end)
 
 	it("produces distinct encodings for different mixed-key values", function()
-		local base = { A = 10, B = "foo", [0] = 1.5, C = true }
-		local modified = { A = 10, B = "foo", [0] = 1.5, C = false }
+		local base = { A = 10, B = "foo", [1] = Color3.new(0, 0, 1), C = true }
+		local modified = { A = 10, B = "foo", [1] = Color3.new(0, 0, 1), C = false }
 
 		local encBase = mixedSchema:Write(base)
 		local encMod = mixedSchema:Write(modified)
