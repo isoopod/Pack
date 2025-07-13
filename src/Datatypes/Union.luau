@@ -34,7 +34,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 					dt.Write(writer, value)
 				end
 			end
-			error(`{value} could not be represented by datatype union.`)
+			error(`{typeof(value)} '{value}' could not be represented by datatype union.`)
 		end,
 	}) :: types.DatatypeInterface<any>
 end

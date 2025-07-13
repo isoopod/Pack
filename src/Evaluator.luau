@@ -54,7 +54,7 @@ function evaluator.addEvaluator(Eval: string, func: (value: any, datatype: types
 end
 
 evaluator.evaluators = {
-	Array = function(value: any, datatype: types.DatatypeInterface<any>)
+	Array = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) == "table" then
 			local expectedIndex = 1
 			for i, v in value do
@@ -66,7 +66,7 @@ evaluator.evaluators = {
 		end
 		return false
 	end,
-	BitField = function(value: any)
+	BitField = function(value: unknown)
 		if type(value) == "table" then
 			local expectedIndex = 1
 			for i, v in value do
@@ -78,58 +78,58 @@ evaluator.evaluators = {
 		end
 		return false
 	end,
-	bool = function(value: any)
+	bool = function(value: unknown)
 		return type(value) == "boolean"
 	end,
-	BrickColor = function(value: any)
+	BrickColor = function(value: unknown)
 		return typeof(value) == "BrickColor"
 	end,
-	buffer8 = function(value: any)
+	buffer8 = function(value: unknown)
 		if type(value) == "buffer" then
 			if buffer.len(value) < 2 ^ 8 then return true end
 		end
 		return false
 	end,
-	buffer16 = function(value: any)
+	buffer16 = function(value: unknown)
 		if type(value) == "buffer" then
 			if buffer.len(value) < 2 ^ 16 then return true end
 		end
 		return false
 	end,
-	buffer24 = function(value: any)
+	buffer24 = function(value: unknown)
 		if type(value) == "buffer" then
 			if buffer.len(value) < 2 ^ 24 then return true end
 		end
 		return false
 	end,
-	buffer32 = function(value: any)
+	buffer32 = function(value: unknown)
 		if type(value) == "buffer" then
 			if buffer.len(value) < 2 ^ 32 then return true end
 		end
 		return false
 	end,
-	buffer = function(value: any, datatype: types.DatatypeInterface<any>)
+	buffer = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) == "buffer" then
 			if buffer.len(value) < datatype.len then return true end
 		end
 		return false
 	end,
-	CFrame = function(value: any)
+	CFrame = function(value: unknown)
 		return typeof(value) == "CFrame"
 	end,
-	Color3 = function(value: any)
+	Color3 = function(value: unknown)
 		if typeof(value) == "Color3" then
 			if value.R < 256 and value.G < 256 and value.B < 256 then return true end
 		end
 		return false
 	end,
-	Color3Raw = function(value: any)
+	Color3Raw = function(value: unknown)
 		return typeof(value) == "Color3"
 	end,
-	DateTime = function(value: any)
+	DateTime = function(value: unknown)
 		return typeof(value) == "DateTime"
 	end,
-	Dict = function(value: any, datatype: types.DatatypeInterface<any>)
+	Dict = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if typeof(value) ~= "table" then return false end
 		-- First check number of keys
 		local vLen, fLen = 0, 0
@@ -147,41 +147,41 @@ evaluator.evaluators = {
 		end
 		return true
 	end,
-	Enum = function(value: any, datatype: types.DatatypeInterface<any>)
+	Enum = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		-- TODO: Look for a faster way to do this
 		for _, v in (datatype.Item :: Enum):GetEnumItems() do
 			if value == v then return true end
 		end
 		return false
 	end,
-	f16 = function(value: any)
+	f16 = function(value: unknown)
 		if type(value) ~= "number" then return false end
 		return CanRepresent(value, MAX_F16, 10)
 	end,
-	f24 = function(value: any)
+	f24 = function(value: unknown)
 		if type(value) ~= "number" then return false end
 		return CanRepresent(value, MAX_F24, 16)
 	end,
-	f32 = function(value: any)
+	f32 = function(value: unknown)
 		if type(value) ~= "number" then return false end
 		return CanRepresent(value, MAX_F32, 23)
 	end,
-	f64 = function(value: any)
+	f64 = function(value: unknown)
 		return type(value) == "number"
 	end,
-	Inst_Ref = function(value: any)
+	Inst_Ref = function(value: unknown)
 		return typeof(value) == "Instance"
 	end,
-	i8 = function(value: any)
+	i8 = function(value: unknown)
 		return type(value) == "number" and value >= -(2 ^ 8) and value <= (2 ^ 8 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	i16 = function(value: any)
+	i16 = function(value: unknown)
 		return type(value) == "number" and value >= -(2 ^ 16) and value <= (2 ^ 16 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	i32 = function(value: any)
+	i32 = function(value: unknown)
 		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	Map = function(value: any, datatype: types.DatatypeInterface<any>)
+	Map = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) ~= "table" then return false end
 		for k, v in value do
 			if not evaluator.evaluators[datatype.Key.Eval](k, datatype.Key) then return false end
@@ -189,27 +189,27 @@ evaluator.evaluators = {
 		end
 		return true
 	end,
-	["nil"] = function(value: any)
+	["nil"] = function(value: unknown)
 		return value == nil
 	end,
-	nullable = function(value: any, datatype: types.DatatypeInterface<any>)
+	nullable = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		return value == nil or evaluator.evaluators[datatype.dt.Eval](value, datatype.dt)
 	end,
-	object = function(value: any, datatype: types.DatatypeInterface<any>)
+	object = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) ~= "table" then return false end
 		if getmetatable(value :: any) ~= datatype.mt then return false end
 		return evaluator.evaluators[datatype.cData.Eval](value, datatype.cData)
 	end,
-	R3 = function(value: any)
+	R3 = function(value: unknown)
 		return typeof(value) == "Region3"
 	end,
-	R3i16 = function(value: any)
+	R3i16 = function(value: unknown)
 		return typeof(value) == "Region3int16"
 	end,
-	SDict = function(_value: any, datatype: types.DatatypeInterface<any>)
+	SDict = function(_value: unknown, datatype: types.DatatypeInterface<unknown>)
 		-- must be a table
 		if typeof(_value) ~= "table" then return false end
-		local value: { [any]: any } = _value
+		local value: { [any]: any } = _value :: any
 
 		local required: { [any]: any } = datatype.format or {}
 		local optional = datatype.optFormat
@@ -253,65 +253,71 @@ evaluator.evaluators = {
 
 		return true
 	end,
-	s8 = function(value: any)
+	s8 = function(value: unknown)
 		if type(value) ~= "string" then return false end
 		return buffer.len(buffer.fromstring(value)) < 2 ^ 8
 	end,
-	s16 = function(value: any)
+	s16 = function(value: unknown)
 		if type(value) ~= "string" then return false end
 		return buffer.len(buffer.fromstring(value)) < 2 ^ 16
 	end,
-	s24 = function(value: any)
+	s24 = function(value: unknown)
 		if type(value) ~= "string" then return false end
 		return buffer.len(buffer.fromstring(value)) < 2 ^ 24
 	end,
-	s32 = function(value: any)
+	s32 = function(value: unknown)
 		return type(value) == "string"
 	end,
-	string = function(value: any, datatype: types.DatatypeInterface<any>)
+	string = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) ~= "string" then return false end
 		return buffer.len(buffer.fromstring(value)) == datatype.len
 	end,
-	UD = function(value: any)
+	UD = function(value: unknown)
 		return typeof(value) == "UDim"
 	end,
-	UD2 = function(value: any)
+	UD2 = function(value: unknown)
 		return typeof(value) == "UDim2"
 	end,
-	u8 = function(value: any)
+	u8 = function(value: unknown)
 		return type(value) == "number" and value >= 0 and value < 2 ^ 8 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	u16 = function(value: any)
+	u16 = function(value: unknown)
 		return type(value) == "number" and value >= 0 and value < 2 ^ 16 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	u32 = function(value: any)
+	u32 = function(value: unknown)
 		return type(value) == "number" and value >= 0 and value < 2 ^ 32 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	V2f16 = function(value: any)
+	V2f16 = function(value: unknown)
 		return checkVector2(value, MAX_F16)
 	end,
-	V2f24 = function(value: any)
+	V2f24 = function(value: unknown)
 		return checkVector2(value, MAX_F24)
 	end,
-	V2f32 = function(value: any)
+	V2f32 = function(value: unknown)
 		return checkVector2(value, MAX_F32)
 	end,
-	V3f16 = function(value: any)
+	V2i16 = function(value: unknown)
+		return typeof(value) == "Vector2int16"
+	end,
+	V3f16 = function(value: unknown)
 		return checkVector3(value, MAX_F16)
 	end,
-	V3f24 = function(value: any)
+	V3f24 = function(value: unknown)
 		return checkVector3(value, MAX_F24)
 	end,
-	V3f32 = function(value: any)
+	V3f32 = function(value: unknown)
 		return checkVector3(value, MAX_F32)
 	end,
-	Transformer = function(value: any, datatype: types.DatatypeInterface<any>)
+	V3i16 = function(value: unknown)
+		return typeof(value) == "Vector3int16"
+	end,
+	Transformer = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		return pcall(function()
 			local encoded = datatype.enc(value)
 			assert(evaluator.evaluators[datatype.Form.Eval](encoded, datatype.Form))
 		end)
 	end,
-	lit = function(value: any, datatype: types.DatatypeInterface<any>)
+	lit = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		return value == datatype.val
 	end,
 } :: evaluators
