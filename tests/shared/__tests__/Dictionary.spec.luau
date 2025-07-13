@@ -48,7 +48,7 @@ describe("Mixed Table Dictionaries", function()
 
 		local enc1 = mixedSchema:Write(t1)
 		local enc2 = mixedSchema:Write(t2)
-		expect(enc1).toEqual(enc2)
+		expect(buffer.tostring(enc1)).toEqual(buffer.tostring(enc2))
 	end)
 
 	it("produces distinct encodings for different mixed-key values", function()
