@@ -20,13 +20,9 @@ local function fuzzyEq(a: number, b: number, epsilon: number): boolean
 	return math.abs(a - b) <= epsilon * math.max(1, math.abs(a), math.abs(b))
 end
 
--- Test whether a value is exactly representable in an IEEE float
-local function CanRepresent(value: number, maxRange: number, mantissaBits: number): boolean
-	if math.abs(value) > maxRange then return false end
-	-- Scale up by mantissa and back to check exactness
-	local scale = 2 ^ mantissaBits
-	local approx = math.round(value * scale) / scale
-	return fuzzyEq(value, approx, 1e-9)
+-- Can represent float
+local function CanRepresent(value: number, maxRange: number): boolean
+	return math.abs(value) <= maxRange
 end
 
 local function checkVector2(value: any, maxAbs: number)
@@ -168,15 +164,15 @@ evaluator.evaluators = {
 	end,
 	f16 = function(value: unknown)
 		if type(value) ~= "number" then return false end
-		return CanRepresent(value, MAX_F16, 10)
+		return CanRepresent(value, MAX_F16)
 	end,
 	f24 = function(value: unknown)
 		if type(value) ~= "number" then return false end
-		return CanRepresent(value, MAX_F24, 16)
+		return CanRepresent(value, MAX_F24)
 	end,
 	f32 = function(value: unknown)
 		if type(value) ~= "number" then return false end
-		return CanRepresent(value, MAX_F32, 23)
+		return CanRepresent(value, MAX_F32)
 	end,
 	f64 = function(value: unknown)
 		return type(value) == "number"

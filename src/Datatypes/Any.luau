@@ -12,9 +12,6 @@ local CFrame = require(script.Parent.CFrame)
 local Color3 = require(script.Parent.Color3)
 local Color3float32 = require(script.Parent.Color3float32)
 local DateTime = require(script.Parent.DateTime)
-local Float16 = require(script.Parent.Float16)
-local Float24 = require(script.Parent.Float24)
-local Float32 = require(script.Parent.Float32)
 local Float64 = require(script.Parent.Float64)
 local Instance = require(script.Parent.Instance)
 local Int16 = require(script.Parent.Int16)
@@ -55,9 +52,6 @@ local any = Union(
 	Int8,
 	Int16,
 	Int32,
-	Float16,
-	Float24,
-	Float32,
 	Float64,
 	Boolean,
 	String8,
