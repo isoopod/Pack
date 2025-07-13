@@ -27,6 +27,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 		Write = function(writer: types.WriterData, value: any)
 			for i, dt in args do
 				if not dt.Eval then continue end
+				if not Evaluator.evaluators[dt.Eval] then error(`No evaluator for datatype {dt.Eval}`) end
 				if Evaluator.evaluators[dt.Eval](value, dt) then
 					write_alloc(writer, 1)
 					write_u8(writer, i)
