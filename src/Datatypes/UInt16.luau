@@ -12,7 +12,7 @@ local write_alloc = Writer.alloc
 local write_u16 = Writer.u16
 
 local datatype = table.freeze({
-	eval = "u16",
+	Eval = "u16",
 	Read = function(reader: types.ReaderData): number
 		return read_u16(reader)
 	end,

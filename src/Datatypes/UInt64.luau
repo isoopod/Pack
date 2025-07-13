@@ -22,7 +22,7 @@ local write_u32 = Writer.u32
 local POW32 = 2 ^ 32
 
 local datatype64 = table.freeze({
-	Eval = "i64",
+	Eval = "u64",
 
 	Read = function(reader: types.ReaderData): number
 		-- Read low and high segments

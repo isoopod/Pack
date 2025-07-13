@@ -71,16 +71,16 @@ function Logger.StackTrace(self: _Logger, start: number?)
 end
 
 function Logger.WriteLogs(self: _Logger)
-	if self.Status == 0 then
+	if self._status == 0 then
 		if PACK_CONFIG.Verbose then TestService:Message(self:Get(), script, debug.info(2, "l")) end
 		return
 	end
 
 	self:StackTrace(2)
 
-	if self.Status == 1 then
+	if self._status == 1 then
 		warn(self:Get())
-	elseif self.Status == 2 then
+	elseif self._status == 2 then
 		TestService:Error(self:Get())
 	end
 end
