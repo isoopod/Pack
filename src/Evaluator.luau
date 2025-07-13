@@ -311,6 +311,9 @@ evaluator.evaluators = {
 			assert(evaluator.evaluators[datatype.Form.Eval](encoded, datatype.Form))
 		end)
 	end,
+	lit = function(value: any, datatype: types.DatatypeInterface<any>)
+		return value == datatype.val
+	end,
 } :: evaluators
 
 return evaluator
