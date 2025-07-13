@@ -12,7 +12,7 @@ local write_alloc = Writer.alloc
 local write_f32 = Writer.f32
 
 local datatype = table.freeze({
-	Eval = "V2",
+	Eval = "V2f32",
 	Read = function(reader: types.ReaderData): Vector2
 		return Vector2.new(read_f32(reader), read_f32(reader))
 	end,
