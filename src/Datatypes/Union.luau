@@ -32,7 +32,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 					write_alloc(writer, 1)
 					write_u8(writer, i)
 					dt.Write(writer, value)
-					break
+					return
 				end
 			end
 			error(`{typeof(value)} '{value}' could not be represented by datatype union.`)
