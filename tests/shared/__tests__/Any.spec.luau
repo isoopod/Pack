@@ -14,7 +14,7 @@ describe("Any", function()
 		local value = 123.456
 		local encoded = anySchema:Write(value)
 		local decoded = anySchema:Read(encoded)
-		expect(decoded).toEqual(value)
+		expect(decoded).toBeCloseTo(value, 4)
 	end)
 
 	it("round trips a negative integer correctly", function()

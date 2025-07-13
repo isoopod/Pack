@@ -55,11 +55,13 @@ end
 
 evaluator.evaluators = {
 	Array = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) == "table" then
+		local of = datatype.Of
+		local ofEval = of and of.Eval
+		if ofEval and type(value) == "table" then
 			local expectedIndex = 1
 			for i, v in value do
 				if i ~= expectedIndex then return false end
-				if not evaluator.evaluators[datatype.Of.Eval](v, datatype.Of) then return false end
+				if not evaluator.evaluators[ofEval](v, of) then return false end
 				expectedIndex += 1
 			end
 			return true
@@ -109,7 +111,7 @@ evaluator.evaluators = {
 		return false
 	end,
 	buffer = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) == "buffer" then
+		if datatype.len and type(value) == "buffer" then
 			if buffer.len(value) < datatype.len then return true end
 		end
 		return false
@@ -130,27 +132,34 @@ evaluator.evaluators = {
 		return typeof(value) == "DateTime"
 	end,
 	Dict = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if typeof(value) ~= "table" then return false end
-		-- First check number of keys
-		local vLen, fLen = 0, 0
-		for _ in value do
-			vLen += 1
-		end
-		for _ in datatype.format do
-			fLen += 1
-		end
-		if vLen ~= fLen then return false end
+		local _format = datatype.format
+		if _format and type(value) == "table" then
+			local format = _format :: any -- FIXME: If the luau evaluator ever fixes this, remove this cast
+			-- First check number of keys
+			local vLen, fLen = 0, 0
+			for _ in value do
+				vLen += 1
+			end
+			for _ in format do
+				fLen += 1
+			end
+			if vLen ~= fLen then return false end
 
-		for k, v in value do
-			if not datatype.format[k] then return false end
-			if not evaluator.evaluators[datatype.format[k].Eval](v, datatype.format[k]) then return false end
+			for k, v in value do
+				if not format[k] then return false end
+				if not format[k].Eval then return false end
+				if not evaluator.evaluators[format[k].Eval](v, format[k]) then return false end
+			end
+			return true
 		end
-		return true
+		return false
 	end,
 	Enum = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		-- TODO: Look for a faster way to do this
-		for _, v in (datatype.Item :: Enum):GetEnumItems() do
-			if value == v then return true end
+		if datatype.Item then
+			for _, v in (datatype.Item :: Enum):GetEnumItems() do
+				if value == v then return true end
+			end
 		end
 		return false
 	end,
@@ -182,23 +191,27 @@ evaluator.evaluators = {
 		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	Map = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) ~= "table" then return false end
-		for k, v in value do
-			if not evaluator.evaluators[datatype.Key.Eval](k, datatype.Key) then return false end
-			if not evaluator.evaluators[datatype.Val.Eval](v, datatype.Val) then return false end
+		local key, val = datatype.Key, datatype.Val
+		if key and val and key.Eval and val.Eval and type(value) == "table" then
+			for k, v in value do
+				if not evaluator.evaluators[key.Eval :: any](k, key :: any) then return false end
+				if not evaluator.evaluators[val.Eval :: any](v, val :: any) then return false end
+			end
+			return true
 		end
-		return true
+		return false
 	end,
 	["nil"] = function(value: unknown)
 		return value == nil
 	end,
 	nullable = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		return value == nil or evaluator.evaluators[datatype.dt.Eval](value, datatype.dt)
+		if not datatype.dt or not datatype.dt.Eval then return false end
+		return value == nil or evaluator.evaluators[datatype.dt.Eval :: any](value, datatype.dt :: any)
 	end,
 	object = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) ~= "table" then return false end
+		if type(value) ~= "table" or not datatype.mt or not datatype.cData or not (datatype.cData :: any).Eval then return false end
 		if getmetatable(value :: any) ~= datatype.mt then return false end
-		return evaluator.evaluators[datatype.cData.Eval](value, datatype.cData)
+		return evaluator.evaluators[datatype.cData.Eval :: any](value, datatype.cData :: any)
 	end,
 	R3 = function(value: unknown)
 		return typeof(value) == "Region3"
@@ -207,12 +220,13 @@ evaluator.evaluators = {
 		return typeof(value) == "Region3int16"
 	end,
 	SDict = function(_value: unknown, datatype: types.DatatypeInterface<unknown>)
+		local format, optFormat = datatype.format, datatype.optFormat
 		-- must be a table
-		if typeof(_value) ~= "table" then return false end
+		if not format or not optFormat or typeof(_value) ~= "table" then return false end
 		local value: { [any]: any } = _value :: any
 
-		local required: { [any]: any } = datatype.format or {}
-		local optional = datatype.optFormat
+		local required: { [any]: any } = format or {}
+		local optional = optFormat :: any
 		local reqCount, optCount, valCount = 0, 0, 0
 
 		-- count required, optional, and actual keys
@@ -231,8 +245,9 @@ evaluator.evaluators = {
 
 		for key, def in required do
 			local v = rawget(value, key)
+			if not def.Eval then return false end
 			if v == nil then return false end
-			if not evaluator.evaluators[def.Eval](v, def) then return false end
+			if not evaluator.evaluators[def.Eval](v, def :: any) then return false end
 		end
 
 		for key, v in value do
@@ -243,7 +258,7 @@ evaluator.evaluators = {
 
 			local def = optional[key]
 			if def then
-				if v then
+				if def.Eval and v then
 					if not evaluator.evaluators[(def :: any).Eval](v, def :: any) then return false end
 				end
 			else
@@ -269,7 +284,7 @@ evaluator.evaluators = {
 		return type(value) == "string"
 	end,
 	string = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) ~= "string" then return false end
+		if type(value) ~= "string" or not datatype.len then return false end
 		return buffer.len(buffer.fromstring(value)) == datatype.len
 	end,
 	UD = function(value: unknown)
@@ -318,7 +333,7 @@ evaluator.evaluators = {
 		end)
 	end,
 	lit = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		return value == datatype.val
+		return datatype.val and value == datatype.val
 	end,
 } :: evaluators
 
