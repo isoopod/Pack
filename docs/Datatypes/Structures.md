@@ -91,4 +91,4 @@ Pack:DefineSchema(Pack.SparseDictionary({
 Pack.Union(...: Datatype)
 ```
 
-The Union datatype indicates a value may be one of many datatypes, adding 1 byte of overhead. The order of the values is the order they will be evaluated.
+The Union datatype indicates a value may be one of many datatypes. The order of the values is the order they will be evaluated. The overhead is adaptive and uses the bitbuffer.

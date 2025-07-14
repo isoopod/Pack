@@ -2,26 +2,28 @@
 --!native
 --!optimize 2
 
+local BitReader = require(script.Parent.Parent.BitReader)
+local BitWriter = require(script.Parent.Parent.BitWriter)
 local Evaluator = require(script.Parent.Parent.Evaluator)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
 local DEBUG = types.DEBUG
 
-local read_u8 = Reader.u8
+local bitr_read = BitReader.read
 
-local write_alloc = Writer.alloc
-local write_u8 = Writer.u8
+local bitw_alloc = BitWriter.alloc
+local bitw_write = BitWriter.write
 
 return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	local args = { ... }
+
+	local bits = math.floor(math.log(#args, 2)) + 1
 
 	if DEBUG then DEBUG.Union.CheckDatatypesSupported(args) end
 
 	return table.freeze({
 		Read = function(reader: types.ReaderData): any
-			local i = read_u8(reader)
+			local i = bitr_read(reader, bits)
 			return args[i].Read(reader)
 		end,
 		Write = function(writer: types.WriterData, value: any)
@@ -29,8 +31,8 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 				if not dt.Eval then continue end
 				if not Evaluator.evaluators[dt.Eval] then error(`No evaluator for datatype {dt.Eval}`) end
 				if Evaluator.evaluators[dt.Eval](value, dt) then
-					write_alloc(writer, 1)
-					write_u8(writer, i)
+					bitw_alloc(writer, bits)
+					bitw_write(writer, bits, i)
 					dt.Write(writer, value)
 					return
 				end
