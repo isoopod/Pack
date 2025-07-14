@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[67],{5811:e=>{e.exports=JSON.parse('[{"value":"Types","id":"types","level":2},{"value":"DatatypeInterface<T>","id":"DatatypeInterface<T>","level":3}]')}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[137],{4410:e=>{e.exports=JSON.parse('{"sourceUrl":"https://github.com/isoopod/Pack/blob/master","baseUrl":"/Pack/","classOrder":[{"classes":["Pack","Schema"]},{"section":"Internal","classes":["Datatype","BitReader","BitWriter","Reader","Writer"],"gitSourceBranch":"main"}],"apiCategories":[]}')}}]);
