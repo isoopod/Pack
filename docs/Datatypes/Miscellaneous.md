@@ -8,6 +8,10 @@ These datatypes do not fit into the category of primitive or structural.
 
 ## Custom
 
+```lua
+Pack.Custom(reader: (reader) -> T, writer: (writer, val: T))
+```
+
 The `Custom` datatype is used as a simple way to create a custom datatype that will be used once.  
 If performance is essential or the datatype needs to be reused, you can create an extension datatype using the exposed internal Pack types.
 
@@ -28,6 +32,10 @@ Pack:DefineSchema(
 ```
 
 ## Transformer
+
+```lua
+Pack.Transformer(format: T, encode: ((input: U) -> T)?, decode: ((input: T) -> U)?)
+```
 
 The `Transformer` datatype functions as a convenient wrapper for transforming raw data into a more efficient format for encoding, and reversing that process.
 The `format` (usually a [Dictionary](Structures#dictionary)) is how the data will be encoded by Pack.

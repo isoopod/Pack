@@ -6,6 +6,11 @@ local PACK_CONFIG = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
 
 -- Any debug logic should be written here to reduce the amount of native code
 
+--[=[
+	@class Logger
+	A simple logger class for debugging purposes.
+]=]
+
 local Logger = {}
 Logger.__index = Logger
 
@@ -25,6 +30,13 @@ type _Logger = Logger & {
 	_prefix: string,
 }
 
+--[=[
+	@function new
+	@within Logger
+	@param prefix string? -- Optional prefix for log lines.
+	@return Logger
+	Creates a new Logger instance with an optional prefix.
+]=]
 function Logger.new(prefix: string?): Logger
 	local self = {
 		_status = 0,
@@ -34,26 +46,61 @@ function Logger.new(prefix: string?): Logger
 	return setmetatable(self, Logger) :: any
 end
 
+--[=[
+	@method AddLine
+	@within Logger
+	@param line string -- The line to add to the log.
+	Adds a line to the logger with the current prefix.
+]=]
 function Logger.AddLine(self: _Logger, line: string)
 	table.insert(self._lines, `{self._prefix}{line}`)
 end
 
+--[=[
+	@method Get
+	@within Logger
+	@return string -- The concatenated log lines.
+	Retrieves the current log as a single string.
+]=]
 function Logger.Get(self: _Logger): string
 	return table.concat(self._lines, "\n")
 end
 
+--[=[
+	@method Clear
+	@within Logger
+	Clears all log lines.
+]=]
 function Logger.Clear(self: _Logger)
 	table.clear(self._lines)
 end
 
+--[=[
+	@method SetPrefix
+	@within Logger
+	@param prefix string -- The new prefix for log lines.
+	Sets a new prefix for the logger.
+]=]
 function Logger.SetPrefix(self: _Logger, prefix: string)
 	self._prefix = prefix
 end
 
+--[=[
+	@method SetStatus
+	@within Logger
+	@param status number -- The status code (0: success, 1: warning, 2: error).
+	Sets the status of the logger, allowing for different log levels.
+]=]
 function Logger.SetStatus(self: _Logger, status: number)
 	self._status = math.max(self._status, status)
 end
 
+--[=[
+	@method StackTrace
+	@within Logger
+	@param start number? -- Optional starting point for the stack trace.
+	Logs the current stack trace starting from the specified point.
+]=]
 function Logger.StackTrace(self: _Logger, start: number?)
 	self:AddLine("Stacktrace:\n")
 	for i = (start or 1), 100 do -- Limit to 100 layers
@@ -70,6 +117,12 @@ function Logger.StackTrace(self: _Logger, start: number?)
 	end
 end
 
+--[=[
+	@method WriteLogs
+	@within Logger
+	Prints the logs to the console based on the status.
+	If status is 0, it prints a message. If 1, it warns. If 2, it errors.
+]=]
 function Logger.WriteLogs(self: _Logger)
 	if self._status == 0 then
 		if PACK_CONFIG.Verbose then TestService:Message(self:Get(), script, debug.info(2, "l")) end
@@ -91,7 +144,7 @@ debuggers.Array = {
 	CheckLenType = function(t: any)
 		if type(t) ~= "table" or t.Eval == nil or not string.match(t.Eval :: any, "^u%d%d?$") then
 			local dt = "unknown"
-			if type(t) == "table" and t.Write and type(t.Write) == "function" then dt = debug.info(t.Write :: () -> (), "s") end
+			if type(t) == "table" and (t :: any).Write and type(t.Write) == "function" then dt = debug.info(t.Write :: () -> (), "s") end
 			warn(`Arrays should only use unsigned integers for lengthType. Got {dt}`)
 		end
 	end,

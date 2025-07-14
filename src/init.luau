@@ -39,7 +39,7 @@ local Schema = {}
 	@within Schema
 	@param ... any
 	@return buffer -- This is your 'packet' that can be sent around or stored and later read by this schema.
-	@return {any} -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
+	@return {any}? -- Table of refs for datatypes making use of this. Stock Pack does not use this and this is intended for Networking.
 	Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
 ]=]
 function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
@@ -89,8 +89,8 @@ end
 	@class Pack
 	The singleton object from where Schemas are created and Datatypes can be accessed.
 	
-	The constructor for Schemas is accessed with : syntax  
-	Datatypes are accessed with . syntax  
+	The constructor for Schemas is accessed with `:` syntax  
+	Datatypes are accessed with `.` syntax  
 	All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primitives)
 ]=]
 

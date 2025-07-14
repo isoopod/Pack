@@ -8,6 +8,11 @@ type evaluators = {
 	[string]: (value: any, datatype: types.DatatypeInterface<any>) -> boolean,
 }
 
+--[=[
+	@class Evaluator
+	Contains datatype evaluators allowing support for datatypes inside Unions.
+]=]
+
 -- HELPERS --
 
 -- Precomputed maximum normal values for each float format
@@ -45,6 +50,13 @@ end
 
 local evaluator = {}
 
+--[=[
+	@function addEvaluator
+	@within Evaluator
+	@param Eval string -- The name of the evaluator. (Same as the Eval field in your datatype)
+	@param func (value: any, datatype: types.DatatypeInterface<any>) -> boolean -- The evaluator function.
+	Adds a new evaluator function to the evaluator table. Use this to add support for custom datatypes inside Unions.
+]=]
 function evaluator.addEvaluator(Eval: string, func: (value: any, datatype: types.DatatypeInterface<any>) -> boolean)
 	evaluator.evaluators[Eval] = func
 end
