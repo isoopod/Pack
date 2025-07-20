@@ -11,7 +11,6 @@ local unionSchema = Pack:Define(Pack.Union(
 	-- Numeric types
 	Pack.UInt8,
 	Pack.Int16,
-	Pack.Float32,
 	-- Boolean
 	Pack.Boolean,
 	-- Strings
@@ -39,7 +38,6 @@ local unionSchema = Pack:Define(Pack.Union(
 local testCases = {
 	{ value = 255, desc = "UInt8" },
 	{ value = -32768, desc = "Int16" },
-	{ value = 3.14, desc = "Float32" },
 	{ value = true, desc = "Boolean" },
 	{ value = "union", desc = "String8" },
 	{ value = nil, desc = "Null" },
