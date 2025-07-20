@@ -4,7 +4,7 @@ sidebar_position: 1
 <!-- markdownlint-disable MD033 -->
 # Primitive Datatypes
 
-In Pack, a primitive datatype refers to datatypes that contain only their own data. By this definition, Datatypes like Vector3 are treated as primitives, where they might normally be called compount datatypes or aggregate datatypes.
+In Pack, a primitive datatype refers to datatypes that contain only their own data. By this definition, Datatypes like Vector3 are treated as primitives, where they might normally be called compound datatypes or aggregate datatypes.
 
 ## Any
 

@@ -15,6 +15,5 @@ towards parallel luau. This allows you to represent more versatile data structur
 *These features are planned/implemented, but not in the current release or not completely finished.*  
 
 - [x] Proper test coverage with Jest-Lua
-- [x] Datatype evaluators for infered datatypes (union, any)
 - [ ] Full instance marshalling (instead of baked references)
 - [x] Documentation

@@ -46,7 +46,7 @@ local function getAny(): types.DatatypeInterface<any>
 	if any == nil then
 		-- These depend on datatype being fully defined
 		local tbl = Map(datatype, datatype)
-		local array = Array(datatype)
+		local array = Array(datatype, UInt32)
 
 		any = Union(
 			UInt8,
