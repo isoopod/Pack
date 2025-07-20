@@ -39,53 +39,59 @@ local types = require(script.Parent.Parent.types)
 
 local datatype = {}
 
--- Map of any -> any
-local tbl = Map(datatype, datatype)
+local any: types.DatatypeInterface<any>? -- Deferred definition
 
--- Array of any
-local array = Array(datatype)
+-- Lazy initialisation
+local function getAny(): types.DatatypeInterface<any>
+	if any == nil then
+		-- These depend on datatype being fully defined
+		local tbl = Map(datatype, datatype)
+		local array = Array(datatype)
 
-local any = Union(
-	UInt8,
-	UInt16,
-	UInt32,
-	Int8,
-	Int16,
-	Int32,
-	Float64,
-	Boolean,
-	String8,
-	String16,
-	String24,
-	String32,
-	Vector3float32,
-	Vector2float32,
-	CFrame,
-	Instance,
-	Null,
-	Color3,
-	Color3float32,
-	Region3,
-	UDim2,
-	UDim,
-	Buffer8,
-	Buffer16,
-	Buffer24,
-	Buffer32,
-	DateTime,
-	Vector3int16,
-	Vector2int16,
-	Region3int16,
-	array,
-	tbl
-)
+		any = Union(
+			UInt8,
+			UInt16,
+			UInt32,
+			Int8,
+			Int16,
+			Int32,
+			Float64,
+			Boolean,
+			String8,
+			String16,
+			String24,
+			String32,
+			Vector3float32,
+			Vector2float32,
+			CFrame,
+			Instance,
+			Null,
+			Color3,
+			Color3float32,
+			Region3,
+			UDim2,
+			UDim,
+			Buffer8,
+			Buffer16,
+			Buffer24,
+			Buffer32,
+			DateTime,
+			Vector3int16,
+			Vector2int16,
+			Region3int16,
+			array,
+			tbl
+		)
+	end
+	return any :: any
+end
 
 datatype.Eval = "Any"
 datatype.Read = function(reader: types.ReaderData): any
-	return any.Read(reader)
+	return getAny().Read(reader)
 end
 datatype.Write = function(writer: types.WriterData, value: any)
-	any.Write(writer, value)
+	getAny().Write(writer, value)
 end
 
 return table.freeze(datatype)
