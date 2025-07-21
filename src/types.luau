@@ -21,6 +21,11 @@ export type ReaderData = {
 	BitCursor: number,
 }
 
+export type BitReader = {
+	read moveCursor: (self: ReaderData, delta: number) -> (),
+	read read: (self: ReaderData, bits: number) -> number,
+}
+
 export type Reader = {
 	read moveCursor: (self: ReaderData, number) -> (), -- Force move the cursor, but try and rely on the automatic cursor pushing
 	read u8: (self: ReaderData) -> number,
@@ -50,6 +55,13 @@ export type WriterData = {
 	-- Bit buffer
 	_bitLen: number,
 	_bitQueue: { vector },
+}
+
+export type BitWriter = {
+	read alloc: (self: WriterData, bits: number) -> (),
+	read write: (self: WriterData, bits: number, value: number) -> (),
+	read moveCursor: (self: WriterData, delta: number) -> (),
+	read Finalize: (self: WriterData, b: buffer) -> buffer,
 }
 
 export type Writer = {
@@ -264,6 +276,8 @@ export type Pack = {
 
 	Reader: Reader,
 	Writer: Writer,
+	BitReader: BitReader,
+	BitWriter: BitWriter,
 } & Datatypes
 
 -- Makes every property of a table type nullable (i.e. T[K] -> T[K] | nil)

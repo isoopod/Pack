@@ -17,6 +17,8 @@ if not script:GetActor() then
 end
 
 -- Modules
+local BitReader = require(script.BitReader)
+local BitWriter = require(script.BitWriter)
 local Reader = require(script.Reader)
 local Writer = require(script.Writer)
 local types = require(script.types)
@@ -149,6 +151,8 @@ export type Datatypes = types.Datatypes
 
 Pack.Reader = Reader
 Pack.Writer = Writer
+Pack.BitReader = BitReader
+Pack.BitWriter = BitWriter
 
 -- Lazy-loading for datatypes so only the neccesary datatypes are loaded in each environment
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau
