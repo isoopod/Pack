@@ -11,9 +11,6 @@ local types = require(script.Parent.types)
 	A reader instance is created with the .new constructor and modified by the library's functions.
 ]=]
 
-local NAN = 0 / 0
-local INF = math.huge
-
 local Reader = {}
 
 --[=[
@@ -176,9 +173,9 @@ function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffse
 	-- Check for special cases: Infinity or NaN (exponent all ones)
 	if storedExponent == maxExponent then
 		if mantissa == 0 then
-			return sign == 1 and -INF or INF
+			return sign == 1 and -math.huge or math.huge
 		else
-			return NAN
+			return 0 / 0 -- NaN
 		end
 	end
 

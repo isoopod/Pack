@@ -16,8 +16,6 @@ local types = require(script.Parent.types)
 	A writer instance is created with the .new constructor, and is modified with the library's functions.
 ]=]
 
-local INF = math.huge
-
 local OP_U8 = 1
 local OP_U16 = 2
 local OP_U32 = 3
@@ -290,7 +288,7 @@ local WriteFunctions: { (buffer, number, ...any) -> number } = {
 			sign = 0
 			storedExponent = (bit32.lshift(1, n)) - 1
 			mantissa = 1 -- any non-zero value within m bits
-		elseif value == INF or value == -INF then
+		elseif value == math.huge or value == -math.huge then
 			sign = value < 0 and 1 or 0
 			storedExponent = (bit32.lshift(1, n)) - 1
 			mantissa = 0
