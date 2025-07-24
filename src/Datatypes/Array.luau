@@ -6,12 +6,14 @@ local types = require(script.Parent.Parent.types)
 
 local UInt16 = require(script.Parent.UInt16)
 
+local DEBUG = types.DEBUG
+
 return function<T>(valueType: types.DatatypeInterface<T>, lengthType: types.DatatypeInterface<number>?): types.DatatypeInterface<{ T }>
 	lengthType = lengthType or UInt16
 	local read, write = valueType.Read, valueType.Write
 	local lenRead, lenWrite = lengthType.Read, lengthType.Write
 
-	if types.DEBUG then types.DEBUG.Array.CheckLenType(lengthType) end
+	if DEBUG then DEBUG.Array.CheckLenType(lengthType) end
 
 	return table.freeze({
 		Eval = "Array",

@@ -3,9 +3,6 @@ local processServiceExists, ProcessService = pcall(function()
 	return game:GetService(service)
 end)
 
-local PACK_CONFIG = (game:GetService("SharedTableRegistry"):GetSharedTable("PACK_CONFIG"))
-PACK_CONFIG.__DEBUG__ = true
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local runCLI = require(ReplicatedStorage.DevPackages.Jest).runCLI

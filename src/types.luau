@@ -1,7 +1,10 @@
 --!strict
 --# selene:allow(undefined_variable)
 
-local SharedTableRegistry = game:GetService("SharedTableRegistry")
+-- Services
+local RunService = game:GetService("RunService")
+-- Modules
+local ConfigParser = require(script.Parent.ConfigParser)
 
 -- Shared types within pack
 
@@ -278,6 +281,7 @@ export type Pack = {
 	GetWriter: (self: Pack) -> Writer,
 	GetBitReader: (self: Pack) -> BitReader,
 	GetBitWriter: (self: Pack) -> BitWriter,
+	GetConfig: (self: Pack) -> { [any]: any },
 } & Datatypes
 
 -- Makes every property of a table type nullable (i.e. T[K] -> T[K] | nil)
@@ -304,10 +308,10 @@ type function nullableKeys(ty: type)
 	return newTable
 end
 
-local config = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
+-- Processed configuration for pack
+local PackTypes = {}
 
-local packConfig = {}
+PackTypes.cfg = ConfigParser
+PackTypes.DEBUG = ((RunService:IsStudio() or not PackTypes.cfg.debug.onlyInStudio) and PackTypes.cfg.debug.enabled) and require(script.Parent.Debug)
 
-packConfig.DEBUG = if config.__DEBUG__ then require(script.Parent.Debug) else nil
-
-return packConfig
+return PackTypes

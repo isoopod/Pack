@@ -1,8 +1,8 @@
 --!strict
 
-local SharedTableRegistry = game:GetService("SharedTableRegistry")
 local TestService = game:GetService("TestService")
-local PACK_CONFIG = SharedTableRegistry:GetSharedTable("PACK_CONFIG")
+
+local ConfigParser = require(script.Parent.ConfigParser)
 
 -- Any debug logic should be written here to reduce the amount of native code
 
@@ -125,7 +125,7 @@ end
 ]=]
 function Logger.WriteLogs(self: _Logger)
 	if self._status == 0 then
-		if PACK_CONFIG.Verbose then TestService:Message(self:Get(), script, debug.info(2, "l")) end
+		if ConfigParser.debug.verbose then TestService:Message(self:Get(), script, debug.info(2, "l")) end
 		return
 	end
 

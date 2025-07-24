@@ -3,9 +3,6 @@
 
 if not game:GetService("RunService"):IsRunning() then error("Only run TestRunner in a local test.") end
 
-local PACK_CONFIG = (game:GetService("SharedTableRegistry"):GetSharedTable("PACK_CONFIG"))
-PACK_CONFIG.__DEBUG__ = true
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local runCLI = require(ReplicatedStorage.DevPackages.Jest).runCLI
