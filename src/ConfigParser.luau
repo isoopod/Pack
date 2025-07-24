@@ -10,10 +10,10 @@ end
 
 local function WrapVirtualStructure(input: any): ()
 	for k, v in input do
-		if type(v) == "table" then input[k] = WrapVirtualStructure(k) end
+		if type(v) == "table" then input[k] = WrapVirtualStructure(v) end
 	end
 
-	setmetatable(input, VirtualTable)
+	setmetatable(input, { __index = VirtualTable })
 end
 
 local Config: { [any]: any }
@@ -26,7 +26,7 @@ if packConfig and packConfig.ClassName == "ModuleScript" then
 	if not s then warn("Failed to load pack-config:", Config) end
 end
 
-if not Config then Config = {} end
+if type(Config) ~= "table" then Config = {} end
 
 WrapVirtualStructure(Config)
 
