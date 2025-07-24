@@ -17,8 +17,6 @@ if not script:GetActor() then
 end
 
 -- Modules
-local BitReader = require(script.BitReader)
-local BitWriter = require(script.BitWriter)
 local Reader = require(script.Reader)
 local Writer = require(script.Writer)
 local types = require(script.types)
@@ -149,10 +147,37 @@ export type ReaderData = types.ReaderData
 export type WriterData = types.WriterData
 export type Datatypes = types.Datatypes
 
-Pack.Reader = Reader
-Pack.Writer = Writer
-Pack.BitReader = BitReader
-Pack.BitWriter = BitWriter
+--- @method GetReader
+--- @within Pack
+--- @return Reader
+--- Returns the internal buffer reader library. Use this with Pack.Custom
+function Pack.GetReader(_: types.Pack): types.Reader
+	return Reader
+end
+
+--- @method GetWriter
+--- @within Pack
+--- @return Writer
+--- Returns the internal buffer writer library. Use this with Pack.Custom
+function Pack.GetWriter(_: types.Pack): types.Writer
+	return Writer
+end
+
+--- @method GetBitReader
+--- @within Pack
+--- @return BitReader
+--- Returns the internal bitbuffer reader library. Use this with Pack.Custom
+function Pack.GetBitReader(_: types.Pack): types.BitReader
+	return require(script.BitReader)
+end
+
+--- @method GetBitWriter
+--- @within Pack
+--- @return BitWriter
+--- Returns the internal bitbuffer writer library. Use this with Pack.Custom
+function Pack.GetBitWriter(_: types.Pack): types.BitWriter
+	return require(script.BitWriter)
+end
 
 -- Lazy-loading for datatypes so only the neccesary datatypes are loaded in each environment
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau

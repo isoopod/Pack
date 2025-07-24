@@ -61,7 +61,7 @@ export type BitWriter = {
 	read alloc: (self: WriterData, bits: number) -> (),
 	read write: (self: WriterData, bits: number, value: number) -> (),
 	read moveCursor: (self: WriterData, delta: number) -> (),
-	read Finalize: (self: WriterData, b: buffer) -> buffer,
+	read Finalize: (self: WriterData, b: buffer) -> (),
 }
 
 export type Writer = {
@@ -274,10 +274,10 @@ export type Pack = {
 	-- Meaning we cannot pass multiple generics to the lower order read/write methods
 	Define: <T, U...>(self: Pack, T, U...) -> Schema<T, U...>,
 
-	Reader: Reader,
-	Writer: Writer,
-	BitReader: BitReader,
-	BitWriter: BitWriter,
+	GetReader: (self: Pack) -> Reader,
+	GetWriter: (self: Pack) -> Writer,
+	GetBitReader: (self: Pack) -> BitReader,
+	GetBitWriter: (self: Pack) -> BitWriter,
 } & Datatypes
 
 -- Makes every property of a table type nullable (i.e. T[K] -> T[K] | nil)

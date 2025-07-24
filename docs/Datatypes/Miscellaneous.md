@@ -18,14 +18,17 @@ If performance is essential or the datatype needs to be reused, you can create a
 ```lua
 -- See the API reference for the Reader and Writer libraries.
 -- In this example, the datatype just represents a float64
+local Reader = Pack:GetReader()
+local Writer = Pack:GetWriter()
+
 Pack:DefineSchema(
     Pack.Custom(
         function(reader)
-            return Pack.Reader.f64(reader)
+            return Reader.f64(reader)
         end,
         function(writer, val: number)
-            Pack.Writer.alloc(writer, 4)
-            Pack.Writer.f64(writer, val)
+            Writer.alloc(writer, 4)
+            Writer.f64(writer, val)
         end
     )
 )
