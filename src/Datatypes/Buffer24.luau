@@ -16,7 +16,8 @@ local write_nBitUint = Writer.nBitUint
 local write_moveCursor = Writer.moveCursor
 
 local datatype = table.freeze({
-	Eval = "buffer32",
+	Eval = "buffer24",
+	Len = 3,
 	Read = function(reader: types.ReaderData): buffer
 		local len = read_nBitUint(reader, 24, 0)
 		read_moveCursor(reader, 3)

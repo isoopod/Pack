@@ -15,6 +15,7 @@ local write_moveCursor = Writer.moveCursor
 
 local datatype = table.freeze({
 	Eval = "f16",
+	Len = 2,
 	Read = function(reader: types.ReaderData): number
 		local value = read_nBitFloat(reader, 5, 10, 0)
 		read_moveCursor(reader, 2)

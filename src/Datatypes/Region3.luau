@@ -13,6 +13,7 @@ local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "R3",
+	Len = 24,
 	Read = function(reader: types.ReaderData): Region3
 		local min: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any
 		local max: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any

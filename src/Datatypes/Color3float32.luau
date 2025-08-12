@@ -13,6 +13,7 @@ local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "Color3Raw",
+	Len = 12,
 	Read = function(reader: types.ReaderData): Color3
 		return Color3.new(read_f32(reader), read_f32(reader), read_f32(reader))
 	end,

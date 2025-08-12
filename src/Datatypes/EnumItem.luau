@@ -32,6 +32,7 @@ return function(enum: Enum): types.DatatypeInterface<EnumItem>
 
 	return table.freeze({
 		Eval = `Enum`,
+		Len = len,
 		Item = enum, -- In a union, we might have multiple enums
 		Read = function(reader: types.ReaderData): EnumItem
 			return enum:FromValue(read_op(reader)) :: EnumItem

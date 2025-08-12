@@ -13,6 +13,7 @@ local write_f64 = Writer.f64
 
 local datatype = table.freeze({
 	Eval = "DateTime",
+	Len = 8,
 	Read = function(reader: types.ReaderData): DateTime
 		return DateTime.fromUnixTimestampMillis(read_f64(reader))
 	end,

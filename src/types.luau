@@ -109,6 +109,7 @@ export type Writer = {
 	-- You should freeze the DatatypeInterface table
 	local datatype = table.freeze({
 		Eval = "f64",
+		Len = 8, -- Length in bytes if applicable.
 		Read = function(reader: Pack.ReaderData): number
 			return Reader.f64(reader)
 		end,
@@ -140,6 +141,7 @@ export type Writer = {
 		-- We also freeze the dynamic datatype tables
 		return table.freeze({
 			Eval = "Array",
+			Len = 2, -- When a datatype is of variable length, use the minimum size.
 			Of = valueType.Eval, -- Example of adding extra data for the evaluator
 			Read = function(reader: Pack.ReaderData): { T }
 				local len = Reader.u16(reader)
@@ -169,7 +171,7 @@ export type Writer = {
 ]=]
 
 --[=[
-	@type DatatypeInterface<T> {Eval: string?, Read: (ReaderData) -> T, Write: (writer: WriterData, value: T) -> ()}
+	@type DatatypeInterface<T> {Eval: string?, Len: number?, Read: (ReaderData) -> T, Write: (writer: WriterData, value: T) -> ()}
 	@within Datatype
 	Eval is a string indicating which evaluator to use for this value if applicable. Extra info can be added regarding this for advanced datatypes.  
 	Read is a function that is passed a ReaderData instance and expected to read the ReaderData and return whatever was passed into Write.
@@ -177,6 +179,7 @@ export type Writer = {
 ]=]
 export type DatatypeInterface<T> = {
 	read Eval: string?,
+	read Len: number?,
 	read Read: (ReaderData) -> T,
 	read Write: (writer: WriterData, value: T) -> (),
 	[string]: any,

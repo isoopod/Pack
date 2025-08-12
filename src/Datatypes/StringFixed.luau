@@ -15,7 +15,7 @@ local DEBUG = types.DEBUG
 return function(length: number): types.DatatypeInterface<string>
 	return table.freeze({
 		Eval = "string",
-		len = length,
+		Len = length,
 		Read = function(reader: types.ReaderData): string
 			return read_string(reader, length)
 		end,

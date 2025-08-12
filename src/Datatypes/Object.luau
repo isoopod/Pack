@@ -11,6 +11,7 @@ local types = require(script.Parent.Parent.types)
 return function(metatable: { [any]: any }, classData: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	local datatype = {
 		Eval = "object",
+		Len = classData.Len,
 		mt = metatable,
 		cData = classData,
 	}

@@ -32,9 +32,11 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 		len += 1
 	end
 
+	local approximateLen = 0
 	local structure = table.create(len) :: { any }
 
-	for k in format do
+	for k, v in format do
+		approximateLen += v.Len or 0
 		table.insert(structure, k :: any)
 	end
 
@@ -42,6 +44,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	local datatype = {
 		Eval = "Dict",
+		Len = approximateLen,
 		format = format,
 	}
 

@@ -13,6 +13,7 @@ local write_u8 = Writer.u8
 
 local datatype = table.freeze({
 	Eval = "Color3",
+	Len = 3,
 	Read = function(reader: types.ReaderData): Color3
 		return Color3.fromRGB(read_u8(reader), read_u8(reader), read_u8(reader))
 	end,

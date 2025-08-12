@@ -17,6 +17,7 @@ return function<T>(valueType: types.DatatypeInterface<T>, lengthType: types.Data
 
 	return table.freeze({
 		Eval = "Array",
+		Len = lengthType.Len,
 		Of = valueType,
 		Read = function(reader: types.ReaderData): { T }
 			local len = lenRead(reader)

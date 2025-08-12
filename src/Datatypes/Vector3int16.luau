@@ -14,6 +14,7 @@ local write_i16 = Writer.i16
 -- We are going to and from the vector class here, as the Vector3int16 is very slow in comparison.
 local datatype = table.freeze({
 	Eval = "V3i16",
+	Len = 6,
 	Read = function(reader: types.ReaderData): vector
 		return vector.create(read_i16(reader), read_i16(reader), read_i16(reader))
 	end,

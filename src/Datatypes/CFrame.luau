@@ -166,6 +166,7 @@ end
 
 local datatype = table.freeze({
 	Eval = "CFrame",
+	Len = 19, -- We will use the 19 byte size here as it is more likely
 	Read = function(reader: types.ReaderData): CFrame
 		local x = read_f32(reader)
 		local y = read_f32(reader)

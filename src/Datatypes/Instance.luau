@@ -38,6 +38,7 @@ Instance_Refs.count = script:GetAttribute("n") or -1
 
 local datatype = table.freeze({
 	Eval = "Inst_Ref",
+	Len = 4,
 	Read = function(reader: types.ReaderData): Instance?
 		local ref = read_u32(reader)
 

@@ -13,6 +13,7 @@ local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "V3f32",
+	Len = 12,
 	Read = function(reader: types.ReaderData): vector
 		return vector.create(read_f32(reader), read_f32(reader), read_f32(reader))
 	end,

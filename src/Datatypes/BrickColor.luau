@@ -13,6 +13,7 @@ local write_u16 = Writer.u16
 
 local datatype = table.freeze({
 	Eval = "BrickColor",
+	Len = 2,
 	Read = function(reader: types.ReaderData): BrickColor
 		return BrickColor.new(read_u16(reader))
 	end,

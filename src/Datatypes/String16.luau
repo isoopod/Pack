@@ -15,6 +15,7 @@ local write_u16 = Writer.u16
 
 local datatype = table.freeze({
 	Eval = "s16",
+	Len = 2,
 	Read = function(reader: types.ReaderData): string
 		local len = read_u16(reader)
 		return read_string(reader, len)

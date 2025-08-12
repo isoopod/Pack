@@ -13,6 +13,7 @@ local write_i16 = Writer.i16
 
 local datatype = table.freeze({
 	Eval = "i16",
+	Len = 2,
 	Read = function(reader: types.ReaderData): number
 		return read_i16(reader)
 	end,

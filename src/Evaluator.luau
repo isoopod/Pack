@@ -122,8 +122,8 @@ evaluator.evaluators = {
 		return false
 	end,
 	buffer = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if datatype.len and type(value) == "buffer" then
-			if buffer.len(value) < datatype.len then return true end
+		if datatype.Len and type(value) == "buffer" then
+			if buffer.len(value) < datatype.Len then return true end
 		end
 		return false
 	end,
@@ -295,8 +295,8 @@ evaluator.evaluators = {
 		return type(value) == "string"
 	end,
 	string = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		if type(value) ~= "string" or not datatype.len then return false end
-		return buffer.len(buffer.fromstring(value)) == datatype.len
+		if type(value) ~= "string" or not datatype.Len then return false end
+		return buffer.len(buffer.fromstring(value)) == datatype.Len
 	end,
 	UD = function(value: unknown)
 		return typeof(value) == "UDim"

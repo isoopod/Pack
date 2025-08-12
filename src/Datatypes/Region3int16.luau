@@ -13,6 +13,7 @@ local write_i16 = Writer.i16
 
 local datatype = table.freeze({
 	Eval = "R3i16",
+	Len = 12,
 	Read = function(reader: types.ReaderData): Region3int16
 		local min = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
 		local max = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))

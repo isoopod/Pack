@@ -13,6 +13,7 @@ local write_u8 = Writer.u8
 
 local datatype = table.freeze({
 	Eval = "u8",
+	Len = 1,
 	Read = function(reader: types.ReaderData): number
 		return read_u8(reader)
 	end,

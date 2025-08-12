@@ -15,6 +15,7 @@ local write_u32 = Writer.u32
 
 local datatype = table.freeze({
 	Eval = "buffer32",
+	Len = 4,
 	Read = function(reader: types.ReaderData): buffer
 		local len = read_u32(reader)
 		return buffer.fromstring(read_string(reader, len))

@@ -24,6 +24,7 @@ return function<T, U>(format: types.DatatypeInterface<U>, encode: (T) -> U, deco
 			write(writer, encode(value))
 		end,
 		Eval = "Transformer",
+		Len = format.Len,
 		Form = format.Eval,
 		enc = encode,
 	})

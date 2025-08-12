@@ -23,7 +23,7 @@ local POW32 = 2 ^ 32
 
 local datatype64 = table.freeze({
 	Eval = "u64",
-
+	Len = 8,
 	Read = function(reader: types.ReaderData): number
 		-- Read low and high segments
 		local low = read_u32(reader)
@@ -32,7 +32,6 @@ local datatype64 = table.freeze({
 		-- Reconstruct signed 64-bit int
 		return high * POW32 + low
 	end,
-
 	Write = function(writer: types.WriterData, value: number)
 		write_alloc(writer, 8)
 

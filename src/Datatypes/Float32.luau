@@ -13,6 +13,7 @@ local write_f32 = Writer.f32
 
 local datatype = table.freeze({
 	Eval = "f32",
+	Len = 4,
 	Read = function(reader: types.ReaderData): number
 		return read_f32(reader)
 	end,

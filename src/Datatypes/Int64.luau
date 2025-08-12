@@ -25,6 +25,7 @@ local POW32 = 2 ^ 32
 
 local datatype64 = table.freeze({
 	Eval = "i64",
+	Len = 8,
 
 	Read = function(reader: types.ReaderData): number
 		-- Read low unsigned and high signed segments

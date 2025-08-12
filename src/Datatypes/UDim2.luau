@@ -15,6 +15,7 @@ local write_i16 = Writer.i16
 
 local datatype = table.freeze({
 	Eval = "UD2",
+	Len = 12,
 	Read = function(reader: types.ReaderData): UDim2
 		return UDim2.new(read_f32(reader), read_i16(reader), read_f32(reader), read_i16(reader))
 	end,

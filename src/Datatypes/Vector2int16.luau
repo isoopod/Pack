@@ -14,6 +14,7 @@ local write_i16 = Writer.i16
 -- Use Vector2 directly, since its nicer to work with
 local datatype = table.freeze({
 	Eval = "V2i16",
+	Len = 4,
 	Read = function(reader: types.ReaderData): Vector2
 		return Vector2.new(read_i16(reader), read_i16(reader))
 	end,
