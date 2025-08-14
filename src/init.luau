@@ -30,7 +30,7 @@ local Schema = {}
 ]=]
 function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
 	local refs = {}
-	local writer = Writer.new()
+	local writer = Writer.new(self._approxLen)
 	writer.refs = refs
 
 	local input = { ... }
@@ -106,12 +106,16 @@ function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericS
 	local schemas = { ... }
 
 	self._args = #schemas
+	self._approxLen = 0
+
 	self._readers = table.create(self._args) :: { any }
 	self._writers = table.create(self._args) :: { any }
 
 	for i, schema in schemas do
 		self._readers[i] = schema.Read
 		self._writers[i] = schema.Write
+
+		self._approxLen += schema.Len or 0
 	end
 
 	return self
@@ -122,6 +126,7 @@ end
 type GenericSchema = types.Schema<any>
 type _Schema = GenericSchema & {
 	_args: number,
+	_approxLen: number,
 	_readers: { (types.ReaderData) -> any },
 	_writers: { (types.WriterData, any) -> () },
 }

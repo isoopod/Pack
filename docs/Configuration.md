@@ -6,14 +6,14 @@ sidebar_position: 4
 
 ## pack-config.toml
 
-For Rojo users, directly under ReplicatedStorage you can create a `pack-config.toml` file to control Pack's behaviour. Below are all the settings used by Pack.
+For Rojo users, directly under ReplicatedStorage you can create a `pack-config.toml` file to control Pack's behaviour. Below are all the settings used by Pack with their default values.
 
 ```toml
 persistInstanceRefs = false # Are we making use of Pack.Instance in a place using AssetService:SavePlaceAsync()? This allows refs to persist between sessions.
 
 [debug]
-enabled = true
-onlyInStudio = true # [DFT: true] Should debug only be enabled in studio?
+enabled = false
+onlyInStudio = true # Should debug only be enabled in studio?
 verbose = false # Do we want verbose output (not recommended)
 ```
 
@@ -28,7 +28,7 @@ If you aren't using Rojo, we use a different format for the settings. Create a M
 return {
     persistInstanceRefs = false,
     debug = {
-        enabled = true,
+        enabled = false,
         onlyInStudio = true,
         verbose = false
     },

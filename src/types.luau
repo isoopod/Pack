@@ -53,7 +53,9 @@ export type WriterData = {
 
 	-- Main buffer
 	_len: number,
-	_queue: { vector | { any } },
+	_allocatedLen: number,
+	_cursor: number,
+	_buffer: buffer,
 
 	-- Bit buffer
 	_bitLen: number,
@@ -64,7 +66,7 @@ export type BitWriter = {
 	read alloc: (self: WriterData, bits: number) -> (),
 	read write: (self: WriterData, bits: number, value: number) -> (),
 	read moveCursor: (self: WriterData, delta: number) -> (),
-	read Finalize: (self: WriterData, b: buffer) -> (),
+	read Finalize: (self: WriterData) -> (),
 }
 
 export type Writer = {
@@ -83,11 +85,12 @@ export type Writer = {
 	read f32: (self: WriterData, value: number) -> (),
 	read f64: (self: WriterData, value: number) -> (),
 	read string: (self: WriterData, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
+	read stringFixed: (self: WriterData, value: string, count: number) -> (),
 	read addRef: (self: WriterData, ref: any) -> (),
 
 	read Finalize: (self: WriterData) -> buffer,
 
-	read new: () -> WriterData,
+	read new: (approxLen: number?) -> WriterData,
 }
 
 --[=[

@@ -296,7 +296,7 @@ evaluator.evaluators = {
 	end,
 	string = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) ~= "string" or not datatype.Len then return false end
-		return buffer.len(buffer.fromstring(value)) == datatype.Len
+		return #value == datatype.Len
 	end,
 	UD = function(value: unknown)
 		return typeof(value) == "UDim"

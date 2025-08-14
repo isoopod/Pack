@@ -25,6 +25,7 @@ end
 --[=[
 	@function alloc
 	@within BitWriter
+	@param self WriterData -- A writer instance created with .new
 	@param bits number -- Number of bits to allocate.
 	Allocates space in the internal bit buffer without writing any values.
 	This is used to reserve bits ahead of time.
@@ -36,6 +37,7 @@ end
 --[=[
 	@function write
 	@within BitWriter
+	@param self WriterData -- A writer instance created with .new
 	@param bits number -- Number of bits to write.
 	@param value number -- Value to write into the buffer.
 	Queues a write operation to write the given number of bits with the specified value.
@@ -52,6 +54,7 @@ end
 --[=[
 	@function moveCursor
 	@within BitWriter
+	@param self WriterData -- A writer instance created with .new
 	@param delta number -- Number of bits to move the cursor by.
 	Moves the write cursor left by the given number of bits without writing any data.
 	Useful for padding or skipping reserved sections of the buffer.
@@ -63,11 +66,12 @@ end
 --[=[
 	@function Finalize
 	@within BitWriter
-	@param b buffer -- The packet being constructed by Writer.
+	@param self WriterData -- A writer instance created with .new
 	Finalises the bit buffer and writes into the provided binary buffer.
 	Executes all queued write and cursor move operations from right to left.
 ]=]
-function Writer.Finalize(self: types.WriterData, b: buffer)
+function Writer.Finalize(self: types.WriterData)
+	local b = self._buffer
 	local cursor = buffer.len(b) * 8
 
 	for _, v in self._bitQueue do
