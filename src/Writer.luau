@@ -333,6 +333,16 @@ function Writer.addRef(self: types.WriterData, ref: any)
 end
 ----
 
+local function trimBuffer(self: types.WriterData)
+	local len = self._len
+	-- If the buffer is smaller than the allocated size, we can trim it to the correct size
+	if len <= self._allocatedLen then
+		local trimmed = buffer.create(len)
+		buffer.copy(trimmed, 0, self._buffer, 0, len)
+		self._buffer = trimmed
+	end
+end
+
 --[=[
 	@function Finalize
 	@within Writer
@@ -344,20 +354,13 @@ function Writer.Finalize(self: types.WriterData): buffer
 	-- Allocate room for the bit buffer, write the bit buffer, and then trim the buffer to the correct size
 	if self._bitLen ~= 0 then
 		Writer.alloc(self, math.ceil(self._bitLen / 8))
-
+		trimBuffer(self)
 		BitWriter.Finalize(self)
+	else
+		trimBuffer(self)
 	end
 
-	local b = self._buffer
-	local len = self._len
-	if len <= self._allocatedLen then
-		-- If the buffer is smaller than the allocated size, we can trim it to the correct size
-		local trimmed = buffer.create(len)
-		buffer.copy(trimmed, 0, b, 0, len)
-		b = trimmed
-	end
-
-	return b
+	return self._buffer
 end
 
 --[=[
