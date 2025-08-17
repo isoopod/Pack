@@ -70,7 +70,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	local datatype = {
 		Eval = "Dict",
 		Len = approximateLen,
-		BitLen = approximateBitLen ~= 0 and approximateBitLen or nil,
+		BitLen = approximateBitLen + (occupancyField.BitLen or 0),
 		format = requiredFormat,
 		optFormat = optionalFormat,
 	}

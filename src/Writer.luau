@@ -388,7 +388,7 @@ function Writer.new(approximateLen: number?, approximateBitLen: number?): types.
 
 		self._bitLen = 0
 		self._allocatedBitLen = bytes * 8
-		self._bitCursor = approximateBitLen
+		self._bitCursor = bytes * 8
 		self._bitBuffer = buffer.create(bytes)
 	end
 

@@ -36,13 +36,17 @@ function Writer.alloc(self: types.WriterData, bits: number)
 			newSize = math.ceil(newSize * GROWTH_FACTOR)
 		until newSize >= requiredSize
 
-		local newBuffer = buffer.create(newSize)
+		-- Convert bits to bytes
+		local currentByteSize = math.ceil(currentSize / 8)
+		local newByteSize = math.ceil(newSize / 8)
+
+		local newBuffer = buffer.create(newByteSize)
 
 		-- BitBuffer writes right to left, so we need to copy the existing data to the end of the new buffer.
-		local offset = newSize - currentSize
-		buffer.copy(newBuffer, offset, self._buffer, 0, currentSize)
+		local offset = newByteSize - currentByteSize
+		buffer.copy(newBuffer, offset, self._buffer, 0, currentByteSize)
 
-		self._bitCursor += offset
+		self._bitCursor += offset * 8
 		self._bitBuffer = newBuffer
 		self._allocatedBitLen = newSize
 	end
@@ -58,8 +62,8 @@ end
 	The value will be written from right to left in the finalised buffer.
 ]=]
 function Writer.write(self: types.WriterData, bits: number, value: number)
-	buffer.writebits(self._bitBuffer, self._bitCursor, bits, value)
 	self._bitCursor -= bits
+	buffer.writebits(self._bitBuffer, self._bitCursor, bits, value)
 end
 
 --[=[
