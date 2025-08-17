@@ -87,6 +87,7 @@ local function getAny(): types.DatatypeInterface<any>
 end
 
 datatype.Eval = "Any"
+datatype.BitLen = 5
 datatype.Read = function(reader: types.ReaderData): any
 	return getAny().Read(reader)
 end

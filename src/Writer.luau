@@ -352,7 +352,7 @@ end
 ]=]
 function Writer.Finalize(self: types.WriterData): buffer
 	-- Allocate room for the bit buffer, write the bit buffer, and then trim the buffer to the correct size
-	if self._bitLen ~= 0 then
+	if self._bitLen and self._bitLen ~= 0 then
 		Writer.alloc(self, math.ceil(self._bitLen / 8))
 		trimBuffer(self)
 		BitWriter.Finalize(self)
