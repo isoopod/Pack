@@ -12,6 +12,7 @@ return function(metatable: { [any]: any }, classData: types.DatatypeInterface<an
 	local datatype = {
 		Eval = "object",
 		Len = classData.Len,
+		BitLen = classData.BitLen,
 		mt = metatable,
 		cData = classData,
 	}

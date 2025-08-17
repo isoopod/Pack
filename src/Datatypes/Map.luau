@@ -17,6 +17,7 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 
 	local datatype = {
 		Eval = "Map",
+		Len = 2,
 		Key = keyType,
 		Val = valueType,
 	}

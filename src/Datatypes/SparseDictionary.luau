@@ -38,10 +38,12 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	end
 
 	local approximateLen = 0
+	local approximateBitLen = 0
 	optStructure = table.create(optLen) :: { any }
 
 	for k, v in optionalFormat do
 		approximateLen += v.Len or 0
+		approximateBitLen += v.BitLen or 0
 		table.insert(optStructure, k :: any)
 	end
 
@@ -56,6 +58,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 
 		for k, v in requiredFormat do
 			approximateLen += v.Len or 0
+			approximateBitLen += v.BitLen or 0
 			table.insert(reqStructure, k :: any)
 		end
 
@@ -67,6 +70,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	local datatype = {
 		Eval = "Dict",
 		Len = approximateLen,
+		BitLen = approximateBitLen ~= 0 and approximateBitLen or nil,
 		format = requiredFormat,
 		optFormat = optionalFormat,
 	}

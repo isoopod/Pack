@@ -336,7 +336,7 @@ end
 local function trimBuffer(self: types.WriterData)
 	local len = self._len
 	-- If the buffer is smaller than the allocated size, we can trim it to the correct size
-	if len <= self._allocatedLen then
+	if len < self._allocatedLen then
 		local trimmed = buffer.create(len)
 		buffer.copy(trimmed, 0, self._buffer, 0, len)
 		self._buffer = trimmed
@@ -367,11 +367,12 @@ end
 	@function new
 	@within Writer
 	@param approxLen number? -- Optional approximate length of the buffer to be created. This is used to preallocate the buffer size so less resizes are needed.
+	@param approxBitLen number? -- Optional approximate length of the bit buffer to be created. This is used to preallocate the bit buffer size so less resizes are needed.
 	@return WriterData
 	@tag Constructor
 	Creates an empty writer instance
 ]=]
-function Writer.new(approximateLen: number?): types.WriterData
+function Writer.new(approximateLen: number?, approximateBitLen: number?): types.WriterData
 	local self = {}
 
 	self.nRefs = 0
@@ -381,8 +382,15 @@ function Writer.new(approximateLen: number?): types.WriterData
 	self._cursor = 0
 	self._buffer = buffer.create(approximateLen or 0)
 
-	self._bitLen = 0
-	self._bitQueue = {}
+	-- We can assume that if there 0 bits are expected, we don't need to use a bit buffer.
+	if approximateBitLen and approximateBitLen > 0 then
+		local bytes = math.ceil(approximateBitLen / 8)
+
+		self._bitLen = 0
+		self._allocatedBitLen = bytes * 8
+		self._bitCursor = approximateBitLen
+		self._bitBuffer = buffer.create(bytes)
+	end
 
 	return self :: any
 end

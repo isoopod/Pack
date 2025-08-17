@@ -22,6 +22,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	if DEBUG then DEBUG.Union.CheckDatatypesSupported(args) end
 
 	return table.freeze({
+		BitLen = bits,
 		Read = function(reader: types.ReaderData): any
 			local i = bitr_read(reader, bits)
 			return args[i].Read(reader)

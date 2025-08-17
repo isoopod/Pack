@@ -18,6 +18,7 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 	-- Returns a datatype that reads and writes a sequence of booleans as bits.
 	return table.freeze({
 		Eval = "BitField",
+		BitLen = length,
 		Read = function(reader: types.ReaderData): { boolean }
 			local result = table.create(length, false)
 

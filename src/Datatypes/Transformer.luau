@@ -25,6 +25,7 @@ return function<T, U>(format: types.DatatypeInterface<U>, encode: (T) -> U, deco
 		end,
 		Eval = "Transformer",
 		Len = format.Len,
+		BitLen = format.BitLen,
 		Form = format.Eval,
 		enc = encode,
 	})

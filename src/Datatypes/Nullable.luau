@@ -20,6 +20,7 @@ return function<T>(valueType: types.DatatypeInterface<T>): types.DatatypeInterfa
 
 	return table.freeze({
 		Eval = "nullable",
+		BitLen = 1,
 		dt = valueType,
 		Read = function(reader: types.ReaderData): T?
 			if bitr_read(reader, 1) == 1 then return read(reader) end

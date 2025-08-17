@@ -4,6 +4,8 @@
 
 local types = require(script.Parent.types)
 
+local GROWTH_FACTOR = 2
+
 --[=[
 	@class BitWriter
 	Internal bit buffer builder library. Writes right to left, as the bitbuffer is appended to the end of the packet.
@@ -11,16 +13,6 @@ local types = require(script.Parent.types)
 ]=]
 
 local Writer = {}
-
-local function split(u32: number): (number, number)
-	local low = bit32.band(u32, 0xFFFF)
-	local high = bit32.rshift(u32, 16)
-	return low, high
-end
-
-local function reconstruct(low: number, high: number): number
-	return bit32.bor(high * 16777216, low)
-end
 
 --[=[
 	@function alloc
@@ -31,7 +23,29 @@ end
 	This is used to reserve bits ahead of time.
 ]=]
 function Writer.alloc(self: types.WriterData, bits: number)
-	self._bitLen += bits
+	local currentSize = self._bitLen
+	local requiredSize = currentSize + bits
+
+	self._bitLen = requiredSize
+
+	-- In the case the buffer is not large enough, resize it.
+	if self._bitLen > self._allocatedBitLen then
+		local newSize = math.max(self._allocatedBitLen, 1) -- Avoid growing from 0
+
+		repeat
+			newSize = math.ceil(newSize * GROWTH_FACTOR)
+		until newSize >= requiredSize
+
+		local newBuffer = buffer.create(newSize)
+
+		-- BitBuffer writes right to left, so we need to copy the existing data to the end of the new buffer.
+		local offset = newSize - currentSize
+		buffer.copy(newBuffer, offset, self._buffer, 0, currentSize)
+
+		self._bitCursor += offset
+		self._bitBuffer = newBuffer
+		self._allocatedBitLen = newSize
+	end
 end
 
 --[=[
@@ -40,15 +54,12 @@ end
 	@param self WriterData -- A writer instance created with .new
 	@param bits number -- Number of bits to write.
 	@param value number -- Value to write into the buffer.
-	Queues a write operation to write the given number of bits with the specified value.
+	Writes the given number of bits with the specified value.
 	The value will be written from right to left in the finalised buffer.
 ]=]
 function Writer.write(self: types.WriterData, bits: number, value: number)
-	if bits > 24 then
-		table.insert(self._bitQueue, vector.create(bits, split(value)))
-	else
-		table.insert(self._bitQueue, vector.create(bits, value))
-	end
+	buffer.writebits(self._bitBuffer, self._bitCursor, bits, value)
+	self._bitCursor -= bits
 end
 
 --[=[
@@ -60,7 +71,7 @@ end
 	Useful for padding or skipping reserved sections of the buffer.
 ]=]
 function Writer.moveCursor(self: types.WriterData, delta: number)
-	table.insert(self._bitQueue, vector.create(delta, -1))
+	self._bitCursor -= delta
 end
 
 --[=[
@@ -71,20 +82,24 @@ end
 	Executes all queued write and cursor move operations from right to left.
 ]=]
 function Writer.Finalize(self: types.WriterData)
-	local b = self._buffer
-	local cursor = buffer.len(b) * 8
+	local b = self._bitBuffer
 
-	for _, v in self._bitQueue do
-		if v.z then
-			cursor -= v.x
-			buffer.writebits(b, cursor, v.x, reconstruct(v.y, v.z))
-		elseif v.y ~= -1 then
-			cursor -= v.x
-			buffer.writebits(b, cursor, v.x, v.y)
-		else
-			cursor -= v.x
-		end
+	-- Trim the buffer if necessary
+	local bitLen = self._bitLen
+	local byteLen = math.ceil(bitLen / 8) -- Minimum needed storage
+
+	if bitLen < self._allocatedBitLen then
+		local newBuffer = buffer.create(byteLen)
+
+		local oldByteLen = math.ceil(self._allocatedBitLen / 8)
+		local offset = oldByteLen - byteLen
+
+		-- Copy only the meaningful bytes (shift to front)
+		buffer.copy(newBuffer, 0, self._bitBuffer, offset, byteLen)
+		b = newBuffer
 	end
+
+	buffer.copy(self._buffer, self._cursor, b, 0)
 end
 
 return Writer

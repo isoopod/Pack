@@ -59,7 +59,11 @@ export type WriterData = {
 
 	-- Bit buffer
 	_bitLen: number,
-	_bitQueue: { vector },
+	_allocatedBitLen: number,
+	_bitCursor: number,
+	_bitBuffer: buffer,
+
+	--_bitQueue: { vector },
 }
 
 export type BitWriter = {
@@ -90,7 +94,7 @@ export type Writer = {
 
 	read Finalize: (self: WriterData) -> buffer,
 
-	read new: (approxLen: number?) -> WriterData,
+	read new: (approxLen: number?, approxBitLen: number) -> WriterData,
 }
 
 --[=[
@@ -174,7 +178,7 @@ export type Writer = {
 ]=]
 
 --[=[
-	@type DatatypeInterface<T> {Eval: string?, Len: number?, Read: (ReaderData) -> T, Write: (writer: WriterData, value: T) -> ()}
+	@type DatatypeInterface<T> {Eval: string?, Len: number?, BitLen: number?, Read: (ReaderData) -> T, Write: (writer: WriterData, value: T) -> ()}
 	@within Datatype
 	Eval is a string indicating which evaluator to use for this value if applicable. Extra info can be added regarding this for advanced datatypes.  
 	Read is a function that is passed a ReaderData instance and expected to read the ReaderData and return whatever was passed into Write.
@@ -183,6 +187,7 @@ export type Writer = {
 export type DatatypeInterface<T> = {
 	read Eval: string?,
 	read Len: number?,
+	read BitLen: number?,
 	read Read: (ReaderData) -> T,
 	read Write: (writer: WriterData, value: T) -> (),
 	[string]: any,

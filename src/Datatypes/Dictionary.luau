@@ -33,10 +33,12 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 	end
 
 	local approximateLen = 0
+	local approximateBitLen = 0
 	local structure = table.create(len) :: { any }
 
 	for k, v in format do
 		approximateLen += v.Len or 0
+		approximateBitLen += v.BitLen or 0
 		table.insert(structure, k :: any)
 	end
 
@@ -45,6 +47,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 	local datatype = {
 		Eval = "Dict",
 		Len = approximateLen,
+		BitLen = approximateBitLen ~= 0 and approximateBitLen or nil,
 		format = format,
 	}
 

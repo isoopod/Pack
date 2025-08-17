@@ -13,6 +13,7 @@ local bitw_write = BitWriter.write
 
 local datatype = table.freeze({
 	Eval = "bool",
+	BitLen = 1,
 	Read = function(reader: types.ReaderData): boolean
 		return bitr_read(reader, 1) == 1
 	end,
