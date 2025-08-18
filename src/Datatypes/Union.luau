@@ -25,9 +25,6 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 		BitLen = bits,
 		Read = function(reader: types.ReaderData): any
 			local i = bitr_read(reader, bits) + 1
-
-			if DEBUG then assert(i >= 1 and i <= #args, `Union read index {i} out of bounds for {#args} datatypes.`) end
-
 			return args[i].Read(reader)
 		end,
 		Write = function(writer: types.WriterData, value: any)
