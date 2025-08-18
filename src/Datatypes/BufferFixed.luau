@@ -22,7 +22,7 @@ return function(length: number): types.DatatypeInterface<buffer>
 		end,
 		Write = function(writer: types.WriterData, value: buffer)
 			local s = buffer.tostring(value)
-			if DEBUG then assert(#s == length, "BufferFixed expects written buffer length (in bytes) to match the allocated length.") end
+			if DEBUG then assert(buffer.len(value) == length, "BufferFixed expects written buffer length (in bytes) to match the allocated length.") end
 			write_alloc(writer, length)
 			write_stringFixed(writer, s, length)
 		end,

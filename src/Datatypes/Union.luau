@@ -24,7 +24,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 	return table.freeze({
 		BitLen = bits,
 		Read = function(reader: types.ReaderData): any
-			local i = bitr_read(reader, bits)
+			local i = bitr_read(reader, bits) + 1
 			return args[i].Read(reader)
 		end,
 		Write = function(writer: types.WriterData, value: any)
@@ -33,7 +33,7 @@ return function(...: types.DatatypeInterface<any>): types.DatatypeInterface<any>
 				if not Evaluator.evaluators[dt.Eval] then error(`No evaluator for datatype {dt.Eval}`) end
 				if Evaluator.evaluators[dt.Eval](value, dt) then
 					bitw_alloc(writer, bits)
-					bitw_write(writer, bits, i)
+					bitw_write(writer, bits, i - 1)
 					dt.Write(writer, value)
 					return
 				end
