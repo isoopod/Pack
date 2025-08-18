@@ -103,7 +103,7 @@ function Writer.Finalize(self: types.WriterData)
 		b = newBuffer
 	end
 
-	buffer.copy(self._buffer, self._cursor + 1, b, 0)
+	buffer.copy(self._buffer, self._cursor, b, 0)
 end
 
 return Writer
