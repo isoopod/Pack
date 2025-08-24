@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local DumpBuffer = require(script.Parent.Parent.DumpBuffer)
 local JestGlobals = require(ReplicatedStorage.DevPackages.JestGlobals)
 local Pack = require(ReplicatedStorage.Pack)
 
@@ -49,15 +50,25 @@ describe("Any", function()
 	it("round trips an array table correctly", function()
 		local value = { 10, 20, 30 }
 		local encoded = anySchema:Write(value)
-		local decoded = anySchema:Read(encoded)
-		expect(decoded).toEqual(value)
+
+		local s, e = pcall(function()
+			local decoded = anySchema:Read(encoded)
+			expect(decoded).toEqual(value)
+		end)
+
+		assert(s, DumpBuffer(encoded, e))
 	end)
 
 	it("round trips a map table correctly", function()
 		local value = { alpha = 1, beta = 2, gamma = 3 }
 		local encoded = anySchema:Write(value)
-		local decoded = anySchema:Read(encoded)
-		expect(decoded).toEqual(value)
+
+		local s, e = pcall(function()
+			local decoded = anySchema:Read(encoded)
+			expect(decoded).toEqual(value)
+		end)
+
+		assert(s, DumpBuffer(encoded, e))
 	end)
 
 	it("round trips nested tables correctly", function()
@@ -66,8 +77,13 @@ describe("Any", function()
 			dict = { x = "X", y = "Y" },
 		}
 		local encoded = anySchema:Write(value)
-		local decoded = anySchema:Read(encoded)
-		expect(decoded).toEqual(value)
+
+		local s, e = pcall(function()
+			local decoded = anySchema:Read(encoded)
+			expect(decoded).toEqual(value)
+		end)
+
+		assert(s, DumpBuffer(encoded, e))
 	end)
 
 	it("throws when given an unsupported value type", function()
