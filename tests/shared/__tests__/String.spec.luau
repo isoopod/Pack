@@ -54,12 +54,12 @@ describe("StringFixed", function()
 		expect(result).toBe(original)
 	end)
 
-	it.skip("should error on string length mismatch", function()
+	it("should error on string length mismatch", function()
 		local fixedLen = 5
 		local datatype = Pack.StringFixed(fixedLen)
 		local schema = Pack:Define(datatype)
 
-		-- This test assumes DEBUG = true in PACK_CONFIG
+		-- This test assumes DEBUG is enabled
 		expect(function()
 			schema:Write("Hi")
 		end).toThrow()
