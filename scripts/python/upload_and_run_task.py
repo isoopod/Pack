@@ -1,6 +1,7 @@
 import os
 import sys
 import urllib.request
+import logging
 import json
 
 from luau_execution_task import createTask, awaitTaskCompletion, getTaskLogs
@@ -38,10 +39,11 @@ def upload_place(binary_path, universe_id, place_id, do_publish=False):
 
 
 def run_luau_task(universe_id, place_id, place_version, script_file):
-    print("Executing Luau task")
+    logging.info("Executing Luau task")
     script_contents = read_file(script_file).decode("utf8")
 
-    for attempt in range(1, 4):
+    attempt = 1
+    while True:
         task = createTask(
             ROBLOX_API_KEY, script_contents, universe_id, place_id, place_version
         )
@@ -55,20 +57,19 @@ def run_luau_task(universe_id, place_id, place_version, script_file):
 
             match data["state"]:
                 case "COMPLETE":
-                    print("Lua task completed successfully")
+                    logging.info("Lua task completed successfully")
                     exit(0)
                 case "FAILED":
+                    logging.error("Lua task failed")
                     print(data["error"])
                     print("Luau task failed", file=sys.stderr)
                     exit(1)
                 case "CANCELLED":
-                    print("Lua task cancelled")
+                    logging.error("Lua task cancelled")
                     exit(1)
 
-        print(f"Task failed to resolve (stuck in PROCESSING) attempt {attempt}/3.")
-    
-    print("Task failed to resolve 3 times. Aborting")
-    exit(1)
+        logging.warning(f"Task failed to resolve (stuck in PROCESSING) attempt {attempt}. Retrying...")
+        attempt += 1
 
 
 if __name__ == "__main__":
