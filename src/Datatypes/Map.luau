@@ -2,22 +2,24 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
-local read_u16 = Reader.u16
+local UInt16 = require(script.Parent.UInt16)
 
-local write_alloc = Writer.alloc
-local write_u16 = Writer.u16
+local DEBUG = types.DEBUG
 
-return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.DatatypeInterface<V>): types.DatatypeInterface<{ [K]: V }>
+return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.DatatypeInterface<V>, lengthType: types.DatatypeInterface<number>?): types.DatatypeInterface<{ [K]: V }>
+	lengthType = lengthType or UInt16
+	local lenRead, lenWrite = lengthType.Read, lengthType.Write
+
 	local kread, kwrite = keyType.Read, keyType.Write
 	local vread, vwrite = valueType.Read, valueType.Write
 
+	if DEBUG then DEBUG.Array.CheckLenType(lengthType) end
+
 	local datatype = {
 		Eval = "Map",
-		Len = 2,
+		Len = lengthType.Len,
 		Key = keyType,
 		Val = valueType,
 	}
@@ -27,7 +29,7 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 	valueType = datatype.Val
 
 	datatype.Read = function(reader: types.ReaderData): { [K]: V }
-		local len = read_u16(reader)
+		local len = lenRead(reader)
 
 		local map = {}
 
@@ -44,8 +46,7 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 			len += 1
 		end
 
-		write_alloc(writer, 2)
-		write_u16(writer, len)
+		lenWrite(writer, len)
 
 		for k, v in value do
 			kwrite(writer, k)
