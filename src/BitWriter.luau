@@ -44,7 +44,7 @@ function Writer.alloc(self: types.WriterData, bits: number)
 
 		-- BitBuffer writes right to left, so we need to copy the existing data to the end of the new buffer.
 		local offset = newByteSize - currentByteSize
-		buffer.copy(newBuffer, offset, self._buffer, 0, currentByteSize)
+		buffer.copy(newBuffer, offset, self._bitBuffer, 0, currentByteSize)
 
 		self._bitCursor += offset * 8
 		self._bitBuffer = newBuffer
