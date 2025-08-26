@@ -12,14 +12,11 @@ In Pack, structural datatypes are types that do not hold their own data, but ins
 Pack.Array(datatype: Datatype, lengthType: Datatype?)
 ```
 
-An array is an ordered collection of values with the same type.  
+An Array is an ordered collection of values with the same type.  
 Arrays are one-based for consistency with lua.  
 Arrays have two bytes of overhead and can contain a maximum of 65,565 elements by deafult.  
-The type of number the array uses to encode the length can be changed with the second argument
+The type of number the Array uses to encode the length can be changed with the second argument
 and should be an unsigned integer. By default this is UInt16.
-
-By default, arrays use a UInt16 to store thier length, allowing for up to 65,535 entries.
-This can be changed with the second argument, which should be an unsigned integer datatype.
 
 ## Dictionary
 
@@ -49,12 +46,14 @@ Pack:DefineSchema(Pack.Dictionary({
 ## Map
 
 ```lua
-Pack.Map(keyType: Datatype, valueType: Datatype)
+Pack.Map(keyType: Datatype, valueType: Datatype, lengthType: Datatype)
 ```
 
 A Map is a mapping of some type of key to some type of value.  
-This is very useful when used with the Union or any datatypes (WIP).  
-Maps have two bytes of overhead to store the number of elements they contain.
+This is very useful when used with the Union or any datatypes.  
+Maps have two bytes of overhead and can contain a maximum of 65,565 elements by deafult.  
+The type of number the Map uses to encode the length can be changed with the second argument
+and should be an unsigned integer. By default this is UInt16.
 
 ## Nullable
 
@@ -62,7 +61,7 @@ Maps have two bytes of overhead to store the number of elements they contain.
 Pack.Nullable(datatype: Datatype)
 ```
 
-The Nullable datatype indicates the value is optional and may be nil. This adds 1 byte of overhead for every nullable value.
+The Nullable datatype indicates the value is optional and may be nil. This adds 1 bit of overhead for every nullable value.
 
 ## SparseDictionary
 
