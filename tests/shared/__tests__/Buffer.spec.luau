@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local JestGlobals = require(ReplicatedStorage.DevPackages.JestGlobals)
 local Pack = require(ReplicatedStorage.Pack)
-local types = require(ReplicatedStorage.Pack.types)
 
 local it = JestGlobals.it
 local expect = JestGlobals.expect
@@ -114,19 +113,6 @@ describe("BufferFixed", function()
 			end
 
 			it("should error when writing oversized buffers", function()
-				-- DEBUGGING --
-				local s = pcall(function()
-					local largeBuffer = buffer.fromstring(string.rep("a", length + 1))
-					schema:Write(largeBuffer)
-				end)
-				if s then
-					error(
-						`Expected error when writing oversized buffer of length {length}, but write succeeded.\nBuffer length: {buffer.len(
-							buffer.fromstring(string.rep("a", length + 1))
-						)}\nDEBUG: {types.DEBUG ~= nil}`
-					)
-				end
-
 				expect(function()
 					-- Keep this inside the expect because this line will error at max buffer size
 					local largeBuffer = buffer.fromstring(string.rep("a", length + 1))
