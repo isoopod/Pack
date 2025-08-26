@@ -11,8 +11,6 @@ local read_string = Reader.string
 local write_alloc = Writer.alloc
 local write_stringFixed = Writer.stringFixed
 
-local DEBUG = types.DEBUG
-
 return function(length: number): types.DatatypeInterface<buffer>
 	return table.freeze({
 		Eval = "buffer",
@@ -21,8 +19,9 @@ return function(length: number): types.DatatypeInterface<buffer>
 			return buffer.fromstring(read_string(reader, length))
 		end,
 		Write = function(writer: types.WriterData, value: buffer)
-			if DEBUG then assert(buffer.len(value) == length, "BufferFixed expects written buffer length to match the allocated length.") end
 			local s = buffer.tostring(value)
+			assert(#s == length, "BufferFixed expects written buffer length to match the allocated length.")
+
 			write_alloc(writer, length)
 			write_stringFixed(writer, s, length)
 		end,
