@@ -9,6 +9,8 @@ local ConfigParser = require(script.Parent.ConfigParser)
 -- Shared types within pack
 
 export type Schema<T, U...> = {
+	DisableReadProtection: boolean?,
+
 	Read: (self: Schema<T, U...>, buff: buffer, refs: refs?) -> (T, U...),
 	Write: (self: Schema<T, U...>, T, U...) -> (buffer, refs?),
 }

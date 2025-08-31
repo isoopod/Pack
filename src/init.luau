@@ -18,6 +18,12 @@ local Pack = {}
 
 	Once created, a schema holds the Read and Write methods to serialize and deserialize data to and from packets (buffers).
 ]=]
+
+--- @prop DisableReadProtection boolean?
+--- @within Schema
+--- If true, disables the read protection that checks if the entire packet was read.
+--- This is not recommended unless you have a specific use case that requires it.
+
 local Schema = {}
 
 --[=[
@@ -59,13 +65,15 @@ function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 		tuple[i] = self._readers[i](reader)
 	end
 
-	local len = buffer.len(packet)
-	local totalBytesRead = reader.Cursor + math.ceil((len * 8 - reader.BitCursor) / 8)
-	if totalBytesRead ~= len then
-		-- If the provided packet is longer than what we actually read, we know something has gone wrong
-		-- This prevents most cases where unrelated data that somehow doesnt cause a parse error will be caught
-		-- This can happen if a created packet gets read by the wrong schema, or an unrelated buffer is read in place of the packet
-		error(`Packet len mismatch: Expected to read {len} bytes, only read {totalBytesRead}.`)
+	if self.DisableReadProtection ~= true then
+		local len = buffer.len(packet)
+		local totalBytesRead = reader.Cursor + math.ceil((len * 8 - reader.BitCursor) / 8)
+		if totalBytesRead ~= len then
+			-- If the provided packet is longer than what we actually read, we know something has gone wrong
+			-- This prevents most cases where unrelated data that somehow doesnt cause a parse error will be caught
+			-- This can happen if a created packet gets read by the wrong schema, or an unrelated buffer is read in place of the packet
+			error(`Packet len mismatch: Expected to read {len} bytes, only read {totalBytesRead}.`)
+		end
 	end
 
 	return unpack(tuple)
