@@ -25,11 +25,6 @@ To use this datatype, you must pass in a fixed length of how many booleans it is
 When writing to this datatype, it is in the format of an array of booleans. If the array is shorter than the expected length, the last values will be treated as false.  
 Reading it will return the array of booleans in the same order.  
 
-:::info
-You should try to have the defined length as close to a multiple of eight as possible.  
-If your bitfield length is a mutliple of 8 (including 0) + 1, use a regular boolean for that last bool instead.
-:::
-
 ## Boolean
 
 ```lua
