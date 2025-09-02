@@ -189,7 +189,7 @@ function Pack.GetConfig(_: types.Pack): { [any]: any }
 	return types.cfg
 end
 
--- Lazy-loading for datatypes so only the neccesary datatypes are loaded in each environment
+-- Lazy-loading for datatypes so only the necessary datatypes are loaded in each environment
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau
 function Pack.__index(self, key)
 	if Pack[key] then return Pack[key] end
@@ -204,7 +204,7 @@ function Pack.__index(self, key)
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
-	local s, datatype = pcall(require, script.Datatypes:FindFirstChild(key))
+	local s, datatype = pcall(require :: any, script.Datatypes:FindFirstChild(key))
 	assert(s, `Unable to access datatype Pack.{key}. Datatype not found: {datatype}`)
 	cache[key] = datatype
 	rawset(self, "_cachedDatatypes", cache)

@@ -20,7 +20,7 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 		Eval = "BitField",
 		BitLen = length,
 		Read = function(reader: types.ReaderData): { boolean }
-			local result = table.create(length, false)
+			local result = table.create(length, false) :: { boolean }
 
 			-- Read each bit sequentially
 			for i = 1, length do
