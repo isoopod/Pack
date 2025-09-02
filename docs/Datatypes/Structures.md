@@ -9,7 +9,7 @@ In Pack, structural datatypes are types that do not hold their own data, but ins
 ## Array
 
 ```lua
-Pack.Array(datatype: Datatype, lengthType: Datatype?)
+Pack.Array(datatype: Datatype<any>, lengthType: Datatype<number>?)
 ```
 
 An Array is an ordered collection of values with the same type.  
@@ -21,7 +21,7 @@ and should be an unsigned integer. By default this is UInt16.
 ## Dictionary
 
 ```lua
-Pack.Dictionary(format: {[any]: Datatype})
+Pack.Dictionary(format: { [any]: Datatype<any> })
 ```
 
 A Pack Dictionary refers to a table with predefined keys.  
@@ -46,7 +46,7 @@ Pack:DefineSchema(Pack.Dictionary({
 ## Map
 
 ```lua
-Pack.Map(keyType: Datatype, valueType: Datatype, lengthType: Datatype)
+Pack.Map(keyType: Datatype<any>, valueType: Datatype<any>, lengthType: Datatype<number>?)
 ```
 
 A Map is a mapping of some type of key to some type of value.  
@@ -58,7 +58,7 @@ and should be an unsigned integer. By default this is UInt16.
 ## Nullable
 
 ```lua
-Pack.Nullable(datatype: Datatype)
+Pack.Nullable(datatype: Datatype<any>)
 ```
 
 The Nullable datatype indicates the value is optional and may be nil. This adds 1 bit of overhead for every nullable value.
@@ -66,7 +66,7 @@ The Nullable datatype indicates the value is optional and may be nil. This adds 
 ## SparseDictionary
 
 ```lua
-Pack.SparseDictionary(optionalFormat: {[any]: Datatype}, requiredFormat: {[any]: Datatype})
+Pack.SparseDictionary(optionalFormat: { [any]: Datatype<any> }, requiredFormat: { [any]: Datatype<any> })
 ```
 
 A Pack SparseDictionary refers to a table with predefined keys, each of which are optional.  

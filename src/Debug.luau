@@ -140,6 +140,38 @@ end
 
 local debuggers = {}
 
+debuggers.EnforceDatatype = {
+	AnyNumeric = function(dt: any)
+		if
+			type(dt) ~= "table"
+			or (
+				dt.Eval ~= "u8"
+				and dt.Eval ~= "u16"
+				and dt.Eval ~= "u32"
+				and dt.Eval ~= "u64"
+				and dt.Eval ~= "i8"
+				and dt.Eval ~= "i16"
+				and dt.Eval ~= "i32"
+				and dt.Eval ~= "i64"
+				and dt.Eval ~= "f32"
+				and dt.Eval ~= "f64"
+				and dt.Eval ~= "frac"
+			)
+		then
+			local dtype = "unknown"
+			if type(dt) == "table" and (dt :: any).Write and type((dt :: any).Write) == "function" then dtype = debug.info((dt :: any).Write :: () -> (), "s") end
+			warn(`This datatype expects the provided value type to be numeric. Got {dtype}`)
+		end
+	end,
+	AnyColor3 = function(dt: any)
+		if type(dt) ~= "table" or (dt.Eval ~= "Color3" and dt.Eval ~= "Color3float32") then
+			local dtype = "unknown"
+			if type(dt) == "table" and (dt :: any).Write and type((dt :: any).Write) == "function" then dtype = debug.info((dt :: any).Write :: () -> (), "s") end
+			warn(`This datatype expects the provided value type to be Color3. Got {dtype}`)
+		end
+	end,
+}
+
 debuggers.Array = {
 	CheckLenType = function(t: any)
 		if type(t) ~= "table" or t.Eval == nil or not string.match(t.Eval :: any, "^u%d%d?$") then

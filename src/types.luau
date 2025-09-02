@@ -223,6 +223,9 @@ export type Datatypes = {
 	Float: number,
 	Float64: number,
 	Double: number,
+	Fraction: number,
+
+	NumberSequence: (type: number) -> NumberSequence,
 
 	Boolean: boolean,
 	BitField: (length: number) -> { boolean },
@@ -242,6 +245,7 @@ export type Datatypes = {
 	Color3: Color3,
 	Color3float32: Color3,
 	BrickColor: BrickColor,
+	ColorSequence: (type: Color3) -> ColorSequence,
 
 	CFrame: CFrame,
 	Vector3: Vector,

@@ -110,6 +110,14 @@ Pack.Color3float32
 
 Enodes a Color3 value in full using 12 bytes. This is for when you have colors with RGB values above 255.
 
+## ColorSequence
+
+```lua
+Pack.ColorSequence(type: Datatype<Color3>)
+```
+
+Encodes a ColorSequence using a Color3 datatype to encode the value of each ColorSequenceKeypoint.
+
 ## DateTime
 
 ```lua
@@ -188,6 +196,18 @@ Range:
     - Subnormal: ±2.2×10<sup>-308</sup>
     - Normal: ±1.8×10<sup>308</sup>
 Precision: ~15.9 decimal places
+
+## Fraction
+
+:::note[Aliases]
+**Frac** is an alias for Fraction and can be used instead
+:::
+
+```lua
+Pack.Fraction
+```
+
+Encodes a proper fraction (positive real number between 0 and 1) with a fixed precision of 1/2<sup>16</sup> (0.00001525878).
 
 ## Instance
 
@@ -285,7 +305,15 @@ Holds a literal value without any overhead. This is useful in tuples.
 Pack.Null
 ```
 
-Represents nothing, directly uses zero bytes. For use in the Union structure (WIP)
+Represents nothing, directly uses zero bytes. For use in the Union structure
+
+## NumberSequence
+
+```lua
+Pack.NumberSequence(type: Datatype<number>)
+```
+
+Encodes a NumberSequence using the provided numeric datatype to store the value of each NumberSequenceKeypoint
 
 ## Object
 

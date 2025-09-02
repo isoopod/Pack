@@ -20,50 +20,57 @@ local write_alloc = Writer.alloc
 local write_u8 = Writer.u8
 local write_u16 = Writer.u16
 
+local DEBUG = types.DEBUG
 local PRECISION = 0xffff
 
 -- Potential improvement: If there are only two repeated keypoints, only write one.
 -- Low priority as that is already a poor use of NumberSequence.
 
-local datatype = table.freeze({
-	Eval = "NumberSequence",
-	Len = 5, -- Minimum of 2 keypoints
-	Read = function(reader: types.ReaderData): NumberSequence
-		local len = read_u8(reader)
-		local array = table.create(len) :: { NumberSequenceKeypoint }
+return function(valueType: types.DatatypeInterface<number>): types.DatatypeInterface<NumberSequence>
+	local read, write = valueType.Read, valueType.Write
 
-		for i = 1, len do
-			local time = read_u16(reader) / PRECISION
-			local value = read_u16(reader) / PRECISION
-			local envelope = 0
-			if bitr_read(reader, 1) == 1 then envelope = read_u16(reader) / PRECISION end
-			array[i] = NumberSequenceKeypoint.new(time, value, envelope)
-		end
+	assert(valueType.Len, "NumberSequence valueType must be a numeric datatype")
+	if DEBUG then DEBUG.EnforceDatatype.AnyNumeric(valueType) end
 
-		return NumberSequence.new(array)
-	end,
-	Write = function(writer: types.WriterData, value: NumberSequence)
-		local keypoints = value.Keypoints
-		local len = #keypoints
+	return table.freeze({
+		Eval = "NumberSequence",
+		Len = 5 + valueType.len * 2, -- Minimum of 2 keypoints
+		Of = valueType,
+		Read = function(reader: types.ReaderData): NumberSequence
+			local len = read_u8(reader)
+			local array = table.create(len) :: { NumberSequenceKeypoint }
 
-		write_alloc(writer, 1 + len * 2)
-		bitw_alloc(writer, len)
-
-		write_u8(writer, len)
-
-		for i = 1, len do
-			local kp = keypoints[i]
-			write_u16(writer, kp.Time * PRECISION)
-			write_u16(writer, kp.Value * PRECISION)
-			local envelope = kp.Envelope
-			if envelope ~= 0 then
-				bitw_write(writer, 1, 1)
-				write_u16(writer, envelope * PRECISION)
-			else
-				bitw_write(writer, 1, 0)
+			for i = 1, len do
+				local time = read_u16(reader) / PRECISION
+				local value = read(reader)
+				local envelope
+				if bitr_read(reader, 1) == 1 then envelope = read(reader) end
+				array[i] = NumberSequenceKeypoint.new(time, value, envelope)
 			end
-		end
-	end,
-})
 
-return datatype
+			return NumberSequence.new(array)
+		end,
+		Write = function(writer: types.WriterData, value: NumberSequence)
+			local keypoints = value.Keypoints
+			local len = #keypoints
+
+			write_alloc(writer, 1 + len * 2) -- Allocate length for the length byte, and all time values
+			bitw_alloc(writer, len)
+
+			write_u8(writer, len)
+
+			for i = 1, len do
+				local kp = keypoints[i]
+				write_u16(writer, kp.Time * PRECISION)
+				write(writer, kp.Value)
+				local envelope = kp.Envelope
+				if envelope ~= 0 then
+					bitw_write(writer, 1, 1)
+					write(writer, envelope)
+				else
+					bitw_write(writer, 1, 0)
+				end
+			end
+		end,
+	}) :: types.DatatypeInterface<NumberSequence>
+end

@@ -139,6 +139,14 @@ evaluator.evaluators = {
 	Color3Raw = function(value: unknown)
 		return typeof(value) == "Color3"
 	end,
+	ColorSequence = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
+		local _of = datatype.Of
+		if _of and typeof(value) == "Color3" then
+			local of = _of :: any
+			return evaluator.evaluators[of.Eval](value, of)
+		end
+		return false
+	end,
 	DateTime = function(value: unknown)
 		return typeof(value) == "DateTime"
 	end,
@@ -189,6 +197,9 @@ evaluator.evaluators = {
 	f64 = function(value: unknown)
 		return type(value) == "number"
 	end,
+	frac = function(value: unknown)
+		return type(value) == "number" and value > 0 and value <= 1
+	end,
 	Inst_Ref = function(value: unknown)
 		return typeof(value) == "Instance"
 	end,
@@ -218,6 +229,14 @@ evaluator.evaluators = {
 	nullable = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if not datatype.dt or not datatype.dt.Eval then return false end
 		return value == nil or evaluator.evaluators[datatype.dt.Eval :: any](value, datatype.dt :: any)
+	end,
+	NumberSequence = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
+		local _of = datatype.Of
+		if _of and type(value) == "number" then
+			local of = _of :: any
+			return evaluator.evaluators[of.Eval](value, of)
+		end
+		return false
 	end,
 	object = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) ~= "table" or not datatype.mt or not datatype.cData or not (datatype.cData :: any).Eval then return false end
