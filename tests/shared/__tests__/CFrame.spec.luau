@@ -32,31 +32,36 @@ end
 describe("CFrame", function()
 	-- Axis-aligned cases (13 bytes)
 	describe("axis-aligned rotations", function()
-		it("should handle identity CFrame", function()
-			local input = CFrame.identity
-			local packet = schema:Write(input)
-			local output = schema:Read(packet)
+		local basisVectors = {
+			Vector3.xAxis,
+			-Vector3.xAxis,
+			Vector3.yAxis,
+			-Vector3.yAxis,
+			Vector3.zAxis,
+			-Vector3.zAxis,
+		}
 
-			expectCFrameNear(output, input, 1e-5)
-			expect(buffer.len(packet)).toEqual(13)
-		end)
+		it("should handle all 24 axis-aligned CFrames", function()
+			for _, up in basisVectors do
+				for _, right in basisVectors do
+					-- Right must be perpendicular to Up
+					if math.abs(up:Dot(right)) < 1e-6 then
+						-- Build orthonormal basis
+						local look = up:Cross(right)
 
-		it("should handle +X right/+Y up", function()
-			local cf = CFrame.fromMatrix(Vector3.new(1, 2, 3), Vector3.xAxis, Vector3.yAxis)
-			local packet = schema:Write(cf)
-			local result = schema:Read(packet)
+						-- Ensure determinant is positive (proper right-handed basis)
+						if look.Magnitude > 0 then
+							local cf = CFrame.fromMatrix(Vector3.zero, right.Unit, up.Unit)
 
-			expectCFrameNear(result, cf, 1e-5)
-			expect(buffer.len(packet)).toEqual(13)
-		end)
+							local packet = schema:Write(cf)
+							local result = schema:Read(packet)
 
-		it("should handle -Z right/-X up", function()
-			local cf = CFrame.fromMatrix(Vector3.new(-5, 10, 0.5), -Vector3.zAxis, -Vector3.xAxis)
-			local packet = schema:Write(cf)
-			local result = schema:Read(packet)
-
-			expectCFrameNear(result, cf, 1e-5)
-			expect(buffer.len(packet)).toEqual(13)
+							expectCFrameNear(result, cf, 1e-5)
+							expect(buffer.len(packet)).toEqual(13)
+						end
+					end
+				end
+			end
 		end)
 	end)
 

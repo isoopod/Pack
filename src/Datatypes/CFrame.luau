@@ -36,7 +36,7 @@ local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, nu
 		axis *= (1 / math.sqrt(math.abs(d)))
 	end
 
-	local h = angle / 2
+	local h = angle * 0.5
 	local s = math.sin(h)
 	axis = axis * s
 
