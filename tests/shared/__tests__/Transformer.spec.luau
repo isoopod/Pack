@@ -9,8 +9,8 @@ local describe = JestGlobals.describe
 
 describe("Transformer", function()
 	it("should round trip values with encode and decode", function()
-		-- Base format is u32
-		local schema = Pack:Define(Pack.Transformer(Pack.u32, function(value: string)
+		-- Base format is UInt32
+		local schema = Pack:Define(Pack.Transformer(Pack.UInt32, function(value: string)
 			-- Encode: turn string into its length
 			return #value
 		end, function(value: number)
@@ -26,14 +26,14 @@ describe("Transformer", function()
 	end)
 
 	it("should change format with only encode", function()
-		-- Base format is u32, but encode changes from boolean
-		local schema = Pack:Define(Pack.Transformer(Pack.u32, function(value: boolean)
+		-- Base format is UInt32, but encode changes from boolean
+		local schema = Pack:Define(Pack.Transformer(Pack.UInt32, function(value: boolean)
 			-- Encode true/false into 1/0
 			return value and 1 or 0
 		end))
 
 		local encodedTrue = schema:Write(true)
-		local decodedTrue = schema:Read(encodedTrue) -- will just be raw u32
+		local decodedTrue = schema:Read(encodedTrue) -- will just be raw UInt32
 		expect(decodedTrue).toBe(1)
 
 		local encodedFalse = schema:Write(false)
@@ -42,8 +42,8 @@ describe("Transformer", function()
 	end)
 
 	it("should validate input with only decode", function()
-		-- Base format is u32, decode restricts values
-		local schema = Pack:Define(Pack.Transformer(Pack.u32, nil, function(value: number)
+		-- Base format is UInt32, decode restricts values
+		local schema = Pack:Define(Pack.Transformer(Pack.UInt32, nil, function(value: number)
 			if value ~= 42 then error("Invalid value") end
 			return "ok"
 		end))
