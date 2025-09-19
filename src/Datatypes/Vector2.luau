@@ -15,7 +15,7 @@ local write_f32 = Writer.f32
 local DEBUG = types.DEBUG
 
 local datatype = table.freeze(setmetatable({
-	Eval = "V2f32",
+	Eval = "V2",
 	of = Float32,
 	Len = 8,
 	Read = function(reader: types.ReaderData): Vector2
