@@ -501,40 +501,17 @@ Range (exact): [0–9,007,199,254,740,992]
 Although UInt64 can store exact integers up to 2<sup>53</sup>, Luau numbers lose precision above 2<sup>53</sup>.  
 Refer to [Int64](#int64) for more info.
 
-## Vector2float32
-
-:::note[Aliases]
-**Vector2** is an alias for Vector2float32 and can be used instead
-:::
+## Vector2
 
 ```lua
-Pack.Vector2float32
-Pack.Vector2
+Pack.Vector2 -- Uses Float32 by default (8 bytes total)
+Pack.Vector2(Pack.Float24) -- Can be called with any other numeric datatype
 ```
 
-Encodes a 2D vector of float32s using 8 bytes.
+Encodes a 2D vector of any numeric datatype.
 
+Vector2 uses a Float32 when not provided another datatype, which is consistent with Luau vectors (Making a Vector2 with Float64s will not increase precision).
 see [Float32](#float32) for approximate range and precision of each component.
-
-## Vector2float24
-
-```lua
-Pack.Vector2float24
-```
-
-Encodes a 2D vector of float24s using 6 bytes.  
-
-see [Float24](#float24) for approximate range and precision of each component.
-
-## Vector2float16
-
-```lua
-Pack.Vector2float16
-```
-
-Encodes a 2D vector of float16s with 4 bytes.
-
-see [Float16](#float16) for approximate range and precision of each component.
 
 ## Vector2int16
 
@@ -544,19 +521,16 @@ Pack.Vector2int16
 
 Encodes a 2D vector of int16s using 4 bytes.
 
-## Vector3float32
-
-:::note[Aliases]
-**Vector3** is an alias for Vector3float32 and can be used instead
-:::
+## Vector3
 
 ```lua
-Pack.Vector3float32
-Pack.Vector3
+Pack.Vector3 -- Uses Float32 by default (12 bytes total)
+Pack.Vector3(Pack.Float24) -- Can be called with any other numeric datatype
 ```
 
-Encodes a 3D vector of float32s using 12 bytes.
+Encodes a 3D vector of any numeric datatype.
 
+Vector3 uses a Float32 when not provided another datatype, which is consistent with Luau vectors (Making a Vector3 with Float64s will not increase precision).  
 see [Float32](#float32) for approximate range and precision of each component.
 
 :::note
@@ -565,26 +539,6 @@ Will return as a luau vector, but these are interchangeable with the Vector3 lib
 (Vector3 methods can be used on vectors and vector library functions can take Vector3s)
 :::
 
-## Vector3float24
-
-```lua
-Pack.Vector3float24
-```
-
-Encodes a 3D vector of float24s using 9 bytes.  
-
-see [Float24](#float24) for approximate range and precision of each component.
-
-## Vector3float16
-
-```lua
-Pack.Vector3float16
-```
-
-Encodes a 3D vector of float16s with 6 bytes.  
-
-see [Float16](#float16) for approximate range and precision of each component.
-
 ## Vector3int16
 
 ```lua
@@ -592,3 +546,7 @@ Pack.Vector3int16
 ```
 
 Encodes a 3D vector of int16s with 6 bytes.
+
+:::note
+You should try to avoid using the Vector3int16 datatype in general, as it is much slower than Vector3.
+:::

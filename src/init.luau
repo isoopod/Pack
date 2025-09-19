@@ -225,8 +225,6 @@ local object: types.Pack = setmetatable({
 		Float = "Float32",
 		Double = "Float64",
 		Frac = "Fraction",
-		Vector2 = "Vector2float32",
-		Vector3 = "Vector3float32",
 	},
 }, Pack) :: any
 

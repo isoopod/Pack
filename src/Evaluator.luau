@@ -30,24 +30,6 @@ local function CanRepresent(value: number, maxRange: number): boolean
 	return math.abs(value) <= maxRange
 end
 
-local function checkVector2(value: any, maxAbs: number)
-	if typeof(value) ~= "Vector2" then return false end
-	local comps = { value.X, value.Y }
-	for _, c in comps do
-		if c < -maxAbs or c > maxAbs then return false end
-	end
-	return true
-end
-
-local function checkVector3(value: any, maxAbs: number)
-	if typeof(value) ~= "Vector3" then return false end
-	local comps = { value.X, value.Y, value.Z }
-	for _, c in comps do
-		if c < -maxAbs or c > maxAbs then return false end
-	end
-	return true
-end
-
 local evaluator = {}
 
 --[=[
@@ -332,26 +314,28 @@ evaluator.evaluators = {
 	u32 = function(value: unknown)
 		return type(value) == "number" and value >= 0 and value < 2 ^ 32 and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
-	V2f16 = function(value: unknown)
-		return checkVector2(value, MAX_F16)
+	V2 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
+		if typeof(value) == "Vector2" then
+			local _of = datatype.of
+			if _of and type(value) == "number" then
+				local of = _of :: any
+				local eval = evaluator.evaluators[of.Eval]
+				return eval(value.X, of) and eval(value.Y, of)
+			end
+		end
+		return false
 	end,
-	V2f24 = function(value: unknown)
-		return checkVector2(value, MAX_F24)
-	end,
-	V2f32 = function(value: unknown)
-		return checkVector2(value, MAX_F32)
-	end,
-	V2i16 = function(value: unknown)
-		return typeof(value) == "Vector2int16"
-	end,
-	V3f16 = function(value: unknown)
-		return checkVector3(value, MAX_F16)
-	end,
-	V3f24 = function(value: unknown)
-		return checkVector3(value, MAX_F24)
-	end,
-	V3f32 = function(value: unknown)
-		return checkVector3(value, MAX_F32)
+
+	V3 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
+		if type(value) == "vector" then
+			local _of = datatype.of
+			if _of and type(value) == "number" then
+				local of = _of :: any
+				local eval = evaluator.evaluators[of.Eval]
+				return eval(value.x, of) and eval(value.y, of) and eval(value.z, of)
+			end
+		end
+		return false
 	end,
 	V3i16 = function(value: unknown)
 		return typeof(value) == "Vector3int16"

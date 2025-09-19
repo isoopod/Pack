@@ -15,15 +15,15 @@ local write_i16 = Writer.i16
 local datatype = table.freeze({
 	Eval = "V3i16",
 	Len = 6,
-	Read = function(reader: types.ReaderData): vector
-		return vector.create(read_i16(reader), read_i16(reader), read_i16(reader))
+	Read = function(reader: types.ReaderData): Vector3int16
+		return Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
 	end,
-	Write = function(writer: types.WriterData, value: vector)
+	Write = function(writer: types.WriterData, value: Vector3int16)
 		write_alloc(writer, 6)
-		write_i16(writer, value.x)
-		write_i16(writer, value.y)
-		write_i16(writer, value.z)
+		write_i16(writer, value.X)
+		write_i16(writer, value.Y)
+		write_i16(writer, value.Z)
 	end,
-}) :: types.DatatypeInterface<vector>
+}) :: types.DatatypeInterface<Vector3int16>
 
 return datatype
