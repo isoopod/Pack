@@ -317,7 +317,7 @@ evaluator.evaluators = {
 	V2 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if typeof(value) == "Vector2" then
 			local _of = datatype.of
-			if _of and type(value) == "number" then
+			if _of then
 				local of = _of :: any
 				local eval = evaluator.evaluators[of.Eval]
 				return eval(value.X, of) and eval(value.Y, of)
@@ -329,7 +329,7 @@ evaluator.evaluators = {
 	V3 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) == "vector" then
 			local _of = datatype.of
-			if _of and type(value) == "number" then
+			if _of then
 				local of = _of :: any
 				local eval = evaluator.evaluators[of.Eval]
 				return eval(value.x, of) and eval(value.y, of) and eval(value.z, of)

@@ -2,6 +2,7 @@
 --!native
 --!optimize 2
 
+local Float32 = require(script.Parent.Float32)
 local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
@@ -15,6 +16,7 @@ local DEBUG = types.DEBUG
 
 local datatype = table.freeze(setmetatable({
 	Eval = "V3",
+	of = Float32,
 	Len = 12,
 	Read = function(reader: types.ReaderData): vector
 		return vector.create(read_f32(reader), read_f32(reader), read_f32(reader))
@@ -37,7 +39,7 @@ local datatype = table.freeze(setmetatable({
 
 		return table.freeze({
 			Eval = "V3",
-			of = valueType.Eval,
+			of = valueType,
 			Len = (valueType.Len or 0) * 3,
 			Blen = valueType.BitLen and valueType.BitLen * 3,
 			Read = function(reader: types.ReaderData): vector

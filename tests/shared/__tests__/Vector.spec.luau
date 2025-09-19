@@ -46,7 +46,7 @@ local tests = {
 	},
 	{
 		name = "Vector3int16",
-		Schema = Pack:Define(Pack.Vector3int16),
+		schema = Pack:Define(Pack.Vector3int16),
 		byteSize = 6,
 		threeAxis = true,
 		values = {

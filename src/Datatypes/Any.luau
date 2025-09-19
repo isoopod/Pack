@@ -31,9 +31,9 @@ local UInt16 = require(script.Parent.UInt16)
 local UInt32 = require(script.Parent.UInt32)
 local UInt8 = require(script.Parent.UInt8)
 local Union = require(script.Parent.Union)
-local Vector2float32 = require(script.Parent.Vector2float32)
+local Vector2 = require(script.Parent.Vector2)
 local Vector2int16 = require(script.Parent.Vector2int16)
-local Vector3float32 = require(script.Parent.Vector3float32)
+local Vector3 = require(script.Parent.Vector3)
 local Vector3int16 = require(script.Parent.Vector3int16)
 local types = require(script.Parent.Parent.types)
 
@@ -61,8 +61,8 @@ local function getAny(): types.DatatypeInterface<any>
 			String16,
 			String24,
 			String32,
-			Vector3float32,
-			Vector2float32,
+			Vector3,
+			Vector2,
 			CFrame,
 			Instance,
 			Null,
