@@ -234,7 +234,7 @@ evaluator.evaluators = {
 	SDict = function(_value: unknown, datatype: types.DatatypeInterface<unknown>)
 		local format, optFormat = datatype.format, datatype.optFormat
 		-- must be a table
-		if not format or not optFormat or typeof(_value) ~= "table" then return false end
+		if not optFormat or typeof(_value) ~= "table" then return false end
 		local value: { [any]: any } = _value :: any
 
 		local required: { [any]: any } = format or {}
