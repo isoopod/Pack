@@ -325,7 +325,9 @@ evaluator.evaluators = {
 		end
 		return false
 	end,
-
+	V2i16 = function(value: unknown)
+		return typeof(value) == "Vector2int16"
+	end,
 	V3 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) == "vector" then
 			local _of = datatype.of
