@@ -58,4 +58,42 @@ describe("Literal", function()
 		expect(output).toEqual(lit)
 		expect(buffer.len(packet)).toEqual(0)
 	end)
+
+	it("should work inside a union", function()
+		local a = "Hello"
+		local b = "World"
+		local schema = Pack:Define(Pack.Union(Pack.Literal(a), Pack.Literal(b)))
+
+		local packet1 = schema:Write(a)
+		local packet2 = schema:Write(b)
+
+		local output1 = schema:Read(packet1)
+		local output2 = schema:Read(packet2)
+
+		expect(output1).toEqual(a)
+		expect(output2).toEqual(b)
+	end)
+
+	it("should work inside a union when in a dictionary", function()
+		local a = "Hello"
+		local b = "World"
+
+		local schema = Pack:Define(Pack.Union(
+			Pack.Dictionary({
+				type = Pack.Literal(a),
+			}),
+			Pack.Dictionary({
+				type = Pack.Literal(b),
+			})
+		)) :: Pack.Schema<{ type: "Hello" } | { type: "World" }>
+
+		local packeta = schema:Write({ type = a })
+		local packetb = schema:Write({ type = b })
+
+		local outputa = schema:Read(packeta)
+		local outputb = schema:Read(packetb)
+
+		expect(outputa.type).toEqual(a)
+		expect(outputb.type).toEqual(b)
+	end)
 end)
