@@ -68,7 +68,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	local occupancyField = BitField(optLen)
 
 	local datatype = {
-		Eval = "Dict",
+		Eval = "SDict",
 		Len = approximateLen,
 		BitLen = approximateBitLen + (occupancyField.BitLen or 0),
 		format = requiredFormat,
