@@ -21,7 +21,7 @@ local datatype = table.freeze({
 	end,
 	Write = function(writer: types.WriterData, value: number)
 		write_alloc(writer, 2)
-		write_u16(writer, value * PRECISION)
+		write_u16(writer, math.floor(value * PRECISION + 0.5))
 	end,
 }) :: types.DatatypeInterface<number>
 
