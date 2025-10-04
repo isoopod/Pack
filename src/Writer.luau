@@ -382,15 +382,12 @@ function Writer.new(approximateLen: number?, approximateBitLen: number?): types.
 	self._cursor = 0
 	self._buffer = buffer.create(approximateLen or 0)
 
-	-- We can assume that if there 0 bits are expected, we don't need to use a bit buffer.
-	if approximateBitLen and approximateBitLen > 0 then
-		local bytes = math.ceil(approximateBitLen / 8)
+	local bytes = math.ceil((approximateBitLen or 0) / 8)
 
-		self._bitLen = 0
-		self._allocatedBitLen = bytes * 8
-		self._bitCursor = bytes * 8
-		self._bitBuffer = buffer.create(bytes)
-	end
+	self._bitLen = 0
+	self._allocatedBitLen = bytes * 8
+	self._bitCursor = bytes * 8
+	self._bitBuffer = buffer.create(bytes)
 
 	return self :: any
 end
