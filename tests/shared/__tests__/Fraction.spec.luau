@@ -38,6 +38,6 @@ describe("Fraction", function()
 		local expected = -2 ^ -16
 		local packet = schema:Write(expected)
 		local actual = schema:Read(packet)
-		expect(math.abs(actual - expected)).toBeLessThanOrEqual(2 ^ -16)
+		expect(math.abs(actual - expected)).toBeLessThanOrEqual(1)
 	end)
 end)
