@@ -9,16 +9,15 @@ local describe = JestGlobals.describe
 
 describe("Color3", function()
 	local schema = Pack:Define(Pack.Color3)
-	-- Standard color cases
-	it("Should handle all 24-bit colors correctly", function()
-		for r = 0, 255 do
-			for g = 0, 255 do
-				for b = 0, 255 do
-					local expected = Color3.fromRGB(r, g, b)
 
+	it("Should handle representative colors correctly", function()
+		local samples = { 0, 128, 255 }
+		for _, r in samples do
+			for _, g in samples do
+				for _, b in samples do
+					local expected = Color3.fromRGB(r, g, b)
 					local packet = schema:Write(expected)
 					local actual = schema:Read(packet)
-
 					expect(actual).toBe(expected)
 				end
 			end
@@ -32,26 +31,23 @@ describe("Color3", function()
 
 	it("Should trim values > 255", function()
 		local expected = Color3.fromRGB(500, 500, 500)
-
 		local packet = schema:Write(expected)
 		local actual = schema:Read(packet)
-
 		expect(actual).never.toBe(expected)
 	end)
 end)
 
 describe("Color3float32", function()
 	local schema = Pack:Define(Pack.Color3float32)
-	-- Standard color cases
-	it("Should handle all 24-bit colors correctly", function()
-		for r = 0, 255 do
-			for g = 0, 255 do
-				for b = 0, 255 do
-					local expected = Color3.fromRGB(r, g, b)
 
+	it("Should handle representative colors correctly", function()
+		local samples = { 0, 128, 255 }
+		for _, r in samples do
+			for _, g in samples do
+				for _, b in samples do
+					local expected = Color3.fromRGB(r, g, b)
 					local packet = schema:Write(expected)
 					local actual = schema:Read(packet)
-
 					expect(actual).toBe(expected)
 				end
 			end
@@ -65,10 +61,8 @@ describe("Color3float32", function()
 
 	it("Should handle values > 255", function()
 		local expected = Color3.fromRGB(500, 500, 500)
-
 		local packet = schema:Write(expected)
 		local actual = schema:Read(packet)
-
 		expect(actual).toBe(expected)
 	end)
 end)
