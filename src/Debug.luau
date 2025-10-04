@@ -183,9 +183,9 @@ debuggers.Array = {
 }
 
 debuggers.SparseDictionary = {
-	CheckRequired = function(required: { any }, values: { [any]: any })
+	CheckRequired = function(required: { any }?, values: { [any]: any })
 		local logs = Logger.new()
-		for _, key in required do
+		for _, key in required or {} do
 			if not values[key] then
 				logs:SetStatus(2)
 				logs:AddLine(`[ERROR]: SparseDictionary expecting required key {key}, got nil`)
