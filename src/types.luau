@@ -247,13 +247,16 @@ export type Datatypes = {
 	BrickColor: BrickColor,
 	ColorSequence: (type: Color3) -> ColorSequence,
 
-	CFrame: CFrame,
-	Vector3: Vector & (number) -> Vector,
-	Vector3int16: Vector3int16,
+	Rad8: number,
+	Rad16: number,
 	Vector2: Vector2 & (number) -> Vector2,
 	Vector2int16: Vector2int16,
+	Vector3: Vector & (number) -> Vector,
+	Vector3int16: Vector3int16,
+	CFrame: CFrame,
 	Region3: Region3,
 	Region3int16: Region3int16,
+
 	UDim: UDim,
 	UDim2: UDim2,
 

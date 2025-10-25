@@ -156,6 +156,8 @@ debuggers.EnforceDatatype = {
 				and dt.Eval ~= "f32"
 				and dt.Eval ~= "f64"
 				and dt.Eval ~= "frac"
+				and dt.Eval ~= "rad8"
+				and dt.Eval ~= "rad16"
 			)
 		then
 			local dtype = "unknown"

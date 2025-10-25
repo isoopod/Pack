@@ -225,6 +225,12 @@ evaluator.evaluators = {
 		if getmetatable(value :: any) ~= datatype.mt then return false end
 		return evaluator.evaluators[datatype.cData.Eval :: any](value, datatype.cData :: any)
 	end,
+	rad8 = function(value: unknown)
+		return type(value) == "number"
+	end,
+	rad16 = function(value: unknown)
+		return type(value) == "number"
+	end,
 	R3 = function(value: unknown)
 		return typeof(value) == "Region3"
 	end,
