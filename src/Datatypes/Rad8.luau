@@ -21,7 +21,7 @@ local datatype = table.freeze({
 	Write = function(writer: types.WriterData, value: number)
 		write_alloc(writer, 1)
 
-		value %= 6.283185307179586 -- 2pi
+		value %= math.pi * 2
 		write_u8(writer, math.floor(value * 40.58451048843331 + 0.5)) -- 2pi^-1 * 0xff
 	end,
 }) :: types.DatatypeInterface<number>

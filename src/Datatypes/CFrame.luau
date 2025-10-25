@@ -22,53 +22,51 @@ local write_moveCursor = Writer.moveCursor
 -- This is significantly better than the axis-angle representation used by many libraries, which takes 24 bytes to compress the CFrame.
 -- The tradeoff is that quaternion compression is more computationally expensive, but easily it's worth it, especially if these CFrames are sent over the network.
 
-local INF = math.huge
 local EPSILON = 1e-6
 local PRECISION = 0xffff / math.sqrt(0.5) -- The smaller 3 values in a rotation quaternion fit between [-sqrt(2) / 2, sqrt(2) / 2]
 -- This allows for more precision for the same number of bits
 
--- Convert a CFrame to a normailised quaternion for encoding
+-- Convert a CFrame to a normalised quaternion for encoding.
 local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, number)
 	local axis, angle = cf:Orthonormalize():ToAxisAngle()
 
-	local d = axis.X ^ 2 + axis.Y ^ 2 + axis.Z ^ 2
-	if math.abs(d) > EPSILON then
-		axis *= (1 / math.sqrt(math.abs(d)))
-	end
-
+	-- Compute scaled axis (axis * sin(angle/2))
 	local h = angle * 0.5
 	local s = math.sin(h)
-	axis = axis * s
+	local ax = axis.X * s
+	local ay = axis.Y * s
+	local az = axis.Z * s
+	local w = math.cos(h)
 
-	local x, y, z, w = axis.X, axis.Y, axis.Z, math.cos(h)
-	d = x * x + y * y + z * z + w * w
+	local d = ax * ax + ay * ay + az * az + w * w
 
 	if math.abs(d) > EPSILON then
 		d = math.sqrt(d)
-
-		return x / d, y / d, z / d, w / d
+		return ax / d, ay / d, az / d, w / d
 	end
 
-	return 0, 0, 0, 1 -- identity
+	-- Return identity if magnitude is effectively zero
+	return 0, 0, 0, 1
 end
 
-local allowedUps = {
-	[0] = { 2, 3, 4, 5 }, -- If right is +X, up can be ±Y or ±Z
-	[1] = { 2, 3, 4, 5 }, -- If right is -X, up can be ±Y or ±Z
-	[2] = { 0, 1, 4, 5 }, -- If right is +Y, up can be ±X or ±Z
-	[3] = { 0, 1, 4, 5 }, -- If right is -Y, up can be ±X or ±Z
-	[4] = { 0, 1, 2, 3 }, -- If right is +Z, up can be ±X or ±Y
-	[5] = { 0, 1, 2, 3 }, -- If right is -Z, up can be ±X or ±Y
-}
+local allowedUps = table.freeze({
+	[0] = { [2] = 1, [3] = 2, [4] = 3, [5] = 4 },
+	[1] = { [2] = 1, [3] = 2, [4] = 3, [5] = 4 },
+	[2] = { [0] = 1, [1] = 2, [4] = 3, [5] = 4 },
+	[3] = { [0] = 1, [1] = 2, [4] = 3, [5] = 4 },
+	[4] = { [0] = 1, [1] = 2, [2] = 3, [3] = 4 },
+	[5] = { [0] = 1, [1] = 2, [2] = 3, [3] = 4 },
+})
 -- stylua: ignore
-local axisLUT = {
+local axisLUT = table.freeze({
 	[Vector3.xAxis] = 0, [-Vector3.xAxis] = 1,
 	[Vector3.yAxis] = 2, [-Vector3.yAxis] = 3,
 	[Vector3.zAxis] = 4, [-Vector3.zAxis] = 5,
-}
+})
 
 -- Compress a CFrame as a Quaternion (with 24 axis-aligned rotations and 16-bit rotational components for non-axis-aligned)
 local function compressQuaternion(cf: CFrame): (number, number?, number?, number?)
+	local round = math.round
 	local right, up = cf.XVector, cf.YVector
 
 	-- Determine Right and Up indices
@@ -76,47 +74,51 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 	local upIndexRaw = rightIndex and axisLUT[up]
 
 	if rightIndex and upIndexRaw then
-		local validUpIndex = table.find(allowedUps[rightIndex], upIndexRaw)
-		if validUpIndex then
-			-- Compute encoding (start at 5 for padding)
-			return 5 + (rightIndex * 4) + (validUpIndex - 1), nil, nil, nil
-		end
+		local validUpIndex = allowedUps[rightIndex][upIndexRaw] -- direct O(1) lookup
+		if validUpIndex then return 5 + (rightIndex * 4) + (validUpIndex - 1), nil, nil, nil end
 	end
 
 	-- Non axis-aligned quaternion, compress by optimizing out one value and quantizing to 16 bit
 	local qx, qy, qz, qw = cfToNormalisedQuaternion(cf)
 
-	local index = -1
-	local value = -INF
+	-- Find largest absolute component (explicit comparisons)
+	local ax = qx >= 0 and qx or -qx
+	local ay = qy >= 0 and qy or -qy
+	local az = qz >= 0 and qz or -qz
+	local aw = qw >= 0 and qw or -qw
 
-	local element: number, v0: number, v1: number, v2: number, val: number, a: number
-	for i = 1, 4, 1 do
-		val = select(i, qx, qy, qz, qw) :: any
-		a = math.abs(val)
-		if a > value then
-			index = i
-			value = a
-			element = val
-		end
+	local index = 1
+	local value = ax
+	local element = qx
+	local v0: number, v1: number, v2: number
+
+	if ay > value then
+		index, value, element = 2, ay, qy
+	end
+	if az > value then
+		index, value, element = 3, az, qz
+	end
+	if aw > value then
+		index, value, element = 4, aw, qw
 	end
 
 	local sign = element >= 0 and 1 or -1
 	if index == 1 then
-		v0 = math.floor(qy * sign * PRECISION + 0.5)
-		v1 = math.floor(qz * sign * PRECISION + 0.5)
-		v2 = math.floor(qw * sign * PRECISION + 0.5)
+		v0 = round(qy * sign * PRECISION)
+		v1 = round(qz * sign * PRECISION)
+		v2 = round(qw * sign * PRECISION)
 	elseif index == 2 then
-		v0 = math.floor(qx * sign * PRECISION + 0.5)
-		v1 = math.floor(qz * sign * PRECISION + 0.5)
-		v2 = math.floor(qw * sign * PRECISION + 0.5)
+		v0 = round(qx * sign * PRECISION)
+		v1 = round(qz * sign * PRECISION)
+		v2 = round(qw * sign * PRECISION)
 	elseif index == 3 then
-		v0 = math.floor(qx * sign * PRECISION + 0.5)
-		v1 = math.floor(qy * sign * PRECISION + 0.5)
-		v2 = math.floor(qw * sign * PRECISION + 0.5)
+		v0 = round(qx * sign * PRECISION)
+		v1 = round(qy * sign * PRECISION)
+		v2 = round(qw * sign * PRECISION)
 	elseif index == 4 then
-		v0 = math.floor(qx * sign * PRECISION + 0.5)
-		v1 = math.floor(qy * sign * PRECISION + 0.5)
-		v2 = math.floor(qz * sign * PRECISION + 0.5)
+		v0 = round(qx * sign * PRECISION)
+		v1 = round(qy * sign * PRECISION)
+		v2 = round(qz * sign * PRECISION)
 	end
 
 	return index, v0, v1, v2
