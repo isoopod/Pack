@@ -64,6 +64,18 @@ local axisLUT = table.freeze({
 	[Vector3.zAxis] = 4, [-Vector3.zAxis] = 5,
 })
 
+-- Reverse lookup for decoding (decode map)
+local allowedUpsDecode: { [number]: { [number]: number } } = {}
+
+for rightIndex, ups in allowedUps do
+	local reverse = table.create(4, 1)
+	for upIndex, remapped in ups do
+		reverse[remapped] = upIndex
+	end
+	allowedUpsDecode[rightIndex] = reverse
+end
+table.freeze(allowedUpsDecode)
+
 -- Compress a CFrame as a Quaternion (with 24 axis-aligned rotations and 16-bit rotational components for non-axis-aligned)
 local function compressQuaternion(cf: CFrame): (number, number?, number?, number?)
 	local round = math.round
@@ -138,7 +150,7 @@ local function decompressAxisAligned(qi: number, x: number, y: number, z: number
 	local upIndexRemapped = encoding % 4
 
 	-- Look up the actual up axis code using the allowedUps table:
-	local actualUpAxis = allowedUps[rightIndex][upIndexRemapped + 1]
+	local actualUpAxis = allowedUpsDecode[rightIndex][upIndexRemapped]
 
 	local right = axisVectors[rightIndex + 1]
 	local up = axisVectors[actualUpAxis + 1]
