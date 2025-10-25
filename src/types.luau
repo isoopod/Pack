@@ -267,6 +267,7 @@ export type Datatypes = {
 
 	Array: <T>(type: T, lengthType: number?) -> { T }, -- Lengthtype is any Unsigned Integer datatype
 	Dictionary: <T>(format: T) -> T,
+	Struct: <T>(format: T) -> T,
 	SparseDictionary: <T, U>(optionalFormat: T, requireFormat: U?) -> nullableKeys<T> & U,
 	Map: <K, V>(keyType: K, valueType: V) -> { [K]: V },
 

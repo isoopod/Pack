@@ -191,11 +191,11 @@ end
 
 -- Lazy-loading for datatypes so only the necessary datatypes are loaded in each environment
 -- This is useful to limit the amount of native code generated when using Pack in parallel luau
-function Pack.__index(self, key)
+function Pack.__index(self: { [string]: any }, key)
 	if Pack[key] then return Pack[key] end
 
 	-- Apply alias for lazy-loading
-	local aliases = rawget(self, "_aliases") :: { [string]: string }
+	local aliases = rawget(self, "_aliases")
 	key = aliases[key] or key
 
 	-- Lazy-load datatypes
@@ -204,7 +204,7 @@ function Pack.__index(self, key)
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
-	local s, datatype = pcall(require, script.Datatypes:FindFirstChild(key))
+	local s, datatype = pcall(require :: any, script.Datatypes:FindFirstChild(key))
 	assert(s, `Unable to access datatype Pack.{key}. Datatype not found: {datatype}`)
 	cache[key] = datatype
 	rawset(self, "_cachedDatatypes", cache)
@@ -226,6 +226,7 @@ local object: types.Pack = setmetatable({
 		Double = "Float64",
 		Frac = "Fraction",
 		Nil = "Null",
+		Struct = "Dictionary",
 	},
 }, Pack) :: any
 
