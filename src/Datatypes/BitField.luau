@@ -24,7 +24,7 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 		Read = function(reader: types.ReaderData): { boolean }
 			local len = length -- Capture upvalue once
 			local result = table_create(len, false) :: { boolean }
-			local idx = 0
+			local idx = 1
 			local remaining = len
 
 			local read = bitr_read
@@ -47,12 +47,12 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 			-- Reserve space for all bits
 			local len = length -- Capture upvalue once
 			bitw_alloc(writer, len)
-			local idx = 0
+			local idx = 1
 			local remaining = len
 
 			local write = bitw_write
 			while remaining > 0 do
-				local chunkSize = math.max(32, remaining)
+				local chunkSize = math.min(32, remaining)
 				local chunk = 0
 
 				for i = 0, chunkSize - 1 do
