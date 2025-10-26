@@ -37,9 +37,6 @@ jobs:
         with:
           path: ~/.aftman
           key: tools-${{ hashFiles('aftman.toml') }}
-          restore-keys: |
-            tools-
-          lookup-only: true
       - name: Lint
         run: ./scripts/shell/lint.sh
 
@@ -55,9 +52,6 @@ jobs:
         with:
           path: ~/.aftman
           key: tools-${{ hashFiles('aftman.toml') }}
-          restore-keys: |
-            tools-
-          lookup-only: true
       - name: Check format
         run: ./scripts/shell/check-format.sh
 
@@ -76,9 +70,6 @@ jobs:
         with:
           path: ~/.aftman
           key: tools-${{ hashFiles('aftman.toml') }}
-          restore-keys: |
-            tools-
-          lookup-only: true
       - name: Run tests
         run: ./scripts/shell/test.sh dev.project.json $TEST_TASK_FILE
         env:
