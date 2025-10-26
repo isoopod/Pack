@@ -14,18 +14,30 @@ local bitr_read = BitReader.read
 local bitw_alloc = BitWriter.alloc
 local bitw_write = BitWriter.write
 
+local table_create = table.create
+
 return function(length: number): types.DatatypeInterface<{ boolean }>
 	-- Returns a datatype that reads and writes a sequence of booleans as bits.
 	return table.freeze({
 		Eval = "BitField",
 		BitLen = length,
 		Read = function(reader: types.ReaderData): { boolean }
-			local result = table.create(length, false) :: { boolean }
+			local len = length -- Capture upvalue once
+			local result = table_create(len, false) :: { boolean }
+			local idx = 0
+			local remaining = len
 
-			-- Read each bit sequentially
-			for i = 1, length do
-				local bitValue = bitr_read(reader, 1)
-				if bitValue == 1 then result[i] = true end
+			local read = bitr_read
+			while remaining > 0 do
+				local chunkSize = math.min(32, remaining)
+				local chunk = read(reader, chunkSize)
+
+				for i = 0, chunkSize - 1 do
+					result[idx] = bit32.extract(chunk, i) == 1
+					idx += 1
+				end
+
+				remaining -= chunkSize
 			end
 
 			return result
@@ -33,12 +45,25 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 
 		Write = function(writer: types.WriterData, value: { boolean })
 			-- Reserve space for all bits
-			bitw_alloc(writer, length)
+			local len = length -- Capture upvalue once
+			bitw_alloc(writer, len)
+			local idx = 0
+			local remaining = len
 
-			-- Write each boolean as a single bit
-			for i = 1, length do
-				local bitValue = value[i] and 1 or 0
-				bitw_write(writer, 1, bitValue)
+			local write = bitw_write
+			while remaining > 0 do
+				local chunkSize = math.max(32, remaining)
+				local chunk = 0
+
+				for i = 0, chunkSize - 1 do
+					if value[idx] then
+						chunk += bit32.lshift(1, i)
+					end
+					idx += 1
+				end
+
+				write(writer, chunkSize, chunk)
+				remaining -= chunkSize
 			end
 		end,
 	}) :: types.DatatypeInterface<{ boolean }>
