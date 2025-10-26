@@ -11,18 +11,23 @@ local read_u8 = Reader.u8
 local write_alloc = Writer.alloc
 local write_u8 = Writer.u8
 
+local TAU = 2 * math.pi
+local TAU_INVERSE = 1 / TAU
+local PRECISION = 0xff
+local PRECISION_INVERSE = 1 / PRECISION
+
 local datatype = table.freeze({
 	Eval = "rad8",
 	Len = 1,
 	Read = function(reader: types.ReaderData): number
 		local byte = read_u8(reader)
-		return byte * 0.024639942381096416 -- 0xff^-1 * 2pi
+		return byte * (PRECISION_INVERSE * TAU)
 	end,
 	Write = function(writer: types.WriterData, value: number)
 		write_alloc(writer, 1)
 
-		value %= math.pi * 2
-		write_u8(writer, math.floor(value * 40.58451048843331 + 0.5)) -- 2pi^-1 * 0xff
+		value %= TAU
+		write_u8(writer, (value * (TAU_INVERSE * PRECISION) + 0.5) // 1)
 	end,
 }) :: types.DatatypeInterface<number>
 

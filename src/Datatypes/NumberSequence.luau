@@ -22,6 +22,7 @@ local write_u16 = Writer.u16
 
 local DEBUG = types.DEBUG
 local PRECISION = 0xffff
+local PRECISION_INVERSE = 1 / PRECISION
 
 -- Potential improvement: If there are only two repeated keypoints, only write one.
 -- Low priority as that is already a poor use of NumberSequence.
@@ -41,7 +42,7 @@ return function(valueType: types.DatatypeInterface<number>): types.DatatypeInter
 			local array = table.create(len) :: { NumberSequenceKeypoint }
 
 			for i = 1, len do
-				local time = read_u16(reader) / PRECISION
+				local time = read_u16(reader) * PRECISION_INVERSE
 				local value = read(reader)
 				local envelope
 				if bitr_read(reader, 1) == 1 then envelope = read(reader) end
