@@ -49,32 +49,35 @@ local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, nu
 	return 0, 0, 0, 1
 end
 
-local allowedUps = table.freeze({
-	[0] = { [2] = 1, [3] = 2, [4] = 3, [5] = 4 },
-	[1] = { [2] = 1, [3] = 2, [4] = 3, [5] = 4 },
-	[2] = { [0] = 1, [1] = 2, [4] = 3, [5] = 4 },
-	[3] = { [0] = 1, [1] = 2, [4] = 3, [5] = 4 },
-	[4] = { [0] = 1, [1] = 2, [2] = 3, [3] = 4 },
-	[5] = { [0] = 1, [1] = 2, [2] = 3, [3] = 4 },
+-- These freeze calls do not need to be localised despite not having fastcalls since they are only used at runtime
+local allowedUpsArray = table.freeze({
+	[0] = table.freeze({ 2, 3, 4, 5 }), -- +X -> ±Y, ±Z
+	[1] = table.freeze({ 2, 3, 4, 5 }), -- -X -> ±Y, ±Z
+	[2] = table.freeze({ 0, 1, 4, 5 }), -- +Y -> ±X, ±Z
+	[3] = table.freeze({ 0, 1, 4, 5 }), -- -Y -> ±X, ±Z
+	[4] = table.freeze({ 0, 1, 2, 3 }), -- +Z -> ±X, ±Y
+	[5] = table.freeze({ 0, 1, 2, 3 }), -- -Z -> ±X, ±Y
 })
+
+-- Build an encode map (upIndex -> remappedOrdinal) from the arrays
+local allowedUpsEncode: { [number]: { [number]: number } } = {}
+for rightIndex, ups in allowedUpsArray do
+	local m = table.create(4) :: { [number]: number }
+	-- ups is an array of 4 values; map each axis id -> position (1..4)
+	for i = 1, #ups do
+		local upAxis = ups[i]
+		m[upAxis] = i
+	end
+	allowedUpsEncode[rightIndex] = table.freeze(m)
+end
+table.freeze(allowedUpsEncode)
+
 -- stylua: ignore
 local axisLUT = table.freeze({
 	[Vector3.xAxis] = 0, [-Vector3.xAxis] = 1,
 	[Vector3.yAxis] = 2, [-Vector3.yAxis] = 3,
 	[Vector3.zAxis] = 4, [-Vector3.zAxis] = 5,
 })
-
--- Reverse lookup for decoding (decode map)
-local allowedUpsDecode: { [number]: { [number]: number } } = {}
-
-for rightIndex, ups in allowedUps do
-	local reverse = table.create(4, 1)
-	for upIndex, remapped in ups do
-		reverse[remapped] = upIndex
-	end
-	allowedUpsDecode[rightIndex] = reverse
-end
-table.freeze(allowedUpsDecode)
 
 -- Compress a CFrame as a Quaternion (with 24 axis-aligned rotations and 16-bit rotational components for non-axis-aligned)
 local function compressQuaternion(cf: CFrame): (number, number?, number?, number?)
@@ -86,7 +89,7 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 	local upIndexRaw = rightIndex and axisLUT[up]
 
 	if rightIndex and upIndexRaw then
-		local validUpIndex = allowedUps[rightIndex][upIndexRaw] -- direct O(1) lookup
+		local validUpIndex = allowedUpsEncode[rightIndex][upIndexRaw] -- direct O(1) lookup
 		if validUpIndex then return 5 + (rightIndex * 4) + (validUpIndex - 1), nil, nil, nil end
 	end
 
@@ -150,7 +153,7 @@ local function decompressAxisAligned(qi: number, x: number, y: number, z: number
 	local upIndexRemapped = encoding % 4
 
 	-- Look up the actual up axis code using the allowedUps table:
-	local actualUpAxis = allowedUpsDecode[rightIndex][upIndexRemapped]
+	local actualUpAxis = allowedUpsArray[rightIndex][upIndexRemapped + 1]
 
 	local right = axisVectors[rightIndex + 1]
 	local up = axisVectors[actualUpAxis + 1]
