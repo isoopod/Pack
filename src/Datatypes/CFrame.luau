@@ -17,6 +17,11 @@ local write_nBitUint = Writer.nBitUint
 local write_nBitInt = Writer.nBitInt
 local write_moveCursor = Writer.moveCursor
 
+local CFrame_fromMatrix = CFrame.fromMatrix
+local CFrame_new = CFrame.new
+local Orthonormalize = CFrame.identity.Orthonormalize
+local ToAxisAngle = CFrame.identity.ToAxisAngle
+
 -- We compress a CFrame's rotational component as a quaternion.
 -- Quaternions are compressed to 13 bytes for axis-aligned cases and 19 bytes for non axis-aligned cases.
 -- This is significantly better than the axis-angle representation used by many libraries, which takes 24 bytes to compress the CFrame.
@@ -24,11 +29,12 @@ local write_moveCursor = Writer.moveCursor
 
 local EPSILON = 1e-6
 local PRECISION = 0xffff / math.sqrt(0.5) -- The smaller 3 values in a rotation quaternion fit between [-sqrt(2) / 2, sqrt(2) / 2]
+local INV_PRECISION = 1 / PRECISION
 -- This allows for more precision for the same number of bits
 
 -- Convert a CFrame to a normalised quaternion for encoding.
 local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, number)
-	local axis, angle = cf:Orthonormalize():ToAxisAngle()
+	local axis, angle = ToAxisAngle(Orthonormalize(cf))
 
 	-- Compute scaled axis (axis * sin(angle/2))
 	local h = angle * 0.5
@@ -40,9 +46,9 @@ local function cfToNormalisedQuaternion(cf: CFrame): (number, number, number, nu
 
 	local d = ax * ax + ay * ay + az * az + w * w
 
-	if math.abs(d) > EPSILON then
-		d = math.sqrt(d)
-		return ax / d, ay / d, az / d, w / d
+	if d > EPSILON then
+		d = 1 / math.sqrt(d)
+		return ax * d, ay * d, az * d, w * d
 	end
 
 	-- Return identity if magnitude is effectively zero
@@ -81,7 +87,6 @@ local axisLUT = table.freeze({
 
 -- Compress a CFrame as a Quaternion (with 24 axis-aligned rotations and 16-bit rotational components for non-axis-aligned)
 local function compressQuaternion(cf: CFrame): (number, number?, number?, number?)
-	local round = math.round
 	local right, up = cf.XVector, cf.YVector
 
 	-- Determine Right and Up indices
@@ -119,21 +124,21 @@ local function compressQuaternion(cf: CFrame): (number, number?, number?, number
 
 	local sign = element >= 0 and 1 or -1
 	if index == 1 then
-		v0 = round(qy * sign * PRECISION)
-		v1 = round(qz * sign * PRECISION)
-		v2 = round(qw * sign * PRECISION)
+		v0 = (qy * sign * PRECISION + 0.5) // 1
+		v1 = (qz * sign * PRECISION + 0.5) // 1
+		v2 = (qw * sign * PRECISION + 0.5) // 1
 	elseif index == 2 then
-		v0 = round(qx * sign * PRECISION)
-		v1 = round(qz * sign * PRECISION)
-		v2 = round(qw * sign * PRECISION)
+		v0 = (qx * sign * PRECISION + 0.5) // 1
+		v1 = (qz * sign * PRECISION + 0.5) // 1
+		v2 = (qw * sign * PRECISION + 0.5) // 1
 	elseif index == 3 then
-		v0 = round(qx * sign * PRECISION)
-		v1 = round(qy * sign * PRECISION)
-		v2 = round(qw * sign * PRECISION)
+		v0 = (qx * sign * PRECISION + 0.5) // 1
+		v1 = (qy * sign * PRECISION + 0.5) // 1
+		v2 = (qw * sign * PRECISION + 0.5) // 1
 	elseif index == 4 then
-		v0 = round(qx * sign * PRECISION)
-		v1 = round(qy * sign * PRECISION)
-		v2 = round(qz * sign * PRECISION)
+		v0 = (qx * sign * PRECISION + 0.5) // 1
+		v1 = (qy * sign * PRECISION + 0.5) // 1
+		v2 = (qz * sign * PRECISION + 0.5) // 1
 	end
 
 	return index, v0, v1, v2
@@ -158,18 +163,19 @@ local function decompressAxisAligned(qi: number, x: number, y: number, z: number
 	local right = axisVectors[rightIndex + 1]
 	local up = axisVectors[actualUpAxis + 1]
 
-	return CFrame.fromMatrix(vector.create(x, y, z) :: any, right :: any, up :: any)
+	return CFrame_fromMatrix(vector.create(x, y, z) :: any, right :: any, up :: any)
 end
 
 local function decompressQuaternion(qi: number, qa: number?, qb: number?, qc: number?): (number, number, number, number)
 	-- Non-axis-aligned quaternion, handle the full compression case
 	assert(qa and qb and qc, "Non-identity quaternion requires qa, qb, and qc")
 
-	qa /= PRECISION
-	qb /= PRECISION
-	qc /= PRECISION
+	qa *= INV_PRECISION
+	qb *= INV_PRECISION
+	qc *= INV_PRECISION
 
-	local d = math.sqrt(1 - (qa * qa + qb * qb + qc * qc))
+	local sum = (qa * qa + qb * qb + qc * qc)
+	local d = math.sqrt(1 - sum)
 	if qi == 1 then
 		return d, qa, qb, qc
 	elseif qi == 2 then
@@ -185,25 +191,27 @@ local datatype = table.freeze({
 	Eval = "CFrame",
 	Len = 19, -- We will use the 19 byte size here as it is more likely
 	Read = function(reader: types.ReaderData): CFrame
-		local x = read_f32(reader)
-		local y = read_f32(reader)
-		local z = read_f32(reader)
-
-		local qx: number, qy: number, qz: number, qw: number
+		local rf32 = read_f32
+		local x = rf32(reader)
+		local y = rf32(reader)
+		local z = rf32(reader)
 
 		local qi = read_nBitUint(reader, 5, 0)
 		if qi > 4 then
 			read_moveCursor(reader, 1)
-			return decompressAxisAligned(qi, x, y, z)
+			-- cframe must be captured in a register before returning to allow inlining
+			local cframe = decompressAxisAligned(qi, x, y, z)
+			return cframe
 		else
-			local qa = read_nBitInt(reader, 17, 5)
-			local qb = read_nBitInt(reader, 17, 22)
-			local qc = read_nBitInt(reader, 17, 39)
+			local rnbi = read_nBitInt
+			local qa = rnbi(reader, 17, 5)
+			local qb = rnbi(reader, 17, 22)
+			local qc = rnbi(reader, 17, 39)
 			read_moveCursor(reader, 7)
-			qx, qy, qz, qw = decompressQuaternion(qi, qa, qb, qc)
-		end
 
-		return CFrame.new(x, y, z, qx, qy, qz, qw)
+			local qx, qy, qz, qw = decompressQuaternion(qi, qa, qb, qc)
+			return CFrame_new(x, y, z, qx, qy, qz, qw)
+		end
 	end,
 	Write = function(writer: types.WriterData, value: CFrame)
 		local x, y, z = value.X, value.Y, value.Z
@@ -212,15 +220,17 @@ local datatype = table.freeze({
 		local axisAligned = qi > 4
 		write_alloc(writer, axisAligned and 13 or 19)
 
-		write_f32(writer, x)
-		write_f32(writer, y)
-		write_f32(writer, z)
+		local wf32 = write_f32
+		wf32(writer, x)
+		wf32(writer, y)
+		wf32(writer, z)
 
 		write_nBitUint(writer, qi, 5, 0)
 		if not axisAligned then
-			write_nBitInt(writer, qa :: number, 17, 5)
-			write_nBitInt(writer, qb :: number, 17, 22)
-			write_nBitInt(writer, qc :: number, 17, 39)
+			local wnbi = write_nBitInt
+			wnbi(writer, qa :: number, 17, 5)
+			wnbi(writer, qb :: number, 17, 22)
+			wnbi(writer, qc :: number, 17, 39)
 			write_moveCursor(writer, 7)
 		else
 			write_moveCursor(writer, 1)
