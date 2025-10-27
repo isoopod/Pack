@@ -295,6 +295,8 @@ export type Pack = {
 	GetBitReader: (self: Pack) -> BitReader,
 	GetBitWriter: (self: Pack) -> BitWriter,
 	GetConfig: (self: Pack) -> { [any]: any },
+	GetSchemaRead: (self: Pack) -> <T, U...>(schema: Schema<T, U...>, T, U...) -> (buffer, refs?),
+	GetSchemaWrite: (self: Pack) -> <T, U...>(schema: Schema<T, U...>, buff: buffer, refs: refs?) -> (T, U...),
 } & Datatypes
 
 -- Makes every property of a table type nullable (i.e. T[K] -> T[K] | nil)
