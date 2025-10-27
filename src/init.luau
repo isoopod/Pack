@@ -191,7 +191,7 @@ end
 
 --- @method GetSchemaRead
 --- @within Pack
---- @returns <T, U...>(schema: Schema<T, U...>, T, U...) -> (buffer, refs?)
+--- @return <T, U...>(schema: Schema<T, U...>, T, U...) -> (buffer, refs?)
 --- [ADVANCED]: Returns the schema read function so you can skip a namecall operation when reading a packet
 function Pack.GetSchemaRead(_)
 	return Schema.Read
@@ -199,7 +199,7 @@ end
 
 --- @method GetSchemaWrite
 --- @within Pack
---- @returns <T, U...>(schema: Schema<T, U...>, buff: buffer, refs: refs?) -> (T, U...)
+--- @return <T, U...>(schema: Schema<T, U...>, buff: buffer, refs: refs?) -> (T, U...)
 --- [ADVANCED]: Returns the schema write function so you can skip a namecall operation when writing a packet
 function Pack.GetSchemaWrite(_)
 	return Schema.Write
