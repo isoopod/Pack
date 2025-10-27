@@ -9,7 +9,7 @@ local types = require(script.Parent.Parent.types)
 local read_string = Reader.string
 
 local write_alloc = Writer.alloc
-local write_stringFixed = Writer.stringFixed
+local write_string = Writer.string
 
 return function(length: number): types.DatatypeInterface<string>
 	return table.freeze({
@@ -21,7 +21,7 @@ return function(length: number): types.DatatypeInterface<string>
 		Write = function(writer: types.WriterData, value: string)
 			assert(#value == length, "stringFixed expects written string length (in bytes) to match the allocated length.")
 			write_alloc(writer, length)
-			write_stringFixed(writer, value, length)
+			write_string(writer, value, length)
 		end,
 	}) :: types.DatatypeInterface<string>
 end

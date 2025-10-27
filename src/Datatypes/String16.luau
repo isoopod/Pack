@@ -21,12 +21,12 @@ local datatype = table.freeze({
 		return read_string(reader, len)
 	end,
 	Write = function(writer: types.WriterData, value: string)
-		local len, write = write_string(writer, value)
+		local len = #value
 
-		write_alloc(writer, 2)
+		write_alloc(writer, len + 2)
 		write_u16(writer, len)
 
-		write()
+		write_string(writer, value, len)
 	end,
 }) :: types.DatatypeInterface<string>
 

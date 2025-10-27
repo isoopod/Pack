@@ -281,34 +281,10 @@ end
 	@within Writer
 	@param self WriterData -- A writer instance created with .new
 	@param value string -- The string you wish to write
-	@param count number? -- Optional value denoting the maximum number of bytes to write
-	@return number -- the length of the string in bytes
-	@return () -> () -- A function that orders the wring into the packet
-	@tag Allocating
-	Processes a string into a seperate buffer and allocates the byte length of the string (or if count is provided and smaller than blen, allocates `count` bytes)  
-	Returns the amount of bytes allocated, and a function to commit the string to the packet.  
-	This is so the length of the string can be written before writing the string itself, for variable length strings.
+	@param count number -- Length of the string to write in bytes
+	Write a string into the buffer. The count/length can be obtained using the len `#` operator on the string, which returns the length of the string in bytes.
 ]=]
-function Writer.string(self: types.WriterData, value: string, count: number?): (number, () -> ())
-	local s = buffer.fromstring(value)
-	local blen = math.min(buffer.len(s), count or math.huge)
-
-	return blen, function()
-		Writer.alloc(self, blen)
-		buffer.copy(self._buffer, self._cursor, s, 0, count)
-		self._cursor += blen
-	end
-end
-
---[=[
-	@function stringFixed
-	@within Writer
-	@param self WriterData -- A writer instance created with .new
-	@param value string -- The string you wish to write
-	@param count number? -- Optional value denoting the maximum number of bytes to write
-	When we already know the length of the string, we can write it directly to the buffer without needing to
-]=]
-function Writer.stringFixed(self: types.WriterData, value: string, count: number)
+function Writer.string(self: types.WriterData, value: string, count: number)
 	buffer.writestring(self._buffer, self._cursor, value, count)
 	self._cursor += count
 end

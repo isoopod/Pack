@@ -44,7 +44,7 @@ export type Reader = {
 	read nBitFloat: (self: ReaderData, n: number, m: number, bitOffset: number) -> number,
 	read f32: (self: ReaderData) -> number,
 	read f64: (self: ReaderData) -> number,
-	read string: (self: ReaderData, count: number?) -> string,
+	read string: (self: ReaderData, count: number) -> string,
 
 	read new: (packet: buffer) -> ReaderData,
 }
@@ -90,8 +90,7 @@ export type Writer = {
 	read nBitFloat: (self: WriterData, value: number, n: number, m: number, bitOffset: number) -> (),
 	read f32: (self: WriterData, value: number) -> (),
 	read f64: (self: WriterData, value: number) -> (),
-	read string: (self: WriterData, value: string, count: number?) -> (number, () -> ()), -- Returns the string's length in bytes and a function to actually write the string
-	read stringFixed: (self: WriterData, value: string, count: number) -> (),
+	read string: (self: WriterData, value: string, count: number) -> (),
 	read addRef: (self: WriterData, ref: any) -> (),
 
 	read Finalize: (self: WriterData) -> buffer,
