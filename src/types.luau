@@ -234,6 +234,7 @@ export type Datatypes = {
 	String24: string,
 	String32: string,
 	StringFixed: (len: number) -> string,
+	CString: string,
 
 	Buffer8: buffer,
 	Buffer16: buffer,

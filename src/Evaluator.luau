@@ -305,6 +305,9 @@ evaluator.evaluators = {
 		if type(value) ~= "string" or not datatype.Len then return false end
 		return #value == datatype.Len
 	end,
+	sZ = function(value: unknown)
+		return type(value) == "string"
+	end,
 	UD = function(value: unknown)
 		return typeof(value) == "UDim"
 	end,
