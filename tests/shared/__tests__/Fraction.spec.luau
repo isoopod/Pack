@@ -35,9 +35,22 @@ describe("Fraction", function()
 	end)
 
 	it("should wrap on out-of-range values", function()
-		local expected = -2 ^ -16
-		local packet = schema:Write(expected)
+		-- Values below 0 should wrap to high end
+		local negative = -0.5
+		local packet = schema:Write(negative)
 		local actual = schema:Read(packet)
-		expect(math.abs(actual - expected)).toBeLessThanOrEqual(1)
+		-- -0.5 wraps to approximately 0.5 due to unsigned integer overflow
+		expect(actual).toBeCloseTo(0.5, 4)
+
+		-- Values above 1 should wrap to low end
+		local above_one = 1.5
+		packet = schema:Write(above_one)
+		actual = schema:Read(packet)
+		-- 1.5 wraps to approximately 0.5
+		expect(actual).toBeCloseTo(0.5, 4)
+
+		-- Test that wrapping is consistent
+		expect(schema:Read(schema:Write(-0.25))).toBeCloseTo(0.75, 4)
+		expect(schema:Read(schema:Write(2.0))).toBeCloseTo(0.0, 4)
 	end)
 end)
