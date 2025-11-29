@@ -1,5 +1,3 @@
---!strict
-
 local TestService = game:GetService("TestService")
 
 local ConfigParser = require(script.Parent.ConfigParser)

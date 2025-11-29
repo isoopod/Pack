@@ -1,5 +1,4 @@
 --!native
---!strict
 --!optimize 2
 
 --Modules

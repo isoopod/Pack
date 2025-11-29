@@ -1,5 +1,3 @@
---!strict
-
 return function(b: buffer, error: string?)
 	local hex = {}
 	local decimal = {}

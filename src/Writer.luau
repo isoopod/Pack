@@ -1,5 +1,4 @@
 --!native
---!strict
 --!optimize 2
 
 -- Queues up write actions to the buffer can be written in a single pass at the end.

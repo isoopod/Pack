@@ -1,4 +1,3 @@
---!strict
 --# selene:allow(undefined_variable)
 
 -- Services
