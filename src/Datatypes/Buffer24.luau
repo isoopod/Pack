@@ -24,13 +24,14 @@ local datatype = table.freeze({
 		return buffer.fromstring(read_string(reader, len))
 	end,
 	Write = function(writer: types.WriterData, value: buffer)
-		local len, write = write_string(writer, buffer.tostring(value))
+		local s = buffer.tostring(value)
+		local len = #s
 
-		write_alloc(writer, 3)
+		write_alloc(writer, len + 3)
 		write_nBitUint(writer, len, 24, 0)
 		write_moveCursor(writer, 3)
 
-		write()
+		write_string(writer, s, len)
 	end,
 }) :: types.DatatypeInterface<buffer>
 
