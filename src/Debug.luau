@@ -188,7 +188,7 @@ debuggers.SparseDictionary = {
 	CheckRequired = function(required: { any }?, values: { [any]: any })
 		local logs = Logger.new()
 		for _, key in required or {} do
-			if not values[key] then
+			if values[key] == nil then
 				logs:SetStatus(2)
 				logs:AddLine(`[ERROR]: SparseDictionary expecting required key {key}, got nil`)
 			end
