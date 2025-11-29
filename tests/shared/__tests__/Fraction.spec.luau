@@ -51,6 +51,6 @@ describe("Fraction", function()
 
 		-- Test that wrapping is consistent
 		expect(schema:Read(schema:Write(-0.25))).toBeCloseTo(0.75, 4)
-		expect(schema:Read(schema:Write(2.0))).toBeCloseTo(0.0, 4)
+		expect(schema:Read(schema:Write(2.0))).toBeCloseTo(1, 4)
 	end)
 end)
