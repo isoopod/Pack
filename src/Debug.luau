@@ -101,18 +101,16 @@ end
 ]=]
 function Logger.StackTrace(self: _Logger, start: number?)
 	self:AddLine("Stacktrace:\n")
-	for i = (start or 1), 100 do -- Limit to 100 layers
+	for i = (start or 2), 100 do -- Limit to 100 layers
 		local source: string, name: string, line: number = debug.info(i, "snl")
-		if not source then
-			self:AddLine("\tStacktrace truncated at 100 lines.")
-			break
-		end
+		if not source then return end
 		if line >= 0 then
 			self:AddLine(string.format("\t%s(%d): %s", source, line, name or "anonymous"))
 		else
 			self:AddLine(string.format("\t%s: %s", source, name or "anonymous"))
 		end
 	end
+	self:AddLine("\tStacktrace truncated at 100 lines.")
 end
 
 --[=[
@@ -127,7 +125,7 @@ function Logger.WriteLogs(self: _Logger)
 		return
 	end
 
-	self:StackTrace(2)
+	self:StackTrace(3)
 
 	if self._status == 1 then
 		warn(self:Get())
