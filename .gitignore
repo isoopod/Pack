@@ -12,3 +12,8 @@
 /package-lock.json
 
 **/__pycache__
+
+.pesde
+*_packages
+
+*.lock

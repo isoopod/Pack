@@ -9,7 +9,3 @@ repository = "https://github.com/isoopod/Pack"
 
 exclude = ["**"]
 include = ["src", "src/*", "default.project.json", "wally.toml", "LICENSE"]
-
-[dev-dependencies]
-Jest = "jsdotlua/jest@3.10.0"
-JestGlobals = "jsdotlua/jest-globals@3.10.0"
