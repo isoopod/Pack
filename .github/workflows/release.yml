@@ -2,7 +2,7 @@ name: Publish Release
 
 on:
   release:
-    types: [created]
+    types: [published, prereleased, created, edited]
 
 defaults:
   run:
@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   publish:
+    if: ${{ github.event.release.draft }}
+
     name: Publish Release
     runs-on: ubuntu-latest
 
