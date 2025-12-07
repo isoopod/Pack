@@ -130,7 +130,12 @@ function Logger.WriteLogs(self: _Logger)
 	if self._status == 1 then
 		warn(self:Get())
 	elseif self._status == 2 then
-		TestService:Error(self:Get())
+		if ConfigParser.debug.verbose then
+			-- TestService errors get logged in the gh action
+			TestService:Error(self:Get())
+		else
+			error(self:Get())
+		end
 	end
 end
 
