@@ -6,12 +6,12 @@ local function VirtualTable(self: any, key: any)
 	return new
 end
 
-local function WrapVirtualStructure(input: any): ()
+local function WrapVirtualStructure(input: any)
 	for k, v in input do
 		if type(v) == "table" then input[k] = WrapVirtualStructure(v) end
 	end
 
-	setmetatable(input, { __index = VirtualTable })
+	return setmetatable(input, { __index = VirtualTable })
 end
 
 local Config: { [any]: any }

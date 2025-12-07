@@ -327,6 +327,6 @@ end
 local PackTypes = {}
 
 PackTypes.cfg = ConfigParser
-PackTypes.DEBUG = PackTypes.cfg.debug.enabled and (not PackTypes.cfg.debug.onlyInStudio or RunService:IsStudio()) and require(script.Parent.Debug)
+PackTypes.DEBUG = (ConfigParser.debug.enabled == true) and (ConfigParser.debug.onlyInStudio == false or RunService:IsStudio()) and require(script.Parent.Debug)
 
 return PackTypes
