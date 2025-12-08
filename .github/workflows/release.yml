@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          ref: main
 
       - name: Extract version from tag
         id: get_version
@@ -46,7 +48,7 @@ jobs:
       - name: Setup rokit
         uses: CompeyDev/setup-rokit@v0.1.2
 
-      - name: Commit and push version bumps
+      - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
           message: "release: ${{ github.ref_name }}"
