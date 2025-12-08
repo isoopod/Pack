@@ -2,18 +2,21 @@
 
 ## [Documentation](https://isoopod.github.io/Pack/)
 
-Schematized Luau buffer serialization library.
+Schematized buffer serialization library for Roblox.
 
-Pack allows you to define complex data (refered to as parallel data) structures through schemas, which represents the structure of the data you pass through,
-and serializes it into a packet (as a buffer, refered to as serial data), and later deserialize it to reconstruct the original data.
+Pack enables the definition of complex data structures using schemas, which describe the layout of the input data (parallel data). It serializes these structures into compact buffers (serial data) and can later deserialize them to accurately reconstruct the original values.
 
-Pack empathises data compression, which is optimal for networking and data storage, but also features alternative data structures that empathise speed, aimed
-towards parallel luau. This allows you to represent more versatile data structures within shared tables without the performance impact of nesting shared tables.
+Pack focuses on efficient data compression, making it suitable for networking and storage scenarios while maintaining clear, schema-driven structure for reliable data interchange.
+
+This project implements a high-performance binary serialization framework for Roblox, designed for precise control over data layout, efficient memory usage, and deterministic encoding across a wide range of datatypes. It provides a unified system for describing packet structures, defining custom datatypes, and encoding or decoding structured data at byte- and bit-level granularity.
+
+Schemas and datatype interfaces form the core of the typing model. A schema defines the structure of a packet, specifying the expected fields and their types. Both static and dynamic datatypes are supported, allowing primitives, arrays, structs, unions, and more advanced constructs to be composed declaratively.
 
 ## Roadmap
 
-*These features are planned/implemented, but not in the current release or not completely finished.*  
+*These features are planned or partially implemented, but not in the current release or not completely finished.*  
+*Ticked features are partially implemented*
 
-- [x] Proper test coverage with Jest-Lua
+- [x] Full test coverage with Jest-Lua
 - [ ] Full instance marshalling (instead of baked references)
-- [x] Documentation
+- [x] Documentation (comprehensive rewrite in the works)

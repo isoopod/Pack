@@ -8,7 +8,7 @@ local GROWTH_FACTOR = 2
 --[=[
 	@class BitWriter
 	Internal bit buffer builder library. Writes right to left, as the bitbuffer is appended to the end of the packet.
-	A `BitWriter` accumulates a series of bit-level write and move operations, which are then packed into a binary buffer during finalisation.
+	A `BitWriter` accumulates a series of bit-level write and move operations, which are then appended onto the main buffer during finalisation.
 ]=]
 
 local Writer = {}

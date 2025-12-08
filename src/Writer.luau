@@ -1,10 +1,6 @@
 --!native
 --!optimize 2
 
--- Queues up write actions to the buffer can be written in a single pass at the end.
--- This is more efficient than concatenating onto the buffer each time we need to allocate.
--- Its the same idea as StringBuilder in Java.
-
 --Modules
 local BitWriter = require(script.Parent.BitWriter)
 local types = require(script.Parent.types)
@@ -13,7 +9,7 @@ local GROWTH_FACTOR = 2
 
 --[=[
 	@class Writer
-	An internal buffer builder used to serialize packets. Operations are added to a queue and the entire buffer will be created in one pass without needing to dynamically resize the buffer.  
+	The internal Writer class. A dynamically expanding buffer with predictive initial sizing depending on the schema.
 	A writer instance is created with the .new constructor, and is modified with the library's functions.
 ]=]
 
