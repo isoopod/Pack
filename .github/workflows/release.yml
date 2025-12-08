@@ -2,7 +2,7 @@ name: Publish Release
 
 on:
   push:
-    tags: ["*"]
+    tags: ["v*"]
 
 defaults:
   run:
@@ -25,8 +25,8 @@ jobs:
       - name: Extract version from tag
         id: get_version
         run: |
-          raw="${{ github.ref_name }}"
-          echo "version=${raw#="v"}" >> "$GITHUB_OUTPUT"
+          tag=${{ github.ref_name }}
+          echo "version=${tag#"v"}" >> "$GITHUB_OUTPUT"
 
       - name: Update changelog
         uses: thomaseizinger/keep-a-changelog-new-release@v3
