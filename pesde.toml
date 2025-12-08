@@ -1,5 +1,5 @@
 name = "isoopod/pack"
-version = "0.1.0"
+version = "0.10.1"
 description = "Schematized Luau buffer serialization library."
 authors = ["isoopod"]
 repository = "https://github.com/isoopod/Pack"
