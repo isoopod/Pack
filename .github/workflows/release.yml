@@ -57,7 +57,7 @@ jobs:
           tag_push: --force
 
       - name: Build
-        run: rojo build default.project.json --output dist.rbxm
+        run: rojo build default.project.json --output Pack.rbxm
 
       - name: Read changelog
         id: read_changelog
@@ -90,14 +90,12 @@ jobs:
 
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.previous_release.outputs.tag || github.ref_name }}...${{ github.ref_name }}
           draft: false
-          files: dist.rbxm
+          files: Pack.rbxm
           prerelease: ${{ contains(github.ref_name, 'rc') }} # Checks for example v0.1.2-rc.1 etc, if you use other formats then you should change this
 
       # Setup pesde after building so the build does not get the dev dependencies
       - name: Setup pesde
         uses: ewd3v/setup-pesde@v0.1.1
-        with:
-          pesde_token: ${{ secrets.PESDE_TOKEN || github.token }}
 
       - name: Publish to pesde
         run: pesde publish -y
