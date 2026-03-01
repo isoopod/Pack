@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 
 # Structural Datatypes
@@ -19,6 +19,10 @@ The type of number the Array uses to encode the length can be changed with the s
 and should be an unsigned integer. By default this is UInt16.
 
 ## Dictionary
+
+:::note[Aliases]
+**Struct** is an alias for Dictionary and can be used instead
+:::
 
 ```lua
 Pack.Dictionary(format: { [any]: Datatype<any> })
