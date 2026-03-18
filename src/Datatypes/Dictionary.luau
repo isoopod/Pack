@@ -50,9 +50,6 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 		format = format,
 	}
 
-	-- Deduplicate format
-	format = datatype.format
-
 	datatype.Read = function(reader: types.ReaderData)
 		local result = {}
 
