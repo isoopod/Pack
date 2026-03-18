@@ -143,7 +143,7 @@ end
 	Only works for schemas which start as either a Dictionary (aka Struct) or SparseDictionary.
 	Does not support tuple schemas.
 ]=]
-function Pack.Reflect(_: types.Pack, schema: _Schema, path: string): GenericSchema?
+function Pack.Reflect(self: types.Pack, schema: _Schema, path: string): GenericSchema?
 	local nodes = string.split(path, "/")
 	local current = schema._s1
 
@@ -157,7 +157,7 @@ function Pack.Reflect(_: types.Pack, schema: _Schema, path: string): GenericSche
 		current = nextNode
 	end
 
-	return current
+	return self:Define(current)
 end
 
 -- Private type
