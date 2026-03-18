@@ -1,6 +1,30 @@
 {
+  "name": "Pack",
   "tree": {
-    "$path": "src"
-  },
-  "name": "Pack"
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "DevPackages": {
+        "$path": "roblox_packages"
+      },
+      "Pack": {
+        "$path": "src"
+      },
+      "shared": {
+        "$path": "tests/shared"
+      },
+      "pack-config": {
+        "$path": "tests/pack-config.toml"
+      }
+    },
+
+    "ServerScriptService": {
+      "$properties": {
+        "LoadStringEnabled": true
+      },
+      "TestRunner": {
+        "$path": "tests/TestRunner.luau"
+      }
+    }
+  }
 }

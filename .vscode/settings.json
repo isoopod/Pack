@@ -1,12 +1,10 @@
 {
-    "luau-lsp.fflags.enableNewSolver": true,
-    "luau-lsp.completion.autocompleteEnd": true,
-    "luau-lsp.completion.imports.enabled": true,
-    "luau-lsp.completion.imports.separateGroupsWithLine": true,
-    "luau-lsp.inlayHints.functionReturnTypes": true,
-    "luau-lsp.inlayHints.parameterTypes": true,
-    "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
-    "stylua.targetReleaseVersion": "latest",
-    "luau-lsp.completion.imports.requireStyle": "alwaysRelative",
-    "roblox-ui.sourcemap.rojoProjectFile": "dev.project.json",
+  "luau-lsp.fflags.enableNewSolver": true,
+  "luau-lsp.completion.autocompleteEnd": true,
+  "luau-lsp.completion.imports.enabled": true,
+  "luau-lsp.completion.imports.separateGroupsWithLine": true,
+  "luau-lsp.inlayHints.functionReturnTypes": true,
+  "luau-lsp.inlayHints.parameterTypes": true,
+  "stylua.targetReleaseVersion": "latest",
+  "luau-lsp.completion.imports.requireStyle": "alwaysRelative"
 }

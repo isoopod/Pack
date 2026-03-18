@@ -289,6 +289,7 @@ export type Pack = {
 	-- This is a limitation of Luau, as there is no higher-order polymorphism
 	-- Meaning we cannot pass multiple generics to the lower order read/write methods
 	Define: <T, U...>(self: Pack, T, U...) -> Schema<T, U...>,
+	Reflect: (self: Pack, schema: Schema<any, nil>, path: string) -> Schema<unknown, nil>?,
 
 	GetReader: (self: Pack) -> Reader,
 	GetWriter: (self: Pack) -> Writer,

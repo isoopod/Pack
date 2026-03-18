@@ -38,6 +38,7 @@ testStringType("String8", Pack.String8, 8)
 testStringType("String16", Pack.String16, 16)
 testStringType("String24", Pack.String24, 24)
 testStringType("String32", Pack.String32, 32)
+testStringType("CString", Pack.CString, 32)
 
 -- Test for StringFixed
 

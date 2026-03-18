@@ -111,13 +111,15 @@ function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericS
 	local self: _Schema = setmetatable({}, { __index = Schema }) :: any
 
 	local schemas = { ... }
+	local args = #schemas
 
-	self._args = #schemas
+	self._s1 = schemas[1]
+	self._args = args
 	self._approxLen = 0
 	self._approxBitLen = 0
 
-	self._readers = table.create(self._args) :: { any }
-	self._writers = table.create(self._args) :: { any }
+	self._readers = table.create(args) :: { any }
+	self._writers = table.create(args) :: { any }
 
 	for i, schema in schemas do
 		self._readers[i] = schema.Read
@@ -130,10 +132,39 @@ function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericS
 	return self
 end
 
+--[=[
+	@method Reflect
+	@within Pack
+	@param schema Schema -- The schema to introspect
+	@param path string -- a / separated path to the specific node in the schema to copy
+	@return Schema
+
+	Navigates through Dictionary and SparseDictionary structures to form a schema from lower in the tree.
+	Only works for schemas which start as either a Dictionary (aka Struct) or SparseDictionary.
+	Does not support tuple schemas.
+]=]
+function Pack.Reflect(_: types.Pack, schema: _Schema, path: string): GenericSchema?
+	local nodes = string.split(path, "/")
+	local current = schema._s1
+
+	for _, key in nodes do
+		-- Ensure we are traversing a struct type
+		if current.Eval ~= "Dict" and current.Eval ~= "SDict" then return nil end
+
+		-- Look up the key in standard or optional formats
+		local nextNode = current.format[key] or (current.optFormat and current.optFormat[key])
+		if not nextNode then return nil end
+		current = nextNode
+	end
+
+	return current
+end
+
 -- Private type
 -- We use a generic version of a schema here, the exported type for pack will apply the correct typing.
 type GenericSchema = types.Schema<any>
 type _Schema = GenericSchema & {
+	_s1: types.DatatypeInterface<any>, -- Reference to the first entry in the tuple for Reflect support
 	_args: number,
 	_approxLen: number,
 	_approxBitLen: number,
