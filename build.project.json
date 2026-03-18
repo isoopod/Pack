@@ -1,0 +1,6 @@
+{
+  "name": "Pack",
+  "tree": {
+    "$path": "src"
+  }
+}

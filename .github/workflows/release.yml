@@ -51,7 +51,7 @@ jobs:
           tag_push: --force
 
       - name: Build
-        run: rojo build default.project.json --output Pack.rbxm
+        run: rojo build build.project.json --output Pack.rbxm
 
       - name: Read changelog
         id: read_changelog
