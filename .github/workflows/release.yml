@@ -39,12 +39,6 @@ jobs:
           path: ./pesde.toml
           version: ${{ steps.get_version.outputs.version }}
 
-      - name: Bump wally version
-        uses: DervexDev/file-version-bumper@v1
-        with:
-          path: ./wally.toml
-          version: ${{ steps.get_version.outputs.version }}
-
       - name: Setup rokit
         uses: CompeyDev/setup-rokit@v0.1.2
 
@@ -101,8 +95,3 @@ jobs:
 
       - name: Publish to pesde
         run: pesde publish -y
-
-      - name: Publish to wally
-        run: |
-          wally login --token "${{ secrets.WALLY_TOKEN }}"
-          wally publish
