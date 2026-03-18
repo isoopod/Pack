@@ -152,7 +152,7 @@ function Pack.Reflect(self: types.Pack, schema: _Schema, path: string): GenericS
 		if current.Eval ~= "Dict" and current.Eval ~= "SDict" then return nil end
 
 		-- Look up the key in standard or optional formats
-		local nextNode = current.format[key] or (current.optFormat and current.optFormat[key])
+		local nextNode = (current.format and current.format[key]) or (current.optFormat and current.optFormat[key])
 		if not nextNode then return nil end
 		current = nextNode
 	end
