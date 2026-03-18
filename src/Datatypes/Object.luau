@@ -16,10 +16,6 @@ return function(metatable: { [any]: any }, classData: types.DatatypeInterface<an
 		cData = classData,
 	}
 
-	-- Deduplicate
-	metatable = datatype.mt
-	classData = datatype.cData
-
 	datatype.Read = function(reader: types.ReaderData): any
 		return setmetatable(classData.Read(reader), metatable)
 	end
