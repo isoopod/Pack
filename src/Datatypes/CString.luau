@@ -19,7 +19,7 @@ local datatype = table.freeze({
 		local remainder = buffer.tostring(read_peakRemainder(reader))
 
 		-- string.find is by far the fastest way to find the first occurence of the null terminator.
-		local nullIndex = string.find(remainder, "/0", 1, true)
+		local nullIndex = string.find(remainder, "\0", 1, true)
 		assert(nullIndex, "Malformed sZ: no null terminator found")
 
 		local len = nullIndex - 1
