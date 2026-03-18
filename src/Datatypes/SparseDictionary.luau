@@ -74,10 +74,6 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 		optFormat = optionalFormat,
 	}
 
-	-- Deduplicate formats
-	requiredFormat = datatype.format
-	optionalFormat = datatype.optFormat
-
 	function datatype.Read(reader: types.ReaderData)
 		local result = {}
 
