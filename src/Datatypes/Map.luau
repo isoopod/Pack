@@ -23,10 +23,6 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 		Val = valueType,
 	}
 
-	-- Deduplicate
-	keyType = datatype.Key
-	valueType = datatype.Val
-
 	datatype.Read = function(reader: types.ReaderData): { [K]: V }
 		local len = lenRead(reader)
 
