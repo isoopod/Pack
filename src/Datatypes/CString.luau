@@ -5,10 +5,10 @@ local Reader = require(script.Parent.Parent.Reader)
 local Writer = require(script.Parent.Parent.Writer)
 local types = require(script.Parent.Parent.types)
 
-local read_u8 = Reader.u8
-local read_string = Reader.string
 local read_moveCursor = Reader.moveCursor
+local read_peakRemainder = Reader.peekRemainder
 
+local write_u8 = Writer.u8
 local write_string = Writer.string
 local write_alloc = Writer.alloc
 
@@ -16,21 +16,24 @@ local datatype = table.freeze({
 	Eval = "sZ",
 	Len = 1,
 	Read = function(reader: types.ReaderData): string
-		local len = 0
-		while true do
-			local byte = read_u8(reader)
-			if byte == 0 then break end
-			len += 1
-		end
-		read_moveCursor(reader, -len - 1)
-		return read_string(reader, len)
+		local remainder = buffer.tostring(read_peakRemainder(reader))
+
+		-- string.find is by far the fastest way to find the first occurence of the null terminator.
+		local nullIndex = string.find(remainder, "/0", 1, true)
+		assert(nullIndex, "Malformed sZ: no null terminator found")
+
+		local len = nullIndex - 1
+		local value = string.sub(remainder, 1, len)
+		read_moveCursor(reader, nullIndex)
+		return value
 	end,
 	Write = function(writer: types.WriterData, value: string)
 		local len = #value
 
 		write_alloc(writer, len + 1)
 
-		write_string(writer, value .. "\0", len)
+		write_string(writer, value, len)
+		write_u8(writer, 0) -- Null terminator (dont add to string directly as it would reallocate the string)
 	end,
 }) :: types.DatatypeInterface<string>
 

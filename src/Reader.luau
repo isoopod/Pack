@@ -235,6 +235,21 @@ function Reader.string(self: types.ReaderData, count: number): string
 	self.Cursor += count
 	return value
 end
+
+--[=[
+	@function peekRemainder
+	@within Reader
+	@param self ReaderData -- A reader instance created with .new
+	@return buffer
+	Peeks the remaining part of the entire buffer, without moving the cursor.
+]=]
+function Reader.peekRemainder(self: types.ReaderData): buffer
+	local b, c = self._buffer, self.Cursor
+	local len = buffer.len(b) - c
+	local result = buffer.create(len)
+	buffer.copy(result, 0, b, c)
+	return result
+end
 ----
 
 --[=[

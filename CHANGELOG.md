@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Pack:Reflect method for schema introspecion in Struct schemas, allowing you to resolve sub-schemas by path. Supports deep navigation through nested Dictionaries / SparseDictionaries.
+
+### Changed
+
+- Rewrite project README for clarity.
+- Optimize CString implementation for near instant reads.
+
+### Removed
+
+- Support for the **Wally** package manager. Pack is now only available as a binary or through [Pesde](https://pesde.dev/packages/isoopod/pack). [see commit for reasoning](https://github.com/isoopod/Pack/commit/2660a601d91119c6c15244532c203b7a0a2add5a)
+
 ## [0.10.1] - 2025-12-08
 
 ### Fixed

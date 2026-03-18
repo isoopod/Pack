@@ -44,6 +44,7 @@ export type Reader = {
 	read f32: (self: ReaderData) -> number,
 	read f64: (self: ReaderData) -> number,
 	read string: (self: ReaderData, count: number) -> string,
+	read peekRemainder: (self: ReaderData) -> buffer,
 
 	read new: (packet: buffer) -> ReaderData,
 }

@@ -4,12 +4,14 @@ sidebar_position: 2
 
 # Installation
 
-## Wally
+## Pesde
 
-Get the latest version of Pack from [wally.run](https://wally.run/package/isoopod/pack) and add it to your wally.toml
+Get the latest version of Pack from [pesde.dev](https://pesde.dev/packages/isoopod/pack) and add it to your pesde.toml.
+You can do this from CLI with the following:
 
-For best results, you will need to run [wally-package-types](https://crates.io/crates/wally-package-types) for the needed internal types to be exported.  
-Without doing this, you will not have access to the Pack.Schema type needed to use tuple schemas.
+```bash
+pesde add isoopod/pack -a Pack
+```
 
 ## Manual
 
