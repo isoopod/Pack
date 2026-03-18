@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-03-18
+
 ### Added
 
 - Pack:Reflect method for schema introspecion in Struct schemas, allowing you to resolve sub-schemas by path. Supports deep navigation through nested Dictionaries / SparseDictionaries.
@@ -27,5 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ConfigParser not parsing correctly and turning everything into virtual tables
 - Debug mode always being enabled in studio
 
-[unreleased]: https://github.com/isoopod/Pack/compare/v0.10.1...HEAD
+[unreleased]: https://github.com/isoopod/Pack/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/isoopod/Pack/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/isoopod/Pack/compare/7fe49eef8207d53df84ae93875221f3cde098f85...v0.10.1
