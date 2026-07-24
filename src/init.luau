@@ -271,8 +271,10 @@ local object: types.Pack = setmetatable({
 		Float = "Float32",
 		Double = "Float64",
 		Frac = "Fraction",
-		Nil = "Null",
+		Bool = "Boolean",
 		Struct = "Dictionary",
+		Nil = "Null",
+		Option = "Nullable",
 	},
 }, Pack) :: any
 

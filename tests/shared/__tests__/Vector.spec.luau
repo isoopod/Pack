@@ -34,7 +34,7 @@ local tests = {
 	},
 	{
 		name = "Vector3 float32",
-		schema = Pack:Define(Pack.Vector3),
+		schema = Pack:Define(Pack.Vector3()),
 		byteSize = 12,
 		threeAxis = true,
 		values = {
@@ -79,7 +79,7 @@ local tests = {
 	},
 	{
 		name = "Vector2 float32",
-		schema = Pack:Define(Pack.Vector2),
+		schema = Pack:Define(Pack.Vector2()),
 		byteSize = 8,
 		values = {
 			Vector2.new(0, 0),
@@ -100,12 +100,12 @@ local tests = {
 	},
 }
 
-for _, spec in tests do
+for _, spec: any in tests do
 	describe(spec.name .. " datatype read/write", function()
 		local schema = spec.schema
 
 		it("writes correct length", function()
-			for _, value in spec.values do
+			for _, value: vector in spec.values do
 				local packet = schema:Write(value)
 				expect(buffer.len(packet)).toBe(spec.byteSize)
 			end

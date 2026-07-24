@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Pack.Bool` (Alias for `Pack.Boolean`)
+- `Pack.Option` (Alias for `Pack.Nullable`)
+
+### Changed
+
+- Modifies the declaration of `Pack.Vector3` and `Pack.Vector2`. These could previously be written as if they were static datatypes but now must be called as functions. Call it without an argument to keep the original default of Float32, otherwise pass in a numeric Pack datatype.
+
 ## [0.11.0] - 2026-03-18
 
 ### Added

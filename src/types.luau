@@ -227,6 +227,7 @@ export type Datatypes = {
 	NumberSequence: (type: number) -> NumberSequence,
 
 	Boolean: boolean,
+	Bool: boolean,
 	BitField: (length: number) -> { boolean },
 
 	String8: string,
@@ -249,9 +250,9 @@ export type Datatypes = {
 
 	Rad8: number,
 	Rad16: number,
-	Vector2: Vector2 & (number) -> Vector2,
+	Vector2: (number?) -> Vector2,
 	Vector2int16: Vector2int16,
-	Vector3: Vector & (number) -> Vector,
+	Vector3: (number?) -> Vector,
 	Vector3int16: Vector3int16,
 	CFrame: CFrame,
 	Region3: Region3,
@@ -276,6 +277,7 @@ export type Datatypes = {
 
 	Null: nil,
 	Nullable: <T>(type: T) -> T?,
+	Option: <T>(type: T) -> T?,
 	-- If possible make this a type function to union all members of a type pack
 	--Union: <T0, T1, T2, T3, T4, T5, T6, T7>(v0: T0, v1: T1, v2: T2?, v3: T3?, v4: T4?, v5: T5?, v6: T6?, v7: T7?) -> T1 | T2 | T3 | T4 | T5 | T6 | T7,
 	Union: (...any) -> any,
