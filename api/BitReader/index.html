@@ -6,8 +6,8 @@
 <title data-rh="true">BitReader | Pack</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://isoopod.github.io/Pack/api/BitReader"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="BitReader | Pack"><meta data-rh="true" name="description" content="Internal bit buffer reader library. Reads right to left, as the bitbuffer is appended to the end of the packet.
 A `BitReader` consumes a binary buffer from end to start, reading or skipping specific numbers of bits."><meta data-rh="true" property="og:description" content="Internal bit buffer reader library. Reads right to left, as the bitbuffer is appended to the end of the packet.
 A `BitReader` consumes a binary buffer from end to start, reading or skipping specific numbers of bits."><link data-rh="true" rel="canonical" href="https://isoopod.github.io/Pack/api/BitReader"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/BitReader" hreflang="en"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/BitReader" hreflang="x-default"><link rel="stylesheet" href="/Pack/assets/css/styles.9632da8c.css">
-<script src="/Pack/assets/js/runtime~main.5a61e656.js" defer="defer"></script>
-<script src="/Pack/assets/js/main.649cfd7f.js" defer="defer"></script>
+<script src="/Pack/assets/js/runtime~main.0b1765f6.js" defer="defer"></script>
+<script src="/Pack/assets/js/main.0484d1c1.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -18,14 +18,18 @@ A `BitReader` consumes a binary buffer from end to start, reading or skipping sp
   Internal bit buffer reader library. Reads right to left, as the bitbuffer is appended to the end of the packet.
   A <code>BitReader</code> consumes a binary buffer from end to start, reading or skipping specific numbers of bits.
 </p>
-</div></header><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions" translate="no">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="moveCursor"><code style="text-decoration:none">moveCursor</code><a href="#moveCursor" class="hash-link" aria-label="Direct link to moveCursor" title="Direct link to moveCursor" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/BitReader.luau#L21"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>BitReader<!-- -->.</code><code class="green_DgR4">moveCursor</code><code>(</code><div class="inset_uKQm"><div><code>delta<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+</div></header><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions" translate="no">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="moveCursor"><code style="text-decoration:none">moveCursor</code><a href="#moveCursor" class="hash-link" aria-label="Direct link to moveCursor" title="Direct link to moveCursor" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/BitReader.luau#L22"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>BitReader<!-- -->.</code><code class="green_DgR4">moveCursor</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>delta<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
 <p>Number of bits to move the cursor by.</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p>
   Moves the read cursor to the left by the specified number of bits without reading.
   Used to skip over unused or reserved sections of the bit buffer.
 </p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="read"><code style="text-decoration:none">read</code><a href="#read" class="hash-link" aria-label="Direct link to read" title="Direct link to read" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/BitReader.luau#L32"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>BitReader<!-- -->.</code><code class="green_DgR4">read</code><code>(</code><div class="inset_uKQm"><div><code>bits<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="read"><code style="text-decoration:none">read</code><a href="#read" class="hash-link" aria-label="Direct link to read" title="Direct link to read" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/BitReader.luau#L34"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>BitReader<!-- -->.</code><code class="green_DgR4">read</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS">ReaderData</code><code>,</code><span class="inlineDescription_G7Er">-- <span>
+<p>A reader instance created with .new</p>
+</span></span></div><div><code>bits<!-- -->: </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
 <p>Number of bits to read.</p>
 </span></span></div></div><code>) → </code><code class="blue_P4bS">number</code><span class="inlineDescription_G7Er">-- <span>
 <p>The value read from the buffer.</p>
@@ -38,6 +42,11 @@ A `BitReader` consumes a binary buffer from end to start, reading or skipping sp
             &quot;desc&quot;: &quot;Moves the read cursor to the left by the specified number of bits without reading.\nUsed to skip over unused or reserved sections of the bit buffer.&quot;,
             &quot;params&quot;: [
                 {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
+                {
                     &quot;name&quot;: &quot;delta&quot;,
                     &quot;desc&quot;: &quot;Number of bits to move the cursor by.&quot;,
                     &quot;lua_type&quot;: &quot;number&quot;
@@ -46,7 +55,7 @@ A `BitReader` consumes a binary buffer from end to start, reading or skipping sp
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 21,
+                &quot;line&quot;: 22,
                 &quot;path&quot;: &quot;src/BitReader.luau&quot;
             }
         },
@@ -54,6 +63,11 @@ A `BitReader` consumes a binary buffer from end to start, reading or skipping sp
             &quot;name&quot;: &quot;read&quot;,
             &quot;desc&quot;: &quot;Reads a value from the buffer by consuming the specified number of bits from right to left.&quot;,
             &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;A reader instance created with .new&quot;,
+                    &quot;lua_type&quot;: &quot;ReaderData&quot;
+                },
                 {
                     &quot;name&quot;: &quot;bits&quot;,
                     &quot;desc&quot;: &quot;Number of bits to read.&quot;,
@@ -68,7 +82,7 @@ A `BitReader` consumes a binary buffer from end to start, reading or skipping sp
             ],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 32,
+                &quot;line&quot;: 34,
                 &quot;path&quot;: &quot;src/BitReader.luau&quot;
             }
         }
