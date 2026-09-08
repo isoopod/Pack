@@ -104,7 +104,7 @@ evaluator.evaluators = {
 	end,
 	buffer = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if datatype.Len and type(value) == "buffer" then
-			if buffer.len(value) < datatype.Len then return true end
+			if buffer.len(value) == datatype.Len then return true end
 		end
 		return false
 	end,
