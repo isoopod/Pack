@@ -14,6 +14,7 @@ local Reader = {}
 --[=[
 	@function moveCursor
 	@within BitReader
+	@param self ReaderData -- A reader instance created with .new
 	@param delta number -- Number of bits to move the cursor by.
 	Moves the read cursor to the left by the specified number of bits without reading.
 	Used to skip over unused or reserved sections of the bit buffer.
@@ -25,6 +26,7 @@ end
 --[=[
 	@function read
 	@within BitReader
+	@param self ReaderData -- A reader instance created with .new
 	@param bits number -- Number of bits to read.
 	@return number -- The value read from the buffer.
 	Reads a value from the buffer by consuming the specified number of bits from right to left.
