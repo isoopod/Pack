@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-09-09
+
 ### Fixed
 
 - Overlooked usage of `Pack.Vector3` not being migrated to `Pack.Vector3()` breaking `Pack.Any`
@@ -45,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ConfigParser not parsing correctly and turning everything into virtual tables
 - Debug mode always being enabled in studio
 
-[unreleased]: https://github.com/isoopod/Pack/compare/v0.12.0...HEAD
+[unreleased]: https://github.com/isoopod/Pack/compare/v0.12.1...HEAD
+[0.12.1]: https://github.com/isoopod/Pack/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/isoopod/Pack/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/isoopod/Pack/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/isoopod/Pack/compare/7fe49eef8207d53df84ae93875221f3cde098f85...v0.10.1
