@@ -12,8 +12,8 @@ All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primiti
 The constructor for Schemas is accessed with `:` syntax  
 Datatypes are accessed with `.` syntax  
 All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primitives)"><link data-rh="true" rel="canonical" href="https://isoopod.github.io/Pack/api/Pack"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Pack" hreflang="en"><link data-rh="true" rel="alternate" href="https://isoopod.github.io/Pack/api/Pack" hreflang="x-default"><link rel="stylesheet" href="/Pack/assets/css/styles.9632da8c.css">
-<script src="/Pack/assets/js/runtime~main.0b1765f6.js" defer="defer"></script>
-<script src="/Pack/assets/js/main.0484d1c1.js" defer="defer"></script>
+<script src="/Pack/assets/js/runtime~main.4373bbac.js" defer="defer"></script>
+<script src="/Pack/assets/js/main.86fc15a3.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -33,7 +33,7 @@ All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primiti
 
 <span class="token comment">-- For tuples, you must explicitly annotate the type of the schema using Pack.Schema&#x3C;...>. </span>
 <span class="token comment">-- The luau type solver can only infer the first argument.</span>
-<span class="token keyword">local</span> tupleSchema <span class="token operator">=</span> Pack<span class="token punctuation">:</span><span class="token function">Define</span><span class="token punctuation">(</span>Pack<span class="token punctuation">.</span>CFrame<span class="token punctuation">,</span> Pack<span class="token punctuation">.</span>Vector3<span class="token punctuation">)</span> <span class="token punctuation">::</span> Pack<span class="token punctuation">.</span>Schema<span class="token operator">&#x3C;</span>CFrame<span class="token punctuation">,</span> Vector3<span class="token operator">></span>
+<span class="token keyword">local</span> tupleSchema <span class="token operator">=</span> Pack<span class="token punctuation">:</span><span class="token function">Define</span><span class="token punctuation">(</span>Pack<span class="token punctuation">.</span>CFrame<span class="token punctuation">,</span> Pack<span class="token punctuation">.</span><span class="token function">Vector3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">::</span> Pack<span class="token punctuation">.</span>Schema<span class="token operator">&#x3C;</span>CFrame<span class="token punctuation">,</span> Vector3<span class="token operator">></span>
 </code></pre>
 </div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="Reflect"><code style="text-decoration:none">Reflect</code><a href="#Reflect" class="hash-link" aria-label="Direct link to Reflect" title="Direct link to Reflect" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/isoopod/Pack/blob/master/src/init.luau#L146"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Pack<!-- -->:</code><code class="green_DgR4">Reflect</code><code>(</code><div class="inset_uKQm"><div><code>schema<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/Pack/api/Schema">Schema</a></code><code>,</code><span class="inlineDescription_G7Er">-- <span>
 <p>The schema to introspect</p>
@@ -63,7 +63,7 @@ All default datatypes can be found in [Docs/Datatypes](../docs/Datatypes/Primiti
     &quot;functions&quot;: [
         {
             &quot;name&quot;: &quot;Define&quot;,
-            &quot;desc&quot;: &quot;Defines a Schema from the provided datatypes.  \nThis supports tuples, however due to luau limitations you will need to manually annotate the type.\n\n```lua title=\&quot;tupleExample.luau\&quot;\nlocal Pack = require(path.to.pack)\n\n-- The type of this schema will implicitly be infered as CFrame\nlocal exampleSchema = Pack:Define(Pack.CFrame)\n\n-- For tuples, you must explicitly annotate the type of the schema using Pack.Schema&lt;...&gt;. \n-- The luau type solver can only infer the first argument.\nlocal tupleSchema = Pack:Define(Pack.CFrame, Pack.Vector3) :: Pack.Schema&lt;CFrame, Vector3&gt;\n```&quot;,
+            &quot;desc&quot;: &quot;Defines a Schema from the provided datatypes.  \nThis supports tuples, however due to luau limitations you will need to manually annotate the type.\n\n```lua title=\&quot;tupleExample.luau\&quot;\nlocal Pack = require(path.to.pack)\n\n-- The type of this schema will implicitly be infered as CFrame\nlocal exampleSchema = Pack:Define(Pack.CFrame)\n\n-- For tuples, you must explicitly annotate the type of the schema using Pack.Schema&lt;...&gt;. \n-- The luau type solver can only infer the first argument.\nlocal tupleSchema = Pack:Define(Pack.CFrame, Pack.Vector3()) :: Pack.Schema&lt;CFrame, Vector3&gt;\n```&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;...&quot;,
