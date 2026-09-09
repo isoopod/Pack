@@ -524,7 +524,7 @@ Encodes a 2D vector of int16s using 4 bytes.
 ## Vector3
 
 ```lua
-Pack.Vector3 -- Uses Float32 by default (12 bytes total)
+Pack.Vector3() -- Uses Float32 by default (12 bytes total)
 Pack.Vector3(Pack.Float24) -- Can be called with any other numeric datatype
 ```
 

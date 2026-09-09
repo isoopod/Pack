@@ -77,7 +77,7 @@ SparseDictionaries have the overhead of a BitField for all optional keys.
 Pack:DefineSchema(Pack.SparseDictionary({
     -- Optional keys
     CFrame = Pack.CFrame,
-    Velocity = Pack.Vector3,
+    Velocity = Pack.Vector3(),
     -- Do not do:
     opt = Pack.Nullable(Pack.CFrame)
     -- All keys in the optional table are already nullable

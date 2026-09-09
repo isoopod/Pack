@@ -104,7 +104,7 @@ end
 
 	-- For tuples, you must explicitly annotate the type of the schema using Pack.Schema<...>. 
 	-- The luau type solver can only infer the first argument.
-	local tupleSchema = Pack:Define(Pack.CFrame, Pack.Vector3) :: Pack.Schema<CFrame, Vector3>
+	local tupleSchema = Pack:Define(Pack.CFrame, Pack.Vector3()) :: Pack.Schema<CFrame, Vector3>
 	```
 ]=]
 function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericSchema

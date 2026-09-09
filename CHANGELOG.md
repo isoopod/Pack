@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Overlooked usage of `Pack.Vector3` not being migrated to `Pack.Vector3()` breaking `Pack.Any`
 - BufferFixed evaluator checking `< length` instead of `== length`
 
 ## [0.12.0] - 2026-07-24

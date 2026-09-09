@@ -23,7 +23,7 @@ local unionSchema = Pack:Define(Pack.Union(
 	Pack.Array(Pack.Int16),
 	-- Common Roblox datatypes
 	Pack.Color3,
-	Pack.Vector3,
+	Pack.Vector3(),
 	Pack.CFrame,
 	Pack.UDim2,
 	-- DateTime
@@ -53,7 +53,7 @@ local testCases = {
 }
 
 describe("Union", function()
-	for _, case in testCases do
+	for _, case: any in testCases do
 		it(`handles {case.desc} branch correctly`, function()
 			local encoded = unionSchema:Write(case.value)
 			local decoded = unionSchema:Read(encoded)
