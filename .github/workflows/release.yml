@@ -33,6 +33,9 @@ jobs:
         with:
           tag: ${{ github.ref_name }}
 
+      - name: Bump library version
+        run: sed -i "s/Pack\.VERSION = \".*\"/Pack.VERSION = \"${{ steps.get_version.outputs.version }}\"/" src/init.luau
+
       - name: Bump pesde version
         uses: DervexDev/file-version-bumper@v1
         with:

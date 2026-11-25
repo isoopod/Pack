@@ -8,6 +8,8 @@ local types = require(script.types)
 
 local Pack = {}
 
+Pack.VERSION = "0.13.0"
+
 -- Schema class
 --[=[
 	@class Schema
