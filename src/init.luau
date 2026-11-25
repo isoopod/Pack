@@ -80,6 +80,8 @@ function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
 	return unpack(tuple)
 end
 
+table.freeze(Schema)
+
 --[=[
 	@class Pack
 	The singleton object from where Schemas are created and Datatypes can be accessed.
@@ -278,6 +280,6 @@ local object: types.Pack = setmetatable({
 		Nil = "Null",
 		Option = "Nullable",
 	},
-}, Pack) :: any
+}, table.freeze(Pack)) :: any
 
 return object
