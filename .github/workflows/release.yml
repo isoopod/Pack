@@ -92,9 +92,10 @@ jobs:
 
       # Setup pesde after building so the build does not get the dev dependencies
       - name: Setup pesde
-        uses: ewd3v/setup-pesde@v0.1.1
-        with:
-          pesde_token: "${{ secrets.PESDE_TOKEN || github.token }}"
+        uses: pesde-pkg/setup@v1
+
+      - name: Pesde auth
+        run: pesde auth login --token "${{ secrets.PESDE_TOKEN || github.token }}"
 
       - name: Publish to pesde
         run: pesde publish -y
