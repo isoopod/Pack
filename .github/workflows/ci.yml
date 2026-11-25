@@ -36,6 +36,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Setup rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
+
       - name: Setup pesde
         uses: pesde-pkg/setup@v1
 
