@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.types)
+const types = require(script.Parent.Parent.types)
 
-local datatype: types.DatatypeInterface<nil> = table.freeze({
+const datatype: types.DatatypeInterface<nil> = table.freeze({
 	Eval = "nil",
 	Read = function(): nil
 		return nil

@@ -1,7 +1,7 @@
 --!optimize 2
 --!native
 
-local types = require(script.Parent.types)
+const types = require(script.Parent.types)
 
 type evaluators = {
 	[string]: (value: any, datatype: types.DatatypeInterface<any>) -> boolean,
@@ -15,21 +15,21 @@ type evaluators = {
 -- HELPERS --
 
 -- Precomputed maximum normal values for each float format
-local MAX_F16 = (2 ^ (2 ^ 5 - 1 - 1)) * (2 - 2 ^ -10) -- 5‑bit exponent, 10‑bit mantissa
-local MAX_F24 = (2 ^ (2 ^ 7 - 1 - 1)) * (2 - 2 ^ -16) -- 7‑bit exponent, 16‑bit mantissa
-local MAX_F32 = (2 ^ (2 ^ 8 - 1 - 1)) * (2 - 2 ^ -23) -- 8‑bit exponent, 23‑bit mantissa
+const MAX_F16 = (2 ^ (2 ^ 5 - 1 - 1)) * (2 - 2 ^ -10) -- 5‑bit exponent, 10‑bit mantissa
+const MAX_F24 = (2 ^ (2 ^ 7 - 1 - 1)) * (2 - 2 ^ -16) -- 7‑bit exponent, 16‑bit mantissa
+const MAX_F32 = (2 ^ (2 ^ 8 - 1 - 1)) * (2 - 2 ^ -23) -- 8‑bit exponent, 23‑bit mantissa
 
 -- Fuzzy equality check for floating point numbers
-local function fuzzyEq(a: number, b: number, epsilon: number): boolean
+const function fuzzyEq(a: number, b: number, epsilon: number): boolean
 	return math.abs(a - b) <= epsilon * math.max(1, math.abs(a), math.abs(b))
 end
 
 -- Can represent float
-local function CanRepresent(value: number, maxRange: number): boolean
+const function CanRepresent(value: number, maxRange: number): boolean
 	return math.abs(value) <= maxRange
 end
 
-local evaluator = {}
+const evaluator = {}
 
 --[=[
 	@function addEvaluator
@@ -47,8 +47,8 @@ evaluator.evaluators = {
 		return true
 	end,
 	Array = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local of = datatype.Of
-		local ofEval = of and of.Eval
+		const of = datatype.Of
+		const ofEval = of and of.Eval
 		if ofEval and type(value) == "table" then
 			local expectedIndex = 1
 			for i, v in value do
@@ -121,9 +121,9 @@ evaluator.evaluators = {
 		return typeof(value) == "Color3"
 	end,
 	ColorSequence = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local _of = datatype.Of
+		const _of = datatype.Of
 		if _of and typeof(value) == "Color3" then
-			local of = _of :: any
+			const of = _of :: any
 			return evaluator.evaluators[of.Eval](value, of)
 		end
 		return false
@@ -132,9 +132,9 @@ evaluator.evaluators = {
 		return typeof(value) == "DateTime"
 	end,
 	Dict = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local _format = datatype.format
+		const _format = datatype.format
 		if _format and type(value) == "table" then
-			local format = _format :: any -- FIXME: If the luau evaluator ever fixes this, remove this cast
+			const format = _format :: any -- FIXME: If the luau evaluator ever fixes this, remove this cast
 			-- First check number of keys
 			local vLen, fLen = 0, 0
 			for _ in value do
@@ -194,7 +194,7 @@ evaluator.evaluators = {
 		return type(value) == "number" and value >= -(2 ^ 32) and value <= (2 ^ 32 - 1) and fuzzyEq(value, math.floor(value), 1e-9)
 	end,
 	Map = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local key, val = datatype.Key, datatype.Val
+		const key, val = datatype.Key, datatype.Val
 		if key and val and key.Eval and val.Eval and type(value) == "table" then
 			for k, v in value do
 				if not evaluator.evaluators[key.Eval :: any](k, key :: any) then return false end
@@ -212,9 +212,9 @@ evaluator.evaluators = {
 		return value == nil or evaluator.evaluators[datatype.dt.Eval :: any](value, datatype.dt :: any)
 	end,
 	NumberSequence = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local _of = datatype.Of
+		const _of = datatype.Of
 		if _of and type(value) == "number" then
-			local of = _of :: any
+			const of = _of :: any
 			return evaluator.evaluators[of.Eval](value, of)
 		end
 		return false
@@ -237,13 +237,13 @@ evaluator.evaluators = {
 		return typeof(value) == "Region3int16"
 	end,
 	SDict = function(_value: unknown, datatype: types.DatatypeInterface<unknown>)
-		local format, optFormat = datatype.format, datatype.optFormat
+		const format, optFormat = datatype.format, datatype.optFormat
 		-- must be a table
 		if not optFormat or typeof(_value) ~= "table" then return false end
-		local value: { [any]: any } = _value :: any
+		const value: { [any]: any } = _value :: any
 
-		local required: { [any]: any } = format or {}
-		local optional = optFormat :: any
+		const required: { [any]: any } = format or {}
+		const optional = optFormat :: any
 		local reqCount, optCount, valCount = 0, 0, 0
 
 		-- count required, optional, and actual keys
@@ -261,7 +261,7 @@ evaluator.evaluators = {
 		if valCount < reqCount or valCount > (reqCount + optCount) then return false end
 
 		for key, def in required do
-			local v = rawget(value, key)
+			const v = rawget(value, key)
 			if not def.Eval then return false end
 			if v == nil then return false end
 			if not evaluator.evaluators[def.Eval](v, def :: any) then return false end
@@ -273,7 +273,7 @@ evaluator.evaluators = {
 				continue
 			end
 
-			local def = optional[key]
+			const def = optional[key]
 			if def then
 				if def.Eval and v then
 					if not evaluator.evaluators[(def :: any).Eval](v, def :: any) then return false end
@@ -324,10 +324,10 @@ evaluator.evaluators = {
 	end,
 	V2 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if typeof(value) == "Vector2" then
-			local _of = datatype.of
+			const _of = datatype.of
 			if _of then
-				local of = _of :: any
-				local eval = evaluator.evaluators[of.Eval]
+				const of = _of :: any
+				const eval = evaluator.evaluators[of.Eval]
 				return eval(value.X, of) and eval(value.Y, of)
 			end
 		end
@@ -338,10 +338,10 @@ evaluator.evaluators = {
 	end,
 	V3 = function(value: unknown, datatype: types.DatatypeInterface<unknown>)
 		if type(value) == "vector" then
-			local _of = datatype.of
+			const _of = datatype.of
 			if _of then
-				local of = _of :: any
-				local eval = evaluator.evaluators[of.Eval]
+				const of = _of :: any
+				const eval = evaluator.evaluators[of.Eval]
 				return eval(value.x, of) and eval(value.y, of) and eval(value.z, of)
 			end
 		end

@@ -1,12 +1,14 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+--!optimize 2
 
-local function VirtualTable(self: any, key: any)
-	local new = setmetatable({}, { __index = VirtualTable })
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const function VirtualTable(self: any, key: any)
+	const new = setmetatable({}, { __index = VirtualTable })
 	self[key] = new
 	return new
 end
 
-local function WrapVirtualStructure(input: any)
+const function WrapVirtualStructure(input: any)
 	for k, v in input do
 		if type(v) == "table" then input[k] = WrapVirtualStructure(v) end
 	end
@@ -16,7 +18,7 @@ end
 
 local Config: { [any]: any }
 
-local packConfig = ReplicatedStorage:FindFirstChild("pack-config")
+const packConfig = ReplicatedStorage:FindFirstChild("pack-config")
 if packConfig and packConfig.ClassName == "ModuleScript" then
 	local s
 	s, Config = pcall(require, packConfig)

@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.types)
+const types = require(script.Parent.Parent.types)
 
-local typePriority = {
+const typePriority = {
 	["number"] = 1,
 	["string"] = 2,
 	["boolean"] = 3,
@@ -14,8 +14,8 @@ local typePriority = {
 	["nil"] = 8,
 }
 
-local function keyComparator(a: any, b: any): boolean
-	local ta, tb = type(a), type(b)
+const function keyComparator(a: any, b: any): boolean
+	const ta, tb = type(a), type(b)
 	if ta ~= tb then return (typePriority[ta] :: number) < (typePriority[tb] :: number) end
 
 	if ta == "number" or ta == "string" then return a < b end
@@ -33,7 +33,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	local approximateLen = 0
 	local approximateBitLen = 0
-	local structure = table.create(len) :: { any }
+	const structure = table.create(len) :: { any }
 
 	for k, v in format do
 		approximateLen += v.Len or 0
@@ -43,7 +43,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	table.sort(structure, keyComparator)
 
-	local datatype = {
+	const datatype = {
 		Eval = "Dict",
 		Len = approximateLen,
 		BitLen = approximateBitLen ~= 0 and approximateBitLen or nil,
@@ -51,10 +51,10 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 	}
 
 	datatype.Read = function(reader: types.ReaderData)
-		local result = {}
+		const result = {}
 
 		for i = 1, len do
-			local key = structure[i]
+			const key = structure[i]
 			result[key] = format[key].Read(reader)
 		end
 
@@ -63,7 +63,7 @@ return function(format: { [any]: types.DatatypeInterface<any> }): types.Datatype
 
 	datatype.Write = function(writer: types.WriterData, value: { [any]: types.DatatypeInterface<any> })
 		for i = 1, len do
-			local key = structure[i]
+			const key = structure[i]
 			format[key].Write(writer, value[key])
 		end
 	end

@@ -1,33 +1,33 @@
 --!native
 --!optimize 2
 
-local BitReader = require(script.Parent.Parent.BitReader)
-local BitWriter = require(script.Parent.Parent.BitWriter)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const BitReader = require(script.Parent.Parent.BitReader)
+const BitWriter = require(script.Parent.Parent.BitWriter)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local bitr_read = BitReader.read
+const bitr_read = BitReader.read
 
-local bitw_alloc = BitWriter.alloc
-local bitw_write = BitWriter.write
+const bitw_alloc = BitWriter.alloc
+const bitw_write = BitWriter.write
 
-local read_u8 = Reader.u8
-local read_u16 = Reader.u16
+const read_u8 = Reader.u8
+const read_u16 = Reader.u16
 
-local write_alloc = Writer.alloc
-local write_u8 = Writer.u8
-local write_u16 = Writer.u16
+const write_alloc = Writer.alloc
+const write_u8 = Writer.u8
+const write_u16 = Writer.u16
 
-local DEBUG = types.DEBUG
-local PRECISION = 0xffff
-local PRECISION_INVERSE = 1 / PRECISION
+const DEBUG = types.DEBUG
+const PRECISION = 0xffff
+const PRECISION_INVERSE = 1 / PRECISION
 
 -- Potential improvement: If there are only two repeated keypoints, only write one.
 -- Low priority as that is already a poor use of NumberSequence.
 
 return function(valueType: types.DatatypeInterface<number>): types.DatatypeInterface<NumberSequence>
-	local read, write = valueType.Read, valueType.Write
+	const read, write = valueType.Read, valueType.Write
 
 	assert(valueType.Len, "NumberSequence valueType must be a numeric datatype")
 	if DEBUG then DEBUG.EnforceDatatype.AnyNumeric(valueType) end
@@ -37,12 +37,12 @@ return function(valueType: types.DatatypeInterface<number>): types.DatatypeInter
 		Len = 5 + valueType.len * 2, -- Minimum of 2 keypoints
 		Of = valueType,
 		Read = function(reader: types.ReaderData): NumberSequence
-			local len = read_u8(reader)
-			local array = table.create(len) :: { NumberSequenceKeypoint }
+			const len = read_u8(reader)
+			const array = table.create(len) :: { NumberSequenceKeypoint }
 
 			for i = 1, len do
-				local time = read_u16(reader) * PRECISION_INVERSE
-				local value = read(reader)
+				const time = read_u16(reader) * PRECISION_INVERSE
+				const value = read(reader)
 				local envelope
 				if bitr_read(reader, 1) == 1 then envelope = read(reader) end
 				array[i] = NumberSequenceKeypoint.new(time, value, envelope)
@@ -51,8 +51,8 @@ return function(valueType: types.DatatypeInterface<number>): types.DatatypeInter
 			return NumberSequence.new(array)
 		end,
 		Write = function(writer: types.WriterData, value: NumberSequence)
-			local keypoints = value.Keypoints
-			local len = #keypoints
+			const keypoints = value.Keypoints
+			const len = #keypoints
 
 			write_alloc(writer, 1 + len * 2) -- Allocate length for the length byte, and all time values
 			bitw_alloc(writer, len)
@@ -60,10 +60,10 @@ return function(valueType: types.DatatypeInterface<number>): types.DatatypeInter
 			write_u8(writer, len)
 
 			for i = 1, len do
-				local kp = keypoints[i]
+				const kp = keypoints[i]
 				write_u16(writer, kp.Time * PRECISION)
 				write(writer, kp.Value)
-				local envelope = kp.Envelope
+				const envelope = kp.Envelope
 				if envelope ~= 0 then
 					bitw_write(writer, 1, 1)
 					write(writer, envelope)

@@ -1,27 +1,27 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_i16 = Reader.i16
+const read_i16 = Reader.i16
 
-local write_alloc = Writer.alloc
-local write_i16 = Writer.i16
+const write_alloc = Writer.alloc
+const write_i16 = Writer.i16
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "R3i16",
 	Len = 12,
 	Read = function(reader: types.ReaderData): Region3int16
-		local min = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
-		local max = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
+		const min = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
+		const max = Vector3int16.new(read_i16(reader), read_i16(reader), read_i16(reader))
 
 		return Region3int16.new(min, max)
 	end,
 	Write = function(writer: types.WriterData, value: Region3int16)
-		local min = value.Min
-		local max = value.Max
+		const min = value.Min
+		const max = value.Max
 
 		write_alloc(writer, 12)
 		write_i16(writer, min.X)

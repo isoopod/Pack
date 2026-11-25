@@ -1,16 +1,16 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_i32 = Reader.i32
+const read_i32 = Reader.i32
 
-local write_alloc = Writer.alloc
-local write_i32 = Writer.i32
+const write_alloc = Writer.alloc
+const write_i32 = Writer.i32
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "i32",
 	Len = 4,
 	Read = function(reader: types.ReaderData): number

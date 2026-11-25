@@ -1,12 +1,12 @@
 --!native
 --!optimize 2
 
-local BitField = require(script.Parent.BitField)
-local types = require(script.Parent.Parent.types)
+const BitField = require(script.Parent.BitField)
+const types = require(script.Parent.Parent.types)
 
-local DEBUG = types.DEBUG
+const DEBUG = types.DEBUG
 
-local typePriority = {
+const typePriority = {
 	["number"] = 1,
 	["string"] = 2,
 	["boolean"] = 3,
@@ -17,8 +17,8 @@ local typePriority = {
 	["nil"] = 8,
 }
 
-local function keyComparator(a: any, b: any): boolean
-	local ta, tb = type(a), type(b)
+const function keyComparator(a: any, b: any): boolean
+	const ta, tb = type(a), type(b)
 	if ta ~= tb then return (typePriority[ta] :: number) < (typePriority[tb] :: number) end
 
 	if ta == "number" or ta == "string" then return a < b end
@@ -64,9 +64,9 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 		table.sort(reqStructure, keyComparator)
 	end
 
-	local occupancyField = BitField(optLen)
+	const occupancyField = BitField(optLen)
 
-	local datatype = {
+	const datatype = {
 		Eval = "SDict",
 		Len = approximateLen,
 		BitLen = approximateBitLen + (occupancyField.BitLen or 0),
@@ -75,19 +75,19 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	}
 
 	function datatype.Read(reader: types.ReaderData)
-		local result = {}
+		const result = {}
 
-		local occupied = occupancyField.Read(reader)
+		const occupied = occupancyField.Read(reader)
 		for i = 1, optLen do
 			if occupied[i] then
-				local key = optStructure[i]
+				const key = optStructure[i]
 				result[key] = optionalFormat[key].Read(reader)
 			end
 		end
 
 		if requiredFormat then
 			for i = 1, reqLen do
-				local key = reqStructure[i]
+				const key = reqStructure[i]
 				result[key] = requiredFormat[key].Read(reader)
 			end
 		end
@@ -96,10 +96,10 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 	end
 
 	function datatype.Write(writer: types.WriterData, value: { [any]: types.DatatypeInterface<any> })
-		local occupied: { boolean }, occupiedWrite: { any } = {}, {}
+		const occupied: { boolean }, occupiedWrite: { any } = {}, {}
 		for i = 1, optLen do
-			local key = optStructure[i]
-			local occ = value[key] ~= nil
+			const key = optStructure[i]
+			const occ = value[key] ~= nil
 			table.insert(occupied, occ)
 			if occ then table.insert(occupiedWrite, key) end
 		end
@@ -107,7 +107,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 		occupancyField.Write(writer, occupied)
 
 		for i = 1, #occupiedWrite do
-			local key = occupiedWrite[i]
+			const key = occupiedWrite[i]
 			optionalFormat[key].Write(writer, value[key])
 		end
 
@@ -115,7 +115,7 @@ return function(optionalFormat: { [any]: types.DatatypeInterface<any> }, require
 
 		if requiredFormat then
 			for i = 1, reqLen do
-				local key = reqStructure[i]
+				const key = reqStructure[i]
 				requiredFormat[key].Write(writer, value[key])
 			end
 		end

@@ -1,6 +1,6 @@
-local TestService = game:GetService("TestService")
+const TestService = game:GetService("TestService")
 
-local ConfigParser = require(script.Parent.ConfigParser)
+const ConfigParser = require(script.Parent.ConfigParser)
 
 -- Any debug logic should be written here to reduce the amount of native code
 
@@ -9,7 +9,7 @@ local ConfigParser = require(script.Parent.ConfigParser)
 	A simple logger class for debugging purposes.
 ]=]
 
-local Logger = {}
+const Logger = {}
 Logger.__index = Logger
 
 export type Logger = {
@@ -36,7 +36,7 @@ type _Logger = Logger & {
 	Creates a new Logger instance with an optional prefix.
 ]=]
 function Logger.new(prefix: string?): Logger
-	local self = {
+	const self = {
 		_status = 0,
 		_lines = {} :: { string },
 		_prefix = prefix or "",
@@ -102,7 +102,7 @@ end
 function Logger.StackTrace(self: _Logger, start: number?)
 	self:AddLine("Stacktrace:\n")
 	for i = (start or 2), 100 do -- Limit to 100 layers
-		local source: string, name: string, line: number = debug.info(i, "snl")
+		const source: string, name: string, line: number = debug.info(i, "snl")
 		if not source then return end
 		if line >= 0 then
 			self:AddLine(string.format("\t%s(%d): %s", source, line, name or "anonymous"))
@@ -189,7 +189,7 @@ debuggers.Array = {
 
 debuggers.SparseDictionary = {
 	CheckRequired = function(required: { any }?, values: { [any]: any })
-		local logs = Logger.new()
+		const logs = Logger.new()
 		for _, key in required or {} do
 			if values[key] == nil then
 				logs:SetStatus(2)
@@ -202,7 +202,7 @@ debuggers.SparseDictionary = {
 
 debuggers.Union = {
 	CheckDatatypesSupported = function(args: { any })
-		local logs = Logger.new()
+		const logs = Logger.new()
 		for _, dt in args do
 			if not dt.Eval then
 				logs:SetStatus(2)
@@ -213,5 +213,7 @@ debuggers.Union = {
 		logs:WriteLogs()
 	end,
 }
+
+table.freeze(Logger)
 
 return debuggers

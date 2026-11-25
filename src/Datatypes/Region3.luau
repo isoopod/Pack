@@ -1,30 +1,30 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_f32 = Reader.f32
+const read_f32 = Reader.f32
 
-local write_alloc = Writer.alloc
-local write_f32 = Writer.f32
+const write_alloc = Writer.alloc
+const write_f32 = Writer.f32
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "R3",
 	Len = 24,
 	Read = function(reader: types.ReaderData): Region3
-		local min: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any
-		local max: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any
+		const min: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any
+		const max: Vector3 = vector.create(read_f32(reader), read_f32(reader), read_f32(reader)) :: any
 
 		return Region3.new(min, max)
 	end,
 	Write = function(writer: types.WriterData, value: Region3)
-		local position = value.CFrame.Position
-		local halfSize = value.Size / 2
+		const position = value.CFrame.Position
+		const halfSize = value.Size / 2
 
-		local min = position - halfSize
-		local max = position + halfSize
+		const min = position - halfSize
+		const max = position + halfSize
 
 		write_alloc(writer, 24)
 		write_f32(writer, min.X)

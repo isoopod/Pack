@@ -1,25 +1,25 @@
 --!native
 --!optimize 2
 
-local CollectionService = game:GetService("CollectionService")
-local RunService = game:GetService("RunService")
-local SharedTableRegistry = game:GetService("SharedTableRegistry")
+const CollectionService = game:GetService("CollectionService")
+const RunService = game:GetService("RunService")
+const SharedTableRegistry = game:GetService("SharedTableRegistry")
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_u32 = Reader.u32
+const read_u32 = Reader.u32
 
-local write_alloc = Writer.alloc
-local write_u32 = Writer.u32
+const write_alloc = Writer.alloc
+const write_u32 = Writer.u32
 
-local IN_ACTOR = script:GetActor() ~= nil
-local IS_SERVER = RunService:IsServer()
+const IN_ACTOR = script:GetActor() ~= nil
+const IS_SERVER = RunService:IsServer()
 
-local PREFIX = IS_SERVER and "PACK_SREF" or "PACK_CREF"
+const PREFIX = IS_SERVER and "PACK_SREF" or "PACK_CREF"
 
-local Instance_Refs = SharedTableRegistry:GetSharedTable("PACK_INSTANCE_REFS")
+const Instance_Refs = SharedTableRegistry:GetSharedTable("PACK_INSTANCE_REFS")
 
 -- WARNING: Instances cannot cross the server client boundary this way, if you are making your own networking library using Pack, pass instances in a separate refs table.
 -- This is targetted towards serializing references to instances to send through SharedTables.
@@ -35,11 +35,11 @@ if IS_SERVER and types.cfg.persistInstanceRefs then setcount = function(count: n
 end end
 Instance_Refs.count = script:GetAttribute("n") or -1
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "Inst_Ref",
 	Len = 4,
 	Read = function(reader: types.ReaderData): Instance?
-		local ref = read_u32(reader)
+		const ref = read_u32(reader)
 
 		return CollectionService:GetTagged(`{PREFIX}{ref}`)[1]
 	end,

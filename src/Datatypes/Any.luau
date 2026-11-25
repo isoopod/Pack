@@ -1,51 +1,51 @@
 --!native
 --!optimize 2
 
-local Array = require(script.Parent.Array)
-local Boolean = require(script.Parent.Boolean)
-local Buffer16 = require(script.Parent.Buffer16)
-local Buffer24 = require(script.Parent.Buffer24)
-local Buffer32 = require(script.Parent.Buffer32)
-local Buffer8 = require(script.Parent.Buffer8)
-local CFrame = require(script.Parent.CFrame)
-local Color3 = require(script.Parent.Color3)
-local Color3float32 = require(script.Parent.Color3float32)
-local DateTime = require(script.Parent.DateTime)
-local Float64 = require(script.Parent.Float64)
-local Instance = require(script.Parent.Instance)
-local Int16 = require(script.Parent.Int16)
-local Int32 = require(script.Parent.Int32)
-local Int8 = require(script.Parent.Int8)
-local Map = require(script.Parent.Map)
-local Null = require(script.Parent.Null)
-local Region3 = require(script.Parent.Region3)
-local Region3int16 = require(script.Parent.Region3int16)
-local String16 = require(script.Parent.String16)
-local String24 = require(script.Parent.String24)
-local String32 = require(script.Parent.String32)
-local String8 = require(script.Parent.String8)
-local UDim = require(script.Parent.UDim)
-local UDim2 = require(script.Parent.UDim2)
-local UInt16 = require(script.Parent.UInt16)
-local UInt32 = require(script.Parent.UInt32)
-local UInt8 = require(script.Parent.UInt8)
-local Union = require(script.Parent.Union)
-local Vector2 = require(script.Parent.Vector2)
-local Vector2int16 = require(script.Parent.Vector2int16)
-local Vector3 = require(script.Parent.Vector3)
-local Vector3int16 = require(script.Parent.Vector3int16)
-local types = require(script.Parent.Parent.types)
+const Array = require(script.Parent.Array)
+const Boolean = require(script.Parent.Boolean)
+const Buffer16 = require(script.Parent.Buffer16)
+const Buffer24 = require(script.Parent.Buffer24)
+const Buffer32 = require(script.Parent.Buffer32)
+const Buffer8 = require(script.Parent.Buffer8)
+const CFrame = require(script.Parent.CFrame)
+const Color3 = require(script.Parent.Color3)
+const Color3float32 = require(script.Parent.Color3float32)
+const DateTime = require(script.Parent.DateTime)
+const Float64 = require(script.Parent.Float64)
+const Instance = require(script.Parent.Instance)
+const Int16 = require(script.Parent.Int16)
+const Int32 = require(script.Parent.Int32)
+const Int8 = require(script.Parent.Int8)
+const Map = require(script.Parent.Map)
+const Null = require(script.Parent.Null)
+const Region3 = require(script.Parent.Region3)
+const Region3int16 = require(script.Parent.Region3int16)
+const String16 = require(script.Parent.String16)
+const String24 = require(script.Parent.String24)
+const String32 = require(script.Parent.String32)
+const String8 = require(script.Parent.String8)
+const UDim = require(script.Parent.UDim)
+const UDim2 = require(script.Parent.UDim2)
+const UInt16 = require(script.Parent.UInt16)
+const UInt32 = require(script.Parent.UInt32)
+const UInt8 = require(script.Parent.UInt8)
+const Union = require(script.Parent.Union)
+const Vector2 = require(script.Parent.Vector2)
+const Vector2int16 = require(script.Parent.Vector2int16)
+const Vector3 = require(script.Parent.Vector3)
+const Vector3int16 = require(script.Parent.Vector3int16)
+const types = require(script.Parent.Parent.types)
 
-local datatype = {}
+const datatype = {}
 
 local any: types.DatatypeInterface<any>? -- Deferred definition
 
 -- Lazy initialisation
-local function getAny(): types.DatatypeInterface<any>
+const function getAny(): types.DatatypeInterface<any>
 	if any == nil then
 		-- These depend on datatype being fully defined
-		local tbl = Map(datatype, datatype)
-		local array = Array(datatype, UInt32)
+		const tbl = Map(datatype, datatype)
+		const array = Array(datatype, UInt32)
 
 		any = Union(
 			UInt8,

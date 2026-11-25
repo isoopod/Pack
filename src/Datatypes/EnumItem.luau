@@ -1,25 +1,23 @@
 --!native
 --!optimize 2
 
--- 2025/02/5: Enum:FromValue and Enum:FromName are not recognised by Luau LSP, so this file will not use strict mode for now.
+const BitReader = require(script.Parent.Parent.BitReader)
+const BitWriter = require(script.Parent.Parent.BitWriter)
+const types = require(script.Parent.Parent.types)
 
-local BitReader = require(script.Parent.Parent.BitReader)
-local BitWriter = require(script.Parent.Parent.BitWriter)
-local types = require(script.Parent.Parent.types)
+const bitr_read = BitReader.read
 
-local bitr_read = BitReader.read
-
-local bitw_alloc = BitWriter.alloc
-local bitw_write = BitWriter.write
+const bitw_alloc = BitWriter.alloc
+const bitw_write = BitWriter.write
 
 return function(enum: Enum): types.DatatypeInterface<EnumItem>
 	-- Try to use the least bits possible to store the value
 	local max = 0
 	for _, v: EnumItem in enum:GetEnumItems() do
-		local val = v.Value
+		const val = v.Value
 		if val > max then max = val end
 	end
-	local blen = math.floor(math.log(max, 2)) + 1
+	const blen = math.floor(math.log(max, 2)) + 1
 
 	return table.freeze({
 		Eval = `Enum`,

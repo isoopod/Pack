@@ -2,7 +2,7 @@
 --!optimize 2
 
 --Modules
-local types = require(script.Parent.types)
+const types = require(script.Parent.types)
 
 --[=[
 	@class Reader
@@ -10,7 +10,7 @@ local types = require(script.Parent.types)
 	A reader instance is created with the .new constructor and modified by the library's functions.
 ]=]
 
-local Reader = {}
+const Reader = {}
 
 --[=[
 	@function moveCursor
@@ -35,7 +35,7 @@ end
 	Reads an unsigned 8-bit integer from the buffer and moves the cursor forwards 1 byte.
 ]=]
 function Reader.u8(self: types.ReaderData): number
-	local value = buffer.readu8(self._buffer, self.Cursor)
+	const value = buffer.readu8(self._buffer, self.Cursor)
 	self.Cursor += 1
 	return value
 end
@@ -48,7 +48,7 @@ end
 	Reads an unsigned 16-bit integer from the buffer and moves the cursor forwards 2 bytes.
 ]=]
 function Reader.u16(self: types.ReaderData): number
-	local value = buffer.readu16(self._buffer, self.Cursor)
+	const value = buffer.readu16(self._buffer, self.Cursor)
 	self.Cursor += 2
 	return value
 end
@@ -61,7 +61,7 @@ end
 	Reads an unsigned 32-bit integer from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.u32(self: types.ReaderData): number
-	local value = buffer.readu32(self._buffer, self.Cursor)
+	const value = buffer.readu32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -74,7 +74,7 @@ end
 	Reads a signed 8-bit integer from the buffer and moves the cursor forwards 1 byte.
 ]=]
 function Reader.i8(self: types.ReaderData): number
-	local value = buffer.readi8(self._buffer, self.Cursor)
+	const value = buffer.readi8(self._buffer, self.Cursor)
 	self.Cursor += 1
 	return value
 end
@@ -87,7 +87,7 @@ end
 	Reads a signed 16-bit integer from the buffer and moves the cursor forwards 2 bytes.
 ]=]
 function Reader.i16(self: types.ReaderData): number
-	local value = buffer.readi16(self._buffer, self.Cursor)
+	const value = buffer.readi16(self._buffer, self.Cursor)
 	self.Cursor += 2
 	return value
 end
@@ -100,7 +100,7 @@ end
 	Reads a signed 32-bit integer from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.i32(self: types.ReaderData): number
-	local value = buffer.readi32(self._buffer, self.Cursor)
+	const value = buffer.readi32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -134,8 +134,8 @@ end
 	:::
 ]=]
 function Reader.nBitInt(self: types.ReaderData, n: number, bitOffset: number): number
-	local value = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
-	local sign = bit32.lshift(1, n - 1)
+	const value = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, n)
+	const sign = bit32.lshift(1, n - 1)
 
 	if bit32.band(value, sign) ~= 0 then return value - 2 ^ n end
 	return value
@@ -158,13 +158,13 @@ end
 	:::
 ]=]
 function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffset: number): number
-	local totalBits = 1 + n + m
-	local combined = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, totalBits)
+	const totalBits = 1 + n + m
+	const combined = buffer.readbits(self._buffer, self.Cursor * 8 + bitOffset, totalBits)
 
-	local sign = bit32.rshift(combined, n + m)
-	local maxExponent = bit32.lshift(1, n) - 1
-	local storedExponent = bit32.band(bit32.rshift(combined, m), maxExponent)
-	local mantissa = bit32.band(combined, bit32.lshift(1, m) - 1)
+	const sign = bit32.rshift(combined, n + m)
+	const maxExponent = bit32.lshift(1, n) - 1
+	const storedExponent = bit32.band(bit32.rshift(combined, m), maxExponent)
+	const mantissa = bit32.band(combined, bit32.lshift(1, m) - 1)
 
 	-- If the value is zero, return immediately.
 	if storedExponent == 0 and mantissa == 0 then return 0 end
@@ -178,7 +178,7 @@ function Reader.nBitFloat(self: types.ReaderData, n: number, m: number, bitOffse
 		end
 	end
 
-	local bias = bit32.lshift(1, n - 1) - 1
+	const bias = bit32.lshift(1, n - 1) - 1
 	local exponent: number, value: number
 
 	if storedExponent == 0 then
@@ -204,7 +204,7 @@ end
 	Reads a 32-bit floating point number from the buffer and moves the cursor forwards 4 bytes.
 ]=]
 function Reader.f32(self: types.ReaderData): number
-	local value = buffer.readf32(self._buffer, self.Cursor)
+	const value = buffer.readf32(self._buffer, self.Cursor)
 	self.Cursor += 4
 	return value
 end
@@ -217,7 +217,7 @@ end
 	Reads a 64-bit floating point number from the buffer and moves the cursor forwards 8 bytes.
 ]=]
 function Reader.f64(self: types.ReaderData): number
-	local value = buffer.readf64(self._buffer, self.Cursor)
+	const value = buffer.readf64(self._buffer, self.Cursor)
 	self.Cursor += 8
 	return value
 end
@@ -231,7 +231,7 @@ end
 	Reads a string of length `count` bytes from the buffer and pushes the cursor `count` bytes forwards.
 ]=]
 function Reader.string(self: types.ReaderData, count: number): string
-	local value = buffer.readstring(self._buffer, self.Cursor, count)
+	const value = buffer.readstring(self._buffer, self.Cursor, count)
 	self.Cursor += count
 	return value
 end
@@ -244,9 +244,9 @@ end
 	Peeks the remaining part of the entire buffer, without moving the cursor.
 ]=]
 function Reader.peekRemainder(self: types.ReaderData): buffer
-	local b, c = self._buffer, self.Cursor
-	local len = buffer.len(b) - c
-	local result = buffer.create(len)
+	const b, c = self._buffer, self.Cursor
+	const len = buffer.len(b) - c
+	const result = buffer.create(len)
 	buffer.copy(result, 0, b, c)
 	return result
 end
@@ -261,7 +261,7 @@ end
 	Creates a new reader instance from a written packet
 ]=]
 function Reader.new(packet: buffer): types.ReaderData
-	local self = {}
+	const self = {}
 
 	self.Cursor = 0
 	self._buffer = packet

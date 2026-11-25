@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.types)
+const types = require(script.Parent.types)
 
-local GROWTH_FACTOR = 2
+const GROWTH_FACTOR = 2
 
 --[=[
 	@class BitWriter
@@ -11,7 +11,7 @@ local GROWTH_FACTOR = 2
 	A `BitWriter` accumulates a series of bit-level write and move operations, which are then appended onto the main buffer during finalisation.
 ]=]
 
-local Writer = {}
+const Writer = {}
 
 --[=[
 	@function alloc
@@ -22,8 +22,8 @@ local Writer = {}
 	This is used to reserve bits ahead of time.
 ]=]
 function Writer.alloc(self: types.WriterData, bits: number)
-	local currentSize = self._bitLen
-	local requiredSize = currentSize + bits
+	const currentSize = self._bitLen
+	const requiredSize = currentSize + bits
 
 	self._bitLen = requiredSize
 
@@ -36,13 +36,13 @@ function Writer.alloc(self: types.WriterData, bits: number)
 		until newSize >= requiredSize
 
 		-- Convert bits to bytes
-		local currentByteSize = math.ceil(currentSize / 8)
-		local newByteSize = math.ceil(newSize / 8)
+		const currentByteSize = math.ceil(currentSize / 8)
+		const newByteSize = math.ceil(newSize / 8)
 
-		local newBuffer = buffer.create(newByteSize)
+		const newBuffer = buffer.create(newByteSize)
 
 		-- BitBuffer writes right to left, so we need to copy the existing data to the end of the new buffer.
-		local offset = newByteSize - currentByteSize
+		const offset = newByteSize - currentByteSize
 		buffer.copy(newBuffer, offset, self._bitBuffer, 0, currentByteSize)
 
 		self._bitCursor += offset * 8
@@ -88,14 +88,14 @@ function Writer.Finalize(self: types.WriterData)
 	local b = self._bitBuffer
 
 	-- Trim the buffer if necessary
-	local bitLen = self._bitLen
-	local byteLen = math.ceil(bitLen / 8) -- Minimum needed storage
+	const bitLen = self._bitLen
+	const byteLen = math.ceil(bitLen / 8) -- Minimum needed storage
 
 	if bitLen < self._allocatedBitLen then
-		local newBuffer = buffer.create(byteLen)
+		const newBuffer = buffer.create(byteLen)
 
-		local oldByteLen = math.ceil(self._allocatedBitLen / 8)
-		local offset = oldByteLen - byteLen
+		const oldByteLen = math.ceil(self._allocatedBitLen / 8)
+		const offset = oldByteLen - byteLen
 
 		-- Copy only the meaningful bytes (shift to front)
 		buffer.copy(newBuffer, 0, self._bitBuffer, offset, byteLen)

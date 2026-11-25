@@ -1,22 +1,22 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.Parent.types)
+const types = require(script.Parent.Parent.types)
 
-local UInt16 = require(script.Parent.UInt16)
+const UInt16 = require(script.Parent.UInt16)
 
-local DEBUG = types.DEBUG
+const DEBUG = types.DEBUG
 
 return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.DatatypeInterface<V>, lengthType: types.DatatypeInterface<number>?): types.DatatypeInterface<{ [K]: V }>
 	lengthType = lengthType or UInt16
-	local lenRead, lenWrite = lengthType.Read, lengthType.Write
+	const lenRead, lenWrite = lengthType.Read, lengthType.Write
 
-	local kread, kwrite = keyType.Read, keyType.Write
-	local vread, vwrite = valueType.Read, valueType.Write
+	const kread, kwrite = keyType.Read, keyType.Write
+	const vread, vwrite = valueType.Read, valueType.Write
 
 	if DEBUG then DEBUG.Array.CheckLenType(lengthType) end
 
-	local datatype = {
+	const datatype = {
 		Eval = "Map",
 		Len = lengthType.Len,
 		Key = keyType,
@@ -24,9 +24,9 @@ return function<K, V>(keyType: types.DatatypeInterface<K>, valueType: types.Data
 	}
 
 	datatype.Read = function(reader: types.ReaderData): { [K]: V }
-		local len = lenRead(reader)
+		const len = lenRead(reader)
 
-		local map = {}
+		const map = {}
 
 		for _ = 1, len do
 			map[kread(reader)] = vread(reader)

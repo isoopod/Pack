@@ -1,16 +1,16 @@
 --!native
 --!optimize 2
 
-local BitReader = require(script.Parent.Parent.BitReader)
-local BitWriter = require(script.Parent.Parent.BitWriter)
-local types = require(script.Parent.Parent.types)
+const BitReader = require(script.Parent.Parent.BitReader)
+const BitWriter = require(script.Parent.Parent.BitWriter)
+const types = require(script.Parent.Parent.types)
 
-local bitr_read = BitReader.read
+const bitr_read = BitReader.read
 
-local bitw_alloc = BitWriter.alloc
-local bitw_write = BitWriter.write
+const bitw_alloc = BitWriter.alloc
+const bitw_write = BitWriter.write
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "bool",
 	BitLen = 1,
 	Read = function(reader: types.ReaderData): boolean

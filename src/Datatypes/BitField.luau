@@ -4,16 +4,16 @@
 -- Leverages the packet bit buffer to implement a fixed-length bitfield efficiently.
 -- TODO: Profile writebits and readbits to see if chunking should be reimplemented.
 
-local BitReader = require(script.Parent.Parent.BitReader)
-local BitWriter = require(script.Parent.Parent.BitWriter)
-local types = require(script.Parent.Parent.types)
+const BitReader = require(script.Parent.Parent.BitReader)
+const BitWriter = require(script.Parent.Parent.BitWriter)
+const types = require(script.Parent.Parent.types)
 
-local bitr_read = BitReader.read
+const bitr_read = BitReader.read
 
-local bitw_alloc = BitWriter.alloc
-local bitw_write = BitWriter.write
+const bitw_alloc = BitWriter.alloc
+const bitw_write = BitWriter.write
 
-local table_create = table.create
+const table_create = table.create
 
 return function(length: number): types.DatatypeInterface<{ boolean }>
 	-- Returns a datatype that reads and writes a sequence of booleans as bits.
@@ -21,15 +21,15 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 		Eval = "BitField",
 		BitLen = length,
 		Read = function(reader: types.ReaderData): { boolean }
-			local len = length -- Capture upvalue once
-			local result = table_create(len, false) :: { boolean }
+			const len = length -- Capture upvalue once
+			const result = table_create(len, false) :: { boolean }
 			local idx = 1
 			local remaining = len
 
-			local read = bitr_read
+			const read = bitr_read
 			while remaining > 0 do
-				local chunkSize = math.min(32, remaining)
-				local chunk = read(reader, chunkSize)
+				const chunkSize = math.min(32, remaining)
+				const chunk = read(reader, chunkSize)
 
 				for i = 0, chunkSize - 1 do
 					result[idx] = bit32.extract(chunk, i) == 1
@@ -44,14 +44,14 @@ return function(length: number): types.DatatypeInterface<{ boolean }>
 
 		Write = function(writer: types.WriterData, value: { boolean })
 			-- Reserve space for all bits
-			local len = length -- Capture upvalue once
+			const len = length -- Capture upvalue once
 			bitw_alloc(writer, len)
 			local idx = 1
 			local remaining = len
 
-			local write = bitw_write
+			const write = bitw_write
 			while remaining > 0 do
-				local chunkSize = math.min(32, remaining)
+				const chunkSize = math.min(32, remaining)
 				local chunk = 0
 
 				for i = 0, chunkSize - 1 do

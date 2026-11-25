@@ -9,27 +9,27 @@
 	they use work correctly in luau
 --]]
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_u32 = Reader.u32
-local read_i32 = Reader.i32
+const read_u32 = Reader.u32
+const read_i32 = Reader.i32
 
-local write_alloc = Writer.alloc
-local write_u32 = Writer.u32
-local write_i32 = Writer.i32
+const write_alloc = Writer.alloc
+const write_u32 = Writer.u32
+const write_i32 = Writer.i32
 
-local POW32 = 2 ^ 32
+const POW32 = 2 ^ 32
 
-local datatype64 = table.freeze({
+const datatype64 = table.freeze({
 	Eval = "i64",
 	Len = 8,
 
 	Read = function(reader: types.ReaderData): number
 		-- Read low unsigned and high signed segments
-		local low = read_u32(reader)
-		local high = read_i32(reader)
+		const low = read_u32(reader)
+		const high = read_i32(reader)
 
 		-- Reconstruct signed 64-bit int
 		return high * POW32 + low
@@ -39,8 +39,8 @@ local datatype64 = table.freeze({
 		write_alloc(writer, 8)
 
 		-- Split into low unsigned and high signed segments
-		local low = value % POW32
-		local high = value // POW32
+		const low = value % POW32
+		const high = value // POW32
 
 		write_u32(writer, low)
 		write_i32(writer, high)

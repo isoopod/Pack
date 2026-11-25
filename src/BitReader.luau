@@ -1,7 +1,7 @@
 --!native
 --!optimize 2
 
-local types = require(script.Parent.types)
+const types = require(script.Parent.types)
 
 --[=[
 	@class BitReader
@@ -9,7 +9,7 @@ local types = require(script.Parent.types)
 	A `BitReader` consumes a binary buffer from end to start, reading or skipping specific numbers of bits.
 ]=]
 
-local Reader = {}
+const Reader = {}
 
 --[=[
 	@function moveCursor

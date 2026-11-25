@@ -1,18 +1,18 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_f32 = Reader.f32
-local read_i16 = Reader.i16
+const read_f32 = Reader.f32
+const read_i16 = Reader.i16
 
-local write_alloc = Writer.alloc
-local write_f32 = Writer.f32
-local write_i16 = Writer.i16
+const write_alloc = Writer.alloc
+const write_f32 = Writer.f32
+const write_i16 = Writer.i16
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "UD",
 	Len = 6,
 	Read = function(reader: types.ReaderData): UDim

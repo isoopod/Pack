@@ -2,11 +2,11 @@
 --!optimize 2
 
 -- Modules
-local Reader = require(script.Reader)
-local Writer = require(script.Writer)
-local types = require(script.types)
+const Reader = require(script.Reader)
+const Writer = require(script.Writer)
+const types = require(script.types)
 
-local Pack = {}
+const Pack = {}
 
 Pack.VERSION = "0.13.0"
 
@@ -25,7 +25,7 @@ Pack.VERSION = "0.13.0"
 --- If true, disables the read protection that checks if the entire packet was read.
 --- This is not recommended unless you have a specific use case that requires it.
 
-local Schema = {}
+const Schema = {}
 
 --[=[
 	@method Write
@@ -36,16 +36,16 @@ local Schema = {}
 	Writes a packet (buffer) from the provided input, which should follow the structure of the schema.
 ]=]
 function Schema.Write(self: _Schema, ...: any): (buffer, types.refs?)
-	local refs = {}
-	local writer = Writer.new(self._approxLen, self._approxBitLen)
+	const refs = {}
+	const writer = Writer.new(self._approxLen, self._approxBitLen)
 	writer.refs = refs
 
-	local input = { ... }
+	const input = { ... }
 	for i = 1, self._args do
 		self._writers[i](writer, input[i])
 	end
 
-	local packed = Writer.Finalize(writer)
+	const packed = Writer.Finalize(writer)
 	return packed, #refs > 0 and refs or nil
 end
 
@@ -58,17 +58,17 @@ end
 	Reads a packet (buffer) that was written with the same schema and outputs a reconstruction of the packet's input.
 ]=]
 function Schema.Read(self: _Schema, packet: buffer, refs: types.refs?): ...any
-	local reader = Reader.new(packet)
+	const reader = Reader.new(packet)
 	reader.refs = refs :: any
 
-	local tuple = table.create(self._args)
+	const tuple = table.create(self._args)
 	for i = 1, self._args do
 		tuple[i] = self._readers[i](reader)
 	end
 
 	if self.DisableReadProtection ~= true then
-		local len = buffer.len(packet)
-		local totalBytesRead = reader.Cursor + math.ceil((len * 8 - reader.BitCursor) / 8)
+		const len = buffer.len(packet)
+		const totalBytesRead = reader.Cursor + math.ceil((len * 8 - reader.BitCursor) / 8)
 		if totalBytesRead ~= len then
 			-- If the provided packet is longer than what we actually read, we know something has gone wrong
 			-- This prevents most cases where unrelated data that somehow doesnt cause a parse error will be caught
@@ -112,10 +112,10 @@ table.freeze(Schema)
 	```
 ]=]
 function Pack.Define(_: types.Pack, ...: types.DatatypeInterface<any>): GenericSchema
-	local self: _Schema = setmetatable({}, { __index = Schema }) :: any
+	const self: _Schema = setmetatable({}, { __index = Schema }) :: any
 
-	local schemas = { ... }
-	local args = #schemas
+	const schemas = { ... }
+	const args = #schemas
 
 	self._s1 = schemas[1]
 	self._args = args
@@ -148,7 +148,7 @@ end
 	Does not support tuple schemas.
 ]=]
 function Pack.Reflect(self: types.Pack, schema: _Schema, path: string): GenericSchema?
-	local nodes = string.split(path, "/")
+	const nodes = string.split(path, "/")
 	local current = schema._s1
 
 	for _, key in nodes do
@@ -156,7 +156,7 @@ function Pack.Reflect(self: types.Pack, schema: _Schema, path: string): GenericS
 		if current.Eval ~= "Dict" and current.Eval ~= "SDict" then return nil end
 
 		-- Look up the key in standard or optional formats
-		local nextNode = (current.format and current.format[key]) or (current.optFormat and current.optFormat[key])
+		const nextNode = (current.format and current.format[key]) or (current.optFormat and current.optFormat[key])
 		if not nextNode then return nil end
 		current = nextNode
 	end
@@ -245,16 +245,16 @@ function Pack.__index(self: { [string]: any }, key)
 	if Pack[key] then return Pack[key] end
 
 	-- Apply alias for lazy-loading
-	local aliases = rawget(self, "_aliases")
+	const aliases = rawget(self, "_aliases")
 	key = aliases[key] or key
 
 	-- Lazy-load datatypes
 	-- Retrieve from cache if present
-	local cache: { [string]: any } = rawget(self, "_cachedDatatypes") :: any
+	const cache: { [string]: any } = rawget(self, "_cachedDatatypes") :: any
 	if cache[key] then return cache[key] end
 
 	-- Load and cache datatype
-	local s, datatype = pcall(require :: any, script.Datatypes:FindFirstChild(key :: any))
+	const s, datatype = pcall(require :: any, script.Datatypes:FindFirstChild(key :: any))
 	assert(s, `Unable to access datatype Pack.{key}. Datatype not found: {datatype}`)
 	cache[key] = datatype
 	rawset(self, "_cachedDatatypes", cache)

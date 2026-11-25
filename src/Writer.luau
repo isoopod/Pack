@@ -2,10 +2,10 @@
 --!optimize 2
 
 --Modules
-local BitWriter = require(script.Parent.BitWriter)
-local types = require(script.Parent.types)
+const BitWriter = require(script.Parent.BitWriter)
+const types = require(script.Parent.types)
 
-local GROWTH_FACTOR = 2
+const GROWTH_FACTOR = 2
 
 --[=[
 	@class Writer
@@ -13,7 +13,7 @@ local GROWTH_FACTOR = 2
 	A writer instance is created with the .new constructor, and is modified with the library's functions.
 ]=]
 
-local Writer = {}
+const Writer = {}
 
 --[=[
 	@function alloc
@@ -24,8 +24,8 @@ local Writer = {}
 	Functions that do allocate will be marked with the Allocating tag. Otherwise, figure out how many bytes you need to allocate and call Writer.alloc
 ]=]
 function Writer.alloc(self: types.WriterData, bytes: number)
-	local currentSize = self._len
-	local requiredSize = currentSize + bytes
+	const currentSize = self._len
+	const requiredSize = currentSize + bytes
 
 	self._len = requiredSize
 
@@ -37,7 +37,7 @@ function Writer.alloc(self: types.WriterData, bytes: number)
 			newSize = math.ceil(newSize * GROWTH_FACTOR)
 		until newSize >= requiredSize
 
-		local newBuffer = buffer.create(newSize)
+		const newBuffer = buffer.create(newSize)
 		buffer.copy(newBuffer, 0, self._buffer, 0, currentSize)
 
 		self._buffer = newBuffer
@@ -196,23 +196,23 @@ function Writer.nBitFloat(self: types.WriterData, value: number, n: number, m: n
 		mantissa = 0
 	else
 		sign = value < 0 and 1 or 0
-		local fAbs = math.abs(value)
-		local bias = (bit32.lshift(1, n - 1)) - 1
+		const fAbs = math.abs(value)
+		const bias = (bit32.lshift(1, n - 1)) - 1
 		if fAbs == 0 then
 			-- Zero is represented with all exponent and mantissa bits zero.
 			storedExponent = 0
 			mantissa = 0
 		else
 			-- Get normalized fraction and exponent via frexp.
-			local fNormalized, exponent = math.frexp(fAbs)
+			const fNormalized, exponent = math.frexp(fAbs)
 			-- Adjust to have fNormalized in [1,2) and e = exponent - 1.
-			local e = exponent - 1
+			const e = exponent - 1
 
 			if e + bias >= 1 then
 				-- Normalised number.
 				storedExponent = e + bias
 				-- The implicit bit is removed; fraction = fNormalized * 2 - 1.
-				local fraction = (fNormalized * 2) - 1
+				const fraction = (fNormalized * 2) - 1
 				-- Round the mantissa to nearest.
 				mantissa = math.floor(fraction * (2 ^ m) + 0.5)
 				-- Handle rounding overflow.
@@ -344,7 +344,7 @@ end
 	Creates an empty writer instance
 ]=]
 function Writer.new(approximateLen: number?, approximateBitLen: number?): types.WriterData
-	local self = {}
+	const self = {}
 
 	self.nRefs = 0
 
@@ -353,7 +353,7 @@ function Writer.new(approximateLen: number?, approximateBitLen: number?): types.
 	self._cursor = 0
 	self._buffer = buffer.create(approximateLen or 0)
 
-	local bytes = math.ceil((approximateBitLen or 0) / 8)
+	const bytes = math.ceil((approximateBitLen or 0) / 8)
 
 	self._bitLen = 0
 	self._allocatedBitLen = bytes * 8

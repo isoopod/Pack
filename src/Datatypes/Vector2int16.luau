@@ -1,17 +1,17 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_i16 = Reader.i16
+const read_i16 = Reader.i16
 
-local write_alloc = Writer.alloc
-local write_i16 = Writer.i16
+const write_alloc = Writer.alloc
+const write_i16 = Writer.i16
 
 -- Use Vector2 directly, since its nicer to work with
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "V2i16",
 	Len = 4,
 	Read = function(reader: types.ReaderData): Vector2int16

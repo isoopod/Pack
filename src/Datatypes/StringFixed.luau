@@ -1,14 +1,14 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_string = Reader.string
+const read_string = Reader.string
 
-local write_alloc = Writer.alloc
-local write_string = Writer.string
+const write_alloc = Writer.alloc
+const write_string = Writer.string
 
 return function(length: number): types.DatatypeInterface<string>
 	return table.freeze({

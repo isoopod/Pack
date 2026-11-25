@@ -1,19 +1,19 @@
 --!native
 --!optimize 2
 
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_u16 = Reader.u16
+const read_u16 = Reader.u16
 
-local write_alloc = Writer.alloc
-local write_u16 = Writer.u16
+const write_alloc = Writer.alloc
+const write_u16 = Writer.u16
 
-local PRECISION = 0xffff
-local PRECISION_INVERSE = 1 / PRECISION
+const PRECISION = 0xffff
+const PRECISION_INVERSE = 1 / PRECISION
 
-local datatype = table.freeze({
+const datatype = table.freeze({
 	Eval = "frac",
 	Len = 2,
 	Read = function(reader: types.ReaderData): number

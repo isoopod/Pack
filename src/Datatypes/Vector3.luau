@@ -1,19 +1,19 @@
 --!native
 --!optimize 2
 
-local Float32 = require(script.Parent.Float32)
-local Reader = require(script.Parent.Parent.Reader)
-local Writer = require(script.Parent.Parent.Writer)
-local types = require(script.Parent.Parent.types)
+const Float32 = require(script.Parent.Float32)
+const Reader = require(script.Parent.Parent.Reader)
+const Writer = require(script.Parent.Parent.Writer)
+const types = require(script.Parent.Parent.types)
 
-local read_f32 = Reader.f32
+const read_f32 = Reader.f32
 
-local write_alloc = Writer.alloc
-local write_f32 = Writer.f32
+const write_alloc = Writer.alloc
+const write_f32 = Writer.f32
 
-local DEBUG = types.DEBUG
+const DEBUG = types.DEBUG
 
-local default = table.freeze({
+const default = table.freeze({
 	Eval = "V3",
 	of = Float32,
 	Len = 12,
@@ -31,7 +31,7 @@ local default = table.freeze({
 return function(valueType: types.DatatypeInterface<number>?): types.DatatypeInterface<vector>
 	if not valueType then return default end
 
-	local read, write = valueType.Read, valueType.Write
+	const read, write = valueType.Read, valueType.Write
 	if DEBUG then
 		DEBUG.EnforceDatatype.AnyNumeric(valueType)
 		if valueType.Eval == "f64" then warn("Float64 should not be used in a vector (vector precision is limited to Float32)") end

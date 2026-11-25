@@ -309,16 +309,16 @@ type function nullableKeys(ty: type)
 	if not ty:is("table") then error("nullableKeys can only be called on table types") end
 
 	-- create a fresh table-type to populate
-	local newTable = types.newtable()
+	const newTable = types.newtable()
 
 	-- iterate over each key (singleton string type) in the original table
 	for prop in ty:properties() do
 		-- get the original property’s read type
-		local origType = ty:readproperty(prop)
+		const origType = ty:readproperty(prop)
 		if origType then
 			-- union it with nil
-			local nilType = types.singleton(nil)
-			local unionType = types.unionof(origType, nilType)
+			const nilType = types.singleton(nil)
+			const unionType = types.unionof(origType, nilType)
 			-- set both read+write to the new nullable union
 			newTable:setproperty(prop, unionType)
 		end
@@ -328,7 +328,7 @@ type function nullableKeys(ty: type)
 end
 
 -- Processed configuration for pack
-local PackTypes = {}
+const PackTypes = {}
 
 PackTypes.cfg = ConfigParser
 PackTypes.DEBUG = (ConfigParser.debug.enabled == true) and (ConfigParser.debug.onlyInStudio == false or RunService:IsStudio()) and require(script.Parent.Debug)
